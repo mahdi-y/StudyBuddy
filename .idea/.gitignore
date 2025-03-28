@@ -1,0 +1,14 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+.idea/discord.xml
+.idea/material_theme_project_new.xml
+material_theme_project_new.xml
+discord.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+
