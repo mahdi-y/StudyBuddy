@@ -1,0 +1,10 @@
+<!-- src/app/study-group/study-group.component.html -->
+
+<div class="container mt-4">
+  <h2>Your Chats</h2>
+  <ul class="list-group mt-3">
+    <li *ngFor="let group of (studyGroups$ | async)" class="list-group-item">
+      <a [routerLink]="['/chat', group.chat.id, 'user', userId]">{{ group.name }}</a>
+    </li>
+  </ul>
+</div>
