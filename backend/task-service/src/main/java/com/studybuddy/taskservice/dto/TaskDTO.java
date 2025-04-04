@@ -3,6 +3,7 @@ package com.studybuddy.taskservice.dto;
 import java.time.LocalDateTime;
 
 public class TaskDTO {
+    private Long id;
 
     private String title;
     private String description;
@@ -13,6 +14,14 @@ public class TaskDTO {
     private Long progressId; // This will link the task to a specific progress
 
     // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getTitle() {
         return title;
     }

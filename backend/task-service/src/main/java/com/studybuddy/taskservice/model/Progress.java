@@ -17,7 +17,8 @@ public class Progress {
     @JsonBackReference
     private List<Task> tasks;  // Multiple tasks related to a progress
 
-    private Integer progressPercentage;
+    @Column
+    private double progressPercentage;
     private Integer totalTasks;
     private Integer totalCompletedTasks;
 
@@ -38,11 +39,11 @@ public class Progress {
         this.tasks = tasks;
     }
 
-    public Integer getProgressPercentage() {
+    public double getProgressPercentage() {
         return progressPercentage;
     }
 
-    public void setProgressPercentage(Integer progressPercentage) {
+    public void setProgressPercentage(double progressPercentage) {
         this.progressPercentage = progressPercentage;
     }
 
