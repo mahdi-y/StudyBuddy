@@ -64,7 +64,10 @@ public class TaskController {
     public TaskDTO getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
-
+    @GetMapping("/tasks")
+    public List<Task> getAllTasks() {
+        return taskService.getAllTasks();  // Fetch tasks from the service
+    }
     // Delete Task by ID
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable Long id) {

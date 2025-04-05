@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,9 @@ public class TaskService {
         } else {
             throw new RuntimeException("Task not found with ID: " + id);
         }
+    }
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();  // Fetch all tasks from the database
     }
     // Update task method
     public TaskDTO updateTask(Long id, TaskDTO taskDTO) {
