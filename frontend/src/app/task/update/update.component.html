@@ -1,0 +1,94 @@
+<h2>Edit Task</h2>
+<form (ngSubmit)="updateTask()" #taskForm="ngForm">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      [(ngModel)]="task.title"
+      name="title"
+      required
+      placeholder="Enter task title"
+      #title="ngModel"
+    />
+    <div *ngIf="title.invalid && title.touched" class="text-danger">
+      Title is required.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      class="form-control"
+      id="description"
+      [(ngModel)]="task.description"
+      name="description"
+      required
+      placeholder="Enter task description"
+      #description="ngModel"
+    ></textarea>
+    <div *ngIf="description.invalid && description.touched" class="text-danger">
+      Description is required.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="dueDate">Due Date</label>
+    <input
+      type="date"
+      class="form-control"
+      id="dueDate"
+      [(ngModel)]="task.dueDate"
+      name="dueDate"
+      required
+      #dueDate="ngModel"
+    />
+    <div *ngIf="dueDate.invalid && dueDate.touched" class="text-danger">
+      Due Date is required.
+    </div>
+  </div>
+
+  <!-- Disabled CreatedAt field -->
+  <div class="form-group">
+    <label for="createdAt">Created At</label>
+    <input
+      type="date"
+      class="form-control"
+      id="createdAt"
+      [(ngModel)]="task.createdAt"
+      name="createdAt"
+      disabled
+      required
+    />
+  </div>
+
+  <!-- Progress ID -->
+  <div class="form-group">
+    <label for="progressId">Progress ID</label>
+    <input
+      type="number"
+      class="form-control"
+      id="progressId"
+      [(ngModel)]="task.progressId"
+      name="progressId"
+      placeholder="Enter progress ID (optional)"
+    />
+  </div>
+
+  <!-- Completed Checkbox -->
+  <div class="form-group">
+    <label for="completed">Completed</label>
+    <input
+      type="checkbox"
+      id="completed"
+      [(ngModel)]="task.completed"
+      name="completed"
+    />
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+    Update Task
+  </button>
+</form>

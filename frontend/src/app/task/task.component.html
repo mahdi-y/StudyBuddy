@@ -1,0 +1,30 @@
+<h2 class="text-center my-4">All Tasks</h2>
+
+<div class="container">
+  <div *ngFor="let task of tasks" class="task-item mb-4 p-3 border rounded">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h5 class="task-title">
+          {{ task.title }}
+        </h5>
+        <p class="task-status" [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
+          {{ task.completed ? 'Completed' : 'In Progress' }}
+        </p>
+      </div>
+      <div class="task-actions">
+        <button class="btn btn-info btn-sm" (click)="editTask(task.id)" title="Edit Task">
+          <i class="fas fa-edit"></i> Edit
+        </button>
+        <button class="btn btn-danger btn-sm" (click)="deleteTask(task.id)" title="Delete Task">
+          <i class="fas fa-trash-alt"></i> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button class="btn btn-primary btn-lg" routerLink="/task/add" title="Add New Task">
+      <i class="fas fa-plus"></i> Add New Task
+    </button>
+  </div>
+</div>
