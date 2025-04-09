@@ -18,19 +18,19 @@ public class UserService {
         return userRepositories.save(user);
     }
 
-    public Optional<User> getUserById(Integer id) {
-        return userRepositories.findById(id);
+    public Optional<User> getUserById(int userid) {
+        return userRepositories.findById(userid);
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        return userRepositories.findByEmail(email);
+    public Optional<User> getUserByEmail(String useremail) {
+        return userRepositories.findByuseremail(useremail);
     }
 
     public List<User> getAllUsers() {
         return userRepositories.findAll();
     }
 
-    public void deleteUser(Integer id) {
-        userRepositories.deleteById(id);
+    public void deleteUser(int userid) {
+        userRepositories.deleteById(userid);
     }
 }

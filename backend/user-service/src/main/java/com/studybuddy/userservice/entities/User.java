@@ -1,52 +1,31 @@
+
+
 package com.studybuddy.userservice.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-@Entity  // Add this annotation
+@Entity
 @Table(name = "users")
-@Getter
-@Setter
-@ToString
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
+
     @Id
-    @Column(name = "iduser")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int userid;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int iduser;
 
-    @Column(name = "username")
-    private String username;
+    private String profile_picture;
 
-    @Column(name = "useremail")
+    @Column(nullable = false, unique = true)
     private String useremail;
 
-    @Column(name = "password", length = 12)
-    private int password;
+    private String username;
 
-    @Column(name = "profile_picture")
-    private String profilepicture;
+    @Column(nullable = false)
+    private String password;
 
-    @Column(name = "role")
     private String role;
-
-    public User(int userid, String username, String useremail, String profilepicture, String role, int password) {
-        this.userid = userid;
-        this.username = username;
-        this.useremail = useremail;
-        this.profilepicture = profilepicture;
-        this.role = role;
-        this.password = password;
-    }
-
-    public User() {
-    }
-
-    public User(String username, String useremail, int password, String role) {
-        this.username = username;
-        this.useremail = useremail;
-        this.password = password;
-        this.role = role;
-    }
 }
