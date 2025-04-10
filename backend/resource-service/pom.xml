@@ -55,6 +55,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- PostgreSQL Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.5</version>  <!-- You can check for a newer version -->
+        </dependency>
     </dependencies>
 
     <build>
