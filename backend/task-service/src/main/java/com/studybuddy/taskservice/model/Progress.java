@@ -21,8 +21,18 @@ public class Progress {
     private double progressPercentage;
     private Integer totalTasks;
     private Integer totalCompletedTasks;
+    //private String name; // Add this field to represent the name of the progress
+
 
     // Getters and Setters
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+
     public Long getId() {
         return id;
     }

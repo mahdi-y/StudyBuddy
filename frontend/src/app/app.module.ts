@@ -6,12 +6,13 @@ import { AppComponent } from './app.component'; // Your main component
 import { TaskComponent } from './task/task.component';
 import {FormsModule} from "@angular/forms";
 import { AddTaskComponent } from './task/add/add.component';
-import { UpdateTaskComponent } from './task/update/update.component'; // Import your new component (if you have one)
+import { UpdateTaskComponent } from './task/update/update.component';
+import { ProgressComponent } from './progress/progress.component'; // Import your new component (if you have one)
 
 @NgModule({
   declarations: [
     AppComponent, // Declare the AppComponent
-    TaskComponent, AddTaskComponent, UpdateTaskComponent // Declare your TaskComponent (if you create one to display tasks)
+    TaskComponent, AddTaskComponent, UpdateTaskComponent, ProgressComponent // Declare your TaskComponent (if you create one to display tasks)
   ],
   imports: [
     BrowserModule,

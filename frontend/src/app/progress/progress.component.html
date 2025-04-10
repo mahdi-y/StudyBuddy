@@ -1,0 +1,55 @@
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Progress Overview</h2>
+
+  <!-- Iterate over each progress item -->
+  <div *ngFor="let progress of progressList" class="progress-card card mb-4 shadow-sm">
+
+    <!-- Display Progress Details -->
+    <div class="card-header bg-light">
+      <h3 class="mb-2">Progress {{ progress.id }} - {{ progress.progressPercentage | number: '1.0-0' }}%</h3>
+      <p><strong>Total Tasks:</strong> {{ progress.totalTasks }}</p>
+      <p><strong>Completed Tasks:</strong> {{ progress.totalCompletedTasks }}</p>
+
+      <!-- Progress Bar -->
+      <div class="progress mt-3">
+        <div class="progress-bar" role="progressbar"
+             [style.width]="progress.progressPercentage + '%'"
+             [ngClass]="{
+               'bg-success': progress.progressPercentage === 100,
+               'bg-warning': progress.progressPercentage < 100 && progress.progressPercentage > 0,
+               'bg-danger': progress.progressPercentage === 0
+             }"
+             [attr.aria-valuenow]="progress.progressPercentage" aria-valuemin="0" aria-valuemax="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Display Tasks Associated with this Progress -->
+    <div *ngIf="progress.tasks && progress.tasks.length > 0" class="card-body">
+      <h4 class="mb-3">Tasks</h4>
+      <div *ngFor="let task of progress.tasks" class="task-item mb-3 card p-3 shadow-sm">
+        <h5>{{ task.title }}</h5>
+        <p>{{ task.description }}</p>
+        <p class="text-muted">
+          <strong>Due:</strong> {{ task.dueDate | date: 'short' }} | <strong>Created:</strong> {{ task.createdAt | date: 'short' }}
+        </p>
+        <p [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
+          <strong>Status:</strong>             {{ task.completed ? 'Completed' : 'In Progress' }}
+
+<!--          <span [ngClass]="{-->
+<!--                'badge': true,-->
+<!--                'badge-success': task.completed,-->
+<!--                'badge-warning': !task.completed-->
+<!--              }">-->
+<!--            {{ task.completed ? 'Completed' : 'In Progress' }}-->
+<!--          </span>-->
+        </p>
+      </div>
+    </div>
+
+    <!-- No tasks message -->
+    <div *ngIf="progress.tasks && progress.tasks.length === 0" class="text-muted card-body">
+      No tasks available for this progress.
+    </div>
+  </div>
+</div>
