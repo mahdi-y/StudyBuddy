@@ -1,0 +1,19 @@
+.invitation-container {
+    max-width: 800px;
+    margin: 20px auto;
+  }
+  
+  .invitation-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+  }
+  
+  .actions {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
+  }
+  
+  mat-chip {
+    margin-left: 10px;
+  }

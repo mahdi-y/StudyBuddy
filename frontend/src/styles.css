@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+/* Add these global styles */
+body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .group-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .group-card, .create-card {
+    margin-bottom: 20px;
+  }
+  
+  .add-button {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+  }
