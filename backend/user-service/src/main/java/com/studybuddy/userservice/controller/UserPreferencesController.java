@@ -22,9 +22,9 @@ public class UserPreferencesController {
             return ResponseEntity.ok(userPreferencesService.savePreferences(prefs));
         }
 
-        @GetMapping("/user/{userId}")
-        public ResponseEntity<UserPreferences> getByUserId(@PathVariable Long userId) {
-            return userPreferencesService.getByUserId(userId)
+        @GetMapping("/user/{iduser}")
+        public ResponseEntity<UserPreferences> getByUserId(@PathVariable Long iduser) {
+            return userPreferencesService.getByIdUser(iduser)
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
         }

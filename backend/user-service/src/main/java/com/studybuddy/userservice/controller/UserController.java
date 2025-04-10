@@ -21,9 +21,9 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    @GetMapping("/{userid}")
-    public ResponseEntity<User> getUser(@PathVariable int userid) {
-        return userService.getUserById(userid)
+    @GetMapping("/{iduser}")
+    public ResponseEntity<User> getUser(@PathVariable int iduser) {
+        return userService.getUserById(iduser)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -33,9 +33,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @DeleteMapping("/{userid}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int userid) {
-        userService.deleteUser(userid);
+    @DeleteMapping("/{iduser}")
+    public ResponseEntity<Void> deleteUser(@PathVariable int iduser) {
+        userService.deleteUser(iduser);
         return ResponseEntity.noContent().build();
     }
 

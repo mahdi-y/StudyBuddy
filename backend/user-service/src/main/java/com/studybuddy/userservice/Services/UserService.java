@@ -18,8 +18,8 @@ public class UserService {
         return userRepositories.save(user);
     }
 
-    public Optional<User> getUserById(int userid) {
-        return userRepositories.findById(userid);
+    public Optional<User> getUserById(int iduser) {
+        return userRepositories.findById(iduser);
     }
 
     public Optional<User> getUserByEmail(String useremail) {
@@ -30,7 +30,7 @@ public class UserService {
         return userRepositories.findAll();
     }
 
-    public void deleteUser(int userid) {
-        userRepositories.deleteById(userid);
+    public void deleteUser(int iduser) {
+        userRepositories.deleteById(iduser);
     }
 }

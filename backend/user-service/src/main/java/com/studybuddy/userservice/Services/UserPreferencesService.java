@@ -17,8 +17,8 @@ public class UserPreferencesService {
         return userpreferencesRepositories.save(prefs);
     }
 
-    public Optional<UserPreferences> getByUserId(Long userid) {
-        return userpreferencesRepositories.findByUserid(userid);
+    public Optional<UserPreferences> getByIdUser(Long iduser) {
+        return userpreferencesRepositories.findByiduser(iduser);
     }
 
     public List<UserPreferences> getAll() {

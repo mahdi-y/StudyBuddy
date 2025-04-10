@@ -17,12 +17,12 @@ public class UserPreferences {
     private String preferredStudyTopics;
 
     private Boolean notificationsEnabled;
+    @Column(name = "DarkMode")
 
-    @Enumerated(EnumType.STRING)
-    private Theme theme;
+    private boolean DarkMode;
 
     private String language;
 
-    private Long userid;
+    private Long iduser;
 }
 

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface UserPreferencesRepositories extends JpaRepository<UserPreferences, Long> {
 
-    Optional<UserPreferences> findByUserid(Long userid);
+    Optional<UserPreferences> findByiduser(Long iduser);
 }
