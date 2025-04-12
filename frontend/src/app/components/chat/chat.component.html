@@ -1,0 +1,28 @@
+<div class="chat-container">
+  <div class="messages-container">
+    <div *ngIf="loadingMessages" class="loading-indicator">
+      Loading messages...
+    </div>
+
+    <div *ngIf="!loadingMessages && messages.length === 0" class="empty-state">
+      No messages yet. Start the conversation!
+    </div>
+
+    <div *ngFor="let message of messages; trackBy: trackByMessage" class="message">
+      <div class="message-header">
+        <span class="sender">User {{message.senderId}}</span>
+        <span class="timestamp">{{message.timestamp | date:'shortTime'}}</span>
+      </div>
+      <div class="message-content">{{message.content}}</div>
+    </div>
+  </div>
+
+  <div class="message-input">
+    <input
+      [(ngModel)]="newMessage"
+      placeholder="Type your message..."
+      (keyup.enter)="sendMessage()"
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>
