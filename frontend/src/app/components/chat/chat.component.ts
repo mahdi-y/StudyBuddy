@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, HostListener} from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { Subscription } from 'rxjs';
 import { Message } from '../../models/message';
@@ -15,6 +15,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   senderId = 123;
   loadingMessages = false;
   private messageSubscription: Subscription | null = null;
+  editingContent: string = '';
 
   constructor(private chatService: ChatService) {}
 
@@ -40,14 +41,28 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private subscribeToNewMessages(): void {
     this.messageSubscription = this.chatService.subscribeToChat(this.chatId).subscribe({
-      next: (message: Message) => {
-        if (!this.loadingMessages && !this.messageExists(message)) {
-          this.messages = [...this.messages, message];
+      next: (data: any) => {
+        if (data.action === 'DELETED') {
+          this.messages = this.messages.filter(m => m.id !== data.messageId);
+        }
+        else if (data.id) { // It's a regular message or update
+          const existingIndex = this.messages.findIndex(m => m.id === data.id);
+          if (existingIndex >= 0) {
+            // Update existing message
+            this.messages = [
+              ...this.messages.slice(0, existingIndex),
+              data,
+              ...this.messages.slice(existingIndex + 1)
+            ];
+          } else {
+            // Add new message
+            if (!this.messageExists(data)) {
+              this.messages = [...this.messages, data];
+            }
+          }
         }
       },
-      error: (err) => {
-        console.error('Error receiving messages:', err);
-      }
+      error: (err) => console.error('Error receiving messages:', err)
     });
   }
 
@@ -97,6 +112,62 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (container) {
       container.scrollTop = container.scrollHeight;
     }
+  }
+
+  editMessage(message: Message) {
+    this.messages.forEach(m => m.showMenu = false);
+    message.isEditable = true;
+    this.editingContent = message.content;
+    message.showMenu = false;
+  }
+
+  saveEdit(message: Message) {
+    this.chatService.updateMessage(message.id!, this.chatId!, this.editingContent!)
+      .then(() => {
+        message.isEditable = false;
+        this.editingContent = '';
+      })
+      .catch(err => console.error('Failed to update message:', err));
+  }
+
+  cancelEdit(message: Message) {
+    message.isEditable = false;
+    this.editingContent = '';
+  }
+
+  deleteMessage(message: Message) {
+    if (!message.id) {
+      console.error('Cannot delete message - messageId is undefined');
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this message?')) {
+      this.chatService.deleteMessage(message.id, this.chatId)
+        .catch(err => console.error('Failed to delete message:', err));
+    }
+    message.showMenu = false; // Close the menu after action
+  }
+
+  toggleMenu(message: Message) {
+    // Close all other menus first
+    this.messages.forEach(m => m.showMenu = false);
+    // Toggle this message's menu
+    message.showMenu = !message.showMenu;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.messages) return;
+
+    // Close all menus if click is outside any menu button or menu
+    const clickedInsideMenu = (event.target as HTMLElement).closest('.action-menu, .menu-btn');
+    if (!clickedInsideMenu) {
+      this.messages.forEach(m => m.showMenu = false);
+    }
+  }
+
+  toggleUser() {
+    this.senderId = this.senderId === 123 ? 456 : 123; // Switch between two users
   }
 
 }

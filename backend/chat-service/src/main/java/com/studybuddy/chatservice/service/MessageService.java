@@ -37,4 +37,15 @@ public class MessageService {
         System.out.println("Fetched " + messages.size() + " messages for chatId: " + chatId);
         return messages;
     }
+
+    public void deleteMessage(Long messageId) {
+        messageRepository.deleteById(messageId);
+    }
+
+    public Message updateMessage(Long messageId, String newContent) {
+        Message message = messageRepository.findById(messageId)
+                .orElseThrow(() -> new RuntimeException("Message not found"));
+        message.setContent(newContent);
+        return messageRepository.save(message);
+    }
 }

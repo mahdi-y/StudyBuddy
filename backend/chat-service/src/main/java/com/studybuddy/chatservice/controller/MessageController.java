@@ -1,12 +1,12 @@
 package com.studybuddy.chatservice.controller;
 
-import com.studybuddy.chatservice.dto.MessageDTO;
-import com.studybuddy.chatservice.dto.MessageResponseDTO;
+import com.studybuddy.chatservice.dto.*;
 import com.studybuddy.chatservice.model.Message;
 import com.studybuddy.chatservice.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +48,23 @@ public class MessageController {
         MessageResponseDTO response = new MessageResponseDTO(savedMessage);
 
         messagingTemplate.convertAndSend("/topic/chats/" + messageDTO.getChatId(), response);
+    }
+
+    @MessageMapping("/deleteMessage")
+    public void deleteMessage(@Payload DeleteMessageRequest request) {
+        messageService.deleteMessage(request.getMessageId());
+        messagingTemplate.convertAndSend("/topic/chats/" + request.getChatId(),
+                new MessageActionDTO(request.getMessageId(), "DELETED"));
+    }
+
+    @MessageMapping("/updateMessage")
+    public void updateMessage(@Payload UpdateMessageRequest request) {
+        Message updatedMessage = messageService.updateMessage(
+                request.getMessageId(),
+                request.getNewContent()
+        );
+        messagingTemplate.convertAndSend("/topic/chats/" + request.getChatId(),
+                new MessageResponseDTO(updatedMessage));
     }
 
 }

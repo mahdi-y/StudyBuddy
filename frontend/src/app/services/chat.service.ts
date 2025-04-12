@@ -129,4 +129,36 @@ export class ChatService implements OnDestroy {
     this.messageSubject.complete();
     this.connectionSubject.complete();
   }
+
+  deleteMessage(messageId: number, chatId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.connectionSubject.value) {
+        reject(new Error('Not connected to WebSocket'));
+        return;
+      }
+
+      this.stompClient.publish({
+        destination: '/app/deleteMessage',
+        body: JSON.stringify({ messageId, chatId }),
+        headers: { 'content-type': 'application/json' }
+      });
+      resolve();
+    });
+  }
+
+  updateMessage(messageId: number, chatId: number, newContent: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.connectionSubject.value) {
+        reject(new Error('Not connected to WebSocket'));
+        return;
+      }
+
+      this.stompClient.publish({
+        destination: '/app/updateMessage',
+        body: JSON.stringify({ messageId, chatId, newContent }),
+        headers: { 'content-type': 'application/json' }
+      });
+      resolve();
+    });
+  }
 }
