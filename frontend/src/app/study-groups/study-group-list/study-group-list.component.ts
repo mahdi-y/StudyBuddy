@@ -36,7 +36,7 @@ export class StudyGroupListComponent implements OnInit {
   // Send an invitation to the selected member for the group
   sendInvitation(groupId: number): void {
     const invitation: SendInvitation = {
-      studyGroupId: groupId,
+      studyGroup: { id: groupId }, // ✅ fix is here
       inviterUserId: this.currentUserId,
       inviteeUserId: this.selectedInviteeUserId
     };

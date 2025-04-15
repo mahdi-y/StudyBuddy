@@ -9,9 +9,11 @@ import { SendInvitation } from '../../models/invitation.model';
 })
 export class InvitationSendComponent {
   invitationData: SendInvitation = {
-    studyGroupId: 0,
-    inviterUserId: 1, // TODO: Replace with the actual logged-in user ID dynamically
-    inviteeUserId: 0
+    inviterUserId: 1, // Replace with logged-in user dynamically
+    inviteeUserId: 0,
+    studyGroup: { id: 0 },
+    status: 'PENDING',
+    type: 'INVITE'
   };
 
   constructor(
@@ -19,7 +21,7 @@ export class InvitationSendComponent {
     private route: ActivatedRoute
   ) {
     const groupId = this.route.snapshot.paramMap.get('groupId');
-    this.invitationData.studyGroupId = groupId ? +groupId : 0;
+    this.invitationData.studyGroup.id = groupId ? +groupId : 0;
   }
 
   sendInvitation(): void {
@@ -28,10 +30,9 @@ export class InvitationSendComponent {
       return;
     }
 
-    this.invitationService.sendInvitation(this.invitationData)
-      .subscribe({
-        next: () => alert('Invitation sent!'),
-        error: err => console.error('Failed to send invitation:', err)
-      });
+    this.invitationService.sendInvitation(this.invitationData).subscribe({
+      next: () => alert('Invitation sent!'),
+      error: err => console.error('Failed to send invitation:', err)
+    });
   }
 }

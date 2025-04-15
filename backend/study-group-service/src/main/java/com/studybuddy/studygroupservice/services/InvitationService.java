@@ -9,6 +9,9 @@ import com.studybuddy.studygroupservice.repositories.StudyGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class InvitationService {
@@ -31,6 +34,12 @@ public class InvitationService {
         Invitation savedInvitation = invitationRepository.save(invitation);
 
         return mapToInvitationDTO(savedInvitation);
+    }
+    public List<InvitationDTO> getAllInvitations() {
+        List<Invitation> invitations = invitationRepository.findAll();
+        return invitations.stream()
+                .map(this::mapToInvitationDTO)
+                .collect(Collectors.toList());
     }
 
 

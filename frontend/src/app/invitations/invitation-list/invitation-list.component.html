@@ -1,2 +1,36 @@
-<h1>Invitation List</h1>
-<p>Welcome to the invitations section!</p>
+<div *ngIf="isLoading" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading invitations...</p>
+  </div>
+  
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="!isLoading && !errorMessage && invitations.length === 0" class="alert alert-info text-center">
+    No invitations found.
+  </div>
+  
+  <div *ngIf="!isLoading && !errorMessage && invitations.length > 0" class="container mt-4">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col" *ngFor="let invitation of invitations">
+        <div class="card shadow-sm h-100 border-primary">
+          <div class="card-body">
+            <h5 class="card-title">
+              📩 Study Group #{{ invitation.studyGroup.id }}
+            </h5>
+            <p class="card-text">
+              <strong>Status:</strong> {{ invitation.status }}<br>
+              <strong>Type:</strong> {{ invitation.type }}<br>
+              <strong>Inviter:</strong> User #{{ invitation.inviterUserId }}<br>
+              <strong>Invitee:</strong> User #{{ invitation.inviteeUserId }}<br>
+              <strong>Sent:</strong> {{ invitation.createdAt | date:'medium' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

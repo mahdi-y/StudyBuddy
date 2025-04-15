@@ -7,6 +7,8 @@ import com.studybuddy.studygroupservice.services.InvitationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/invitations")
 @RequiredArgsConstructor
@@ -23,6 +25,10 @@ public class InvitationController {
     @PostMapping("/send")  // Use '/send' endpoint for sending invitations
     public InvitationDTO sendInvitation(@RequestBody InvitationDTO invitationDTO) {
         return invitationService.sendInvitation(invitationDTO);
+    }
+    @GetMapping
+    public List<InvitationDTO> getAllInvitations() {
+        return invitationService.getAllInvitations();
     }
 
     @DeleteMapping("/{id}")
