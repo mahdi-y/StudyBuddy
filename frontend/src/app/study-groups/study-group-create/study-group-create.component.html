@@ -4,6 +4,9 @@
   <!-- Display any error message -->
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
+  <!-- Display success message -->
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
   <form (ngSubmit)="createGroup()" #groupForm="ngForm">
     <div class="form-group">
       <label for="name">Group Name</label>

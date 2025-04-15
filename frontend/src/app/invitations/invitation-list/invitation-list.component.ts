@@ -1,27 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { InvitationService } from '../../services/invitation.service';
-import { Invitation } from '../../models/invitation.model';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-invitation-list',
-  templateUrl: './invitation-list.component.html'
+  templateUrl: './invitation-list.component.html',
+  styleUrls: ['./invitation-list.component.css']
 })
-export class InvitationListComponent implements OnInit {
-  invitations: Invitation[] = [];
-  currentUserId = 1; // Replace with actual user ID
-
-  constructor(private invitationService: InvitationService) {}
-
-  ngOnInit(): void {
-    this.loadInvitations();
-  }
-
-  loadInvitations(): void {
-    this.invitationService.getUserInvitations(this.currentUserId)
-      .subscribe(invitations => this.invitations = invitations);
-  }
-
-  respondToInvitation(invitationId: number, response: 'ACCEPTED' | 'REJECTED'): void {
-    // Implement response logic
+export class InvitationListComponent {
+  constructor() {
+    console.log('Invitation List Component Loaded');
   }
 }

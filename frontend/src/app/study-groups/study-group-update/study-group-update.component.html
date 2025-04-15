@@ -1,0 +1,17 @@
+<div class="container">
+    <h2>Update Study Group</h2>
+    <form (ngSubmit)="updateGroup()">
+      <div class="form-group">
+        <label for="name">Group Name</label>
+        <input type="text" id="name" [(ngModel)]="studyGroup.name" name="name" class="form-control" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Group Description</label>
+        <textarea id="description" [(ngModel)]="studyGroup.description" name="description" class="form-control" required></textarea>
+      </div>
+      
+      <button mat-raised-button color="primary" type="submit">Update</button>
+    </form>
+  </div>
+  

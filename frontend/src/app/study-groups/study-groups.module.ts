@@ -11,14 +11,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { StudyGroupsRoutingModule } from './study-groups-routing.module';
-import { RouterModule } from '@angular/router';   // <-- Add this
+import { RouterModule } from '@angular/router';
+import { StudyGroupUpdateComponent } from './study-group-update/study-group-update.component';   
 
 
 
 @NgModule({
   declarations: [
     StudyGroupListComponent,
-    StudyGroupCreateComponent
+    StudyGroupCreateComponent,
+    StudyGroupUpdateComponent
   ],
   imports: [
     CommonModule,

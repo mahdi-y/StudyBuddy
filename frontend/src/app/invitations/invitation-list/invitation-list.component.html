@@ -1,16 +1,2 @@
-<mat-list>
-    <mat-list-item *ngFor="let invitation of invitations">
-      <h3 matLine>Invitation to Group #{{ invitation.studyGroupId }}</h3>
-      <p matLine>From User #{{ invitation.inviterUserId }}</p>
-      <p matLine>Status: {{ invitation.status }}</p>
-      
-      <div *ngIf="invitation.status === 'PENDING'">
-        <button mat-button color="primary" (click)="respondToInvitation(invitation.id, 'ACCEPTED')">
-          Accept
-        </button>
-        <button mat-button color="warn" (click)="respondToInvitation(invitation.id, 'REJECTED')">
-          Reject
-        </button>
-      </div>
-    </mat-list-item>
-  </mat-list>
+<h1>Invitation List</h1>
+<p>Welcome to the invitations section!</p>

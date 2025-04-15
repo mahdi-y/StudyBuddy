@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { InvitationsComponent } from './invitations.component';
 import { InvitationListComponent } from './invitation-list/invitation-list.component';
-import { InvitationSendComponent } from './invitation-send/invitation-send.component';
 
 const routes: Routes = [
-  { path: '', component: InvitationListComponent },
-  { path: 'send/:groupId', component: InvitationSendComponent }
+  {
+    path: '',
+    component: InvitationsComponent,
+    children: [
+      { path: '', component: InvitationListComponent }
+    ]
+  }
 ];
 
 @NgModule({

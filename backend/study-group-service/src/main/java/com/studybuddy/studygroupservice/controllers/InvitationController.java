@@ -20,6 +20,10 @@ public class InvitationController {
         Invitation createdInvitation = invitationService.createInvitation(invitationDTO);
         return mapToInvitationDTO(createdInvitation);
     }
+    @PostMapping("/send")  // Use '/send' endpoint for sending invitations
+    public InvitationDTO sendInvitation(@RequestBody InvitationDTO invitationDTO) {
+        return invitationService.sendInvitation(invitationDTO);
+    }
 
     @DeleteMapping("/{id}")
     public void deleteInvitation(@PathVariable Long id) {

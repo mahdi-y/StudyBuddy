@@ -1,6 +1,7 @@
 package com.studybuddy.studygroupservice.services;
 
 import com.studybuddy.studygroupservice.dto.InvitationDTO;
+import com.studybuddy.studygroupservice.dto.StudyGroupDTO;
 import com.studybuddy.studygroupservice.entities.Invitation;
 import com.studybuddy.studygroupservice.entities.StudyGroup;
 import com.studybuddy.studygroupservice.repositories.InvitationRepository;
@@ -12,8 +13,26 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class InvitationService {
 
+
     private final InvitationRepository invitationRepository;
     private final StudyGroupRepository studyGroupRepository;
+    public InvitationDTO sendInvitation(InvitationDTO invitationDTO) {
+        Invitation invitation = new Invitation();
+        invitation.setStatus(invitationDTO.getStatus());
+        invitation.setType(invitationDTO.getType());
+        invitation.setInviterUserId(invitationDTO.getInviterUserId());
+        invitation.setInviteeUserId(invitationDTO.getInviteeUserId());
+
+        StudyGroup studyGroup = studyGroupRepository.findById(invitationDTO.getStudyGroup().getId())
+                .orElseThrow(() -> new RuntimeException("Study group not found"));
+
+        invitation.setStudyGroup(studyGroup);
+
+        Invitation savedInvitation = invitationRepository.save(invitation);
+
+        return mapToInvitationDTO(savedInvitation);
+    }
+
 
     public Invitation createInvitation(InvitationDTO invitationDTO) {
         Invitation invitation = new Invitation();
@@ -32,5 +51,23 @@ public class InvitationService {
 
     public void deleteInvitation(Long id) {
         invitationRepository.deleteById(id);
+    }
+    private InvitationDTO mapToInvitationDTO(Invitation invitation) {
+        InvitationDTO dto = new InvitationDTO();
+        dto.setId(invitation.getId());
+        dto.setStatus(invitation.getStatus());
+        dto.setType(invitation.getType());
+        dto.setInviterUserId(invitation.getInviterUserId());
+        dto.setInviteeUserId(invitation.getInviteeUserId());
+        dto.setCreatedAt(invitation.getCreatedAt());
+
+        StudyGroupDTO groupDTO = new StudyGroupDTO();
+        groupDTO.setId(invitation.getStudyGroup().getId());
+        groupDTO.setName(invitation.getStudyGroup().getName());
+        groupDTO.setDescription(invitation.getStudyGroup().getDescription());
+
+        dto.setStudyGroup(groupDTO);
+
+        return dto;
     }
 }

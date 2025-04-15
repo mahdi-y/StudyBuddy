@@ -1,4 +1,11 @@
-<mat-card *ngFor="let group of studyGroups" class="group-card">
+<div class="container">
+  <!-- Button to create a new study group -->
+  <button mat-raised-button color="primary" (click)="goToCreateGroup()">Create New Group</button>
+
+  <!-- Display the list of study groups -->
+  <div *ngIf="studyGroups.length === 0">No study groups available.</div>
+  
+  <mat-card *ngFor="let group of studyGroups" class="group-card">
     <mat-card-header>
       <mat-card-title>{{ group.name }}</mat-card-title>
     </mat-card-header>
@@ -6,9 +13,20 @@
       <p>{{ group.description }}</p>
     </mat-card-content>
     <mat-card-actions>
+      <!-- Invite Member Button -->
       <button mat-button color="primary" (click)="sendInvitation(group.id)">
         Invite Member
       </button>
+      
+      <!-- Update Study Group Button -->
+      <button mat-button color="accent" (click)="goToUpdateGroup(group.id)">
+        Update
+      </button>
+
+      <!-- Delete Study Group Button -->
+      <button mat-button color="warn" (click)="deleteStudyGroup(group.id)">
+        Delete
+      </button>
     </mat-card-actions>
   </mat-card>
-  
+</div>
