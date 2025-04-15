@@ -1,0 +1,30 @@
+<div class="container mt-4">
+    <h2>Modifier l'utilisateur</h2>
+    <form (ngSubmit)="updateUser()">
+      <div class="mb-3">
+        <label for="username" class="form-label">Nom d'utilisateur</label>
+        <input type="text" class="form-control" id="username" [(ngModel)]="user.username" name="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="useremail" class="form-label">Email</label>
+        <input type="email" class="form-control" id="useremail" [(ngModel)]="user.useremail" name="useremail" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Nouveau mot de passe (laisser vide si inchangé)</label>
+        <input type="password" class="form-control" id="password" [(ngModel)]="user.password" name="password">
+      </div>
+      <div class="mb-3">
+        <label for="profilePicture" class="form-label">Photo de profil (URL)</label>
+        <input type="text" class="form-control" id="profilePicture" [(ngModel)]="user.profilePicture" name="profilePicture">
+      </div>
+      <div class="mb-3">
+        <label for="role" class="form-label">Rôle</label>
+        <select class="form-control" id="role" [(ngModel)]="user.role" name="role" required>
+          <option value="USER">Utilisateur</option>
+          <option value="ADMIN">Administrateur</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+      <a class="btn btn-secondary" routerLink="/users">Annuler</a>
+    </form>
+  </div>

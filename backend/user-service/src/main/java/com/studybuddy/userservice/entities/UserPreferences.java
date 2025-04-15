@@ -14,15 +14,15 @@ public class UserPreferences {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idpreferences;
 
-    private String preferredStudyTopics;
+    private String preferredstudytopics;
 
-    private Boolean notificationsEnabled;
-    @Column(name = "DarkMode")
+    private Boolean notificationsenabled;
+    @Column(name = "darkmode")
 
-    private boolean DarkMode;
+    private boolean darkmode;
 
     private String language;
 
-    private Long iduser;
+    private int iduser;
 }
 

@@ -17,7 +17,7 @@ public class UserPreferencesService {
         return userpreferencesRepositories.save(prefs);
     }
 
-    public Optional<UserPreferences> getByIdUser(Long iduser) {
+    public Optional<UserPreferences> getByIdUser(int iduser) {
         return userpreferencesRepositories.findByiduser(iduser);
     }
 
@@ -25,7 +25,7 @@ public class UserPreferencesService {
         return userpreferencesRepositories.findAll();
     }
 
-    public void deleteById(Long idpreferences) {
+    public void deleteById(int idpreferences) {
         userpreferencesRepositories.deleteById(idpreferences);
     }
 }

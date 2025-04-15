@@ -23,7 +23,7 @@ public class UserPreferencesController {
         }
 
         @GetMapping("/user/{iduser}")
-        public ResponseEntity<UserPreferences> getByUserId(@PathVariable Long iduser) {
+        public ResponseEntity<UserPreferences> getByUserId(@PathVariable int iduser) {
             return userPreferencesService.getByIdUser(iduser)
                     .map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
@@ -35,7 +35,7 @@ public class UserPreferencesController {
         }
 
         @DeleteMapping("/{idpreferences}")
-        public ResponseEntity<Void> delete(@PathVariable Long idpreferences) {
+        public ResponseEntity<Void> delete(@PathVariable int idpreferences) {
             userPreferencesService.deleteById(idpreferences);
             return ResponseEntity.noContent().build();
         }

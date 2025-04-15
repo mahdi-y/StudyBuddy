@@ -11,12 +11,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int iduser;
-
+    @Lob
     private String profile_picture;
 
     @Column(nullable = false, unique = true)

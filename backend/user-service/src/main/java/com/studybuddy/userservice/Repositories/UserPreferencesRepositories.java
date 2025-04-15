@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserPreferencesRepositories extends JpaRepository<UserPreferences, Long> {
+public interface UserPreferencesRepositories extends JpaRepository<UserPreferences, Integer> {
 
-    Optional<UserPreferences> findByiduser(Long iduser);
+    Optional<UserPreferences> findByiduser(int iduser);
 }
