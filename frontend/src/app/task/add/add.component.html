@@ -1,72 +1,115 @@
-<h2>Add New Task</h2>
-<div class="container mt-5">
-  <h2 class="mb-4">➕ Add New Task</h2>
+<div class="container mt-4">
+  <h2>Add New Task</h2>
 
   <form (ngSubmit)="addTask()" #taskForm="ngForm">
-    <!-- Title -->
-    <div class="mb-3">
-      <label for="title" class="form-label">Title</label>
+    <!-- Title Field -->
+    <div class="form-group">
+      <label for="title">Title</label>
       <input
-        type="text"
         id="title"
-        name="title"
         class="form-control"
+        type="text"
         [(ngModel)]="newTask.title"
+        name="title"
         required
+        #title="ngModel"
       />
+      <div *ngIf="title.invalid && title.touched" class="text-danger">
+        Title is required.
+      </div>
     </div>
 
-    <!-- Description -->
-    <div class="mb-3">
-      <label for="description" class="form-label">Description</label>
+    <!-- Description Field -->
+    <div class="form-group">
+      <label for="description">Description</label>
       <textarea
         id="description"
-        name="description"
         class="form-control"
         [(ngModel)]="newTask.description"
+        name="description"
         required
+        #description="ngModel"
       ></textarea>
+      <div *ngIf="description.invalid && description.touched" class="text-danger">
+        Description is required.
+      </div>
     </div>
 
-    <!-- Due Date -->
-    <div class="mb-3">
-      <label for="dueDate" class="form-label">Due Date</label>
+    <!-- Due Date Field -->
+    <div class="form-group">
+      <label for="dueDate">Due Date</label>
       <input
-        type="date"
         id="dueDate"
-        name="dueDate"
         class="form-control"
+        type="date"
         [(ngModel)]="newTask.dueDate"
+        name="dueDate"
+        [min]="createdAt"
+
         required
+        #dueDate="ngModel"
       />
+      <div *ngIf="dueDate.invalid && dueDate.touched" class="text-danger">
+        Due Date is required.
+      </div>
     </div>
 
-    <!-- Progress ID -->
-    <div class="mb-3">
-      <label for="progressId" class="form-label">Progress ID</label>
-      <input
-        type="number"
+    <!-- Progress Dropdown -->
+    <div class="form-group">
+      <label for="progressId">Select Progress</label>
+      <select
         id="progressId"
-        name="progressId"
         class="form-control"
         [(ngModel)]="newTask.progressId"
-      />
+        name="progressId"
+      >
+        <option [ngValue]="null">-- No Progress --</option>
+        <option *ngFor="let progress of progressList" [ngValue]="progress.id">
+          {{ progress.name }}
+        </option>
+      </select>
     </div>
 
-    <!-- Completed Checkbox -->
-    <div class="form-check mb-3">
+    <!-- New Progress Input -->
+    <div class="form-group">
+      <label for="newProgress">Or Enter New Progress</label>
       <input
-        class="form-check-input"
-        type="checkbox"
-        id="completed"
-        name="completed"
-        [(ngModel)]="newTask.completed"
+        id="newProgress"
+        class="form-control"
+        type="text"
+        [(ngModel)]="newProgressName"
+        name="newProgressName"
+        placeholder="New progress name (optional)"
+        [required]="newTask.progressId === null"
       />
-      <label class="form-check-label" for="completed">Completed</label>
+      <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="text-danger">
+        New progress name is required when no progress is selected.
+      </div>
+    </div>
+    <!-- Validation: Both Progress Fields Empty -->
+    <div *ngIf="(taskForm.submitted && newTask.progressId === null && !newProgressName) " class="text-danger">
+      Please select or enter a progress.
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-primary" [disabled]="taskForm.invalid">
+
+    <!-- Validation for exclusive progress -->
+    <div *ngIf="!isProgressExclusive()" class="text-danger">
+      You cannot select both progress and enter a new progress at the same time.
+    </div>
+
+<!--    &lt;!&ndash; Completed Checkbox &ndash;&gt;-->
+<!--    <div class="form-check my-2">-->
+<!--      <input-->
+<!--        id="completed"-->
+<!--        class="form-check-input"-->
+<!--        type="checkbox"-->
+<!--        [(ngModel)]="newTask.completed"-->
+<!--        name="completed"-->
+<!--      />-->
+<!--      <label class="form-check-label" for="completed">Completed</label>-->
+<!--    </div>-->
+
+    <button class="btn btn-primary mt-3" type="submit" [disabled]="taskForm.invalid">
       Add Task
     </button>
   </form>

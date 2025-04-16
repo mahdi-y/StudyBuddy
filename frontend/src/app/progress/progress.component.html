@@ -6,7 +6,7 @@
 
     <!-- Display Progress Details -->
     <div class="card-header bg-light">
-      <h3 class="mb-2">Progress {{ progress.id }} - {{ progress.progressPercentage | number: '1.0-0' }}%</h3>
+      <h3 class="mb-2"> {{ progress.name }} - {{ progress.progressPercentage | number: '1.0-0' }}%</h3>
       <p><strong>Total Tasks:</strong> {{ progress.totalTasks }}</p>
       <p><strong>Completed Tasks:</strong> {{ progress.totalCompletedTasks }}</p>
 

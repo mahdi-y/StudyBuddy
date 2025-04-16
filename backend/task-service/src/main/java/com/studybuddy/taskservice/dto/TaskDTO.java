@@ -12,6 +12,7 @@ public class TaskDTO {
     private LocalDateTime createdAt; // Add the createdAt field
 
     private Long progressId; // This will link the task to a specific progress
+    private String ProgressName;
 
     // Getters and Setters
 
@@ -29,6 +30,8 @@ public class TaskDTO {
     public void setTitle(String title) {
         this.title = title;
     }
+    public String getProgressName() {return ProgressName;}
+    public void setProgressName(String ProgressName) {this.ProgressName =ProgressName;}
 
     public String getDescription() {
         return description;

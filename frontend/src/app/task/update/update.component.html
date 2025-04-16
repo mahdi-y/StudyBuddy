@@ -1,5 +1,6 @@
 <h2>Edit Task</h2>
 <form (ngSubmit)="updateTask()" #taskForm="ngForm">
+  <!-- Title Field -->
   <div class="form-group">
     <label for="title">Title</label>
     <input
@@ -17,6 +18,7 @@
     </div>
   </div>
 
+  <!-- Description Field -->
   <div class="form-group">
     <label for="description">Description</label>
     <textarea
@@ -33,14 +35,17 @@
     </div>
   </div>
 
+  <!-- Due Date Field -->
   <div class="form-group">
     <label for="dueDate">Due Date</label>
     <input
-      type="date"
-      class="form-control"
       id="dueDate"
+      class="form-control"
+      type="date"
       [(ngModel)]="task.dueDate"
       name="dueDate"
+      [min]="task.createdAt"
+
       required
       #dueDate="ngModel"
     />
@@ -49,31 +54,25 @@
     </div>
   </div>
 
-  <!-- Disabled CreatedAt field -->
+  <!-- Progress Dropdown -->
   <div class="form-group">
-    <label for="createdAt">Created At</label>
-    <input
-      type="date"
+    <label for="progress">Progress</label>
+    <select
       class="form-control"
-      id="createdAt"
-      [(ngModel)]="task.createdAt"
-      name="createdAt"
-      disabled
-      required
-    />
-  </div>
-
-  <!-- Progress ID -->
-  <div class="form-group">
-    <label for="progressId">Progress ID</label>
-    <input
-      type="number"
-      class="form-control"
-      id="progressId"
-      [(ngModel)]="task.progressId"
-      name="progressId"
-      placeholder="Enter progress ID (optional)"
-    />
+      id="progress"
+      [(ngModel)]="task.progressName"
+    name="progressName"
+    required
+    #progress="ngModel"
+    >
+    <option value="" disabled>Select Progress</option>
+    <option *ngFor="let progress of progressList" [value]="progress.name">
+      {{ progress.name }}
+    </option>
+    </select>
+    <div *ngIf="progress.invalid && progress.touched" class="text-danger">
+      Progress is required.
+    </div>
   </div>
 
   <!-- Completed Checkbox -->

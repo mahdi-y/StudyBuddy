@@ -5,5 +5,6 @@ export interface Progress {
   progressPercentage: number;  // Can be a decimal value like 75.5
   totalTasks: number;
   totalCompletedTasks: number;
+  name : string;
   tasks?: Task[]; // Adding tasks as an optional property
 }

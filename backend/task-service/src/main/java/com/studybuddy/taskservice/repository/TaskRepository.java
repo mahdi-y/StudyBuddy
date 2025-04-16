@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByProgressId(Long progressId);  // This is correct as Progress is a field in Task
+    boolean existsByProgressId(Long progressId);
+
 }

@@ -6,4 +6,5 @@ export interface Task {
   createdAt?: string; // Optional, as it's set by Spring Boot (not required to be sent)
   progressId: number | null; // ID of the progress entity, can be null
   completed: boolean; // True or false depending on whether the task is completed
+  progressName?: string; // ⬅️ Add this line
 }

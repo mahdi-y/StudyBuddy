@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
-    // ✅ Corrected method name
     Optional<Progress> findByTasksId(Long taskId);
-
+    Optional<Progress> findByName(String name);
 }
+

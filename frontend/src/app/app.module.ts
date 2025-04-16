@@ -9,17 +9,19 @@ import { AddTaskComponent } from './task/add/add.component';
 import { UpdateTaskComponent } from './task/update/update.component';
 import { ProgressComponent } from './progress/progress.component'; // Import your new component (if you have one)
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent, // Declare the AppComponent
-    TaskComponent, AddTaskComponent, UpdateTaskComponent, ProgressComponent // Declare your TaskComponent (if you create one to display tasks)
+    TaskComponent, AddTaskComponent, UpdateTaskComponent, ProgressComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    // Add HttpClientModule to the imports to make HTTP requests
   ],
   providers: [],
   bootstrap: [AppComponent] // Bootstrap your main component

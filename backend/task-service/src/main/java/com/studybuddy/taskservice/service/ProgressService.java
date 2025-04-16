@@ -79,12 +79,13 @@ public class ProgressService {
         progress.setTotalCompletedTasks(completedTasks);
         progress.setProgressPercentage(progressPercentage);
 
-        // Optionally, update the progress entity in the database if needed
+        // Update the progress entity in the database if the values have changed
         progressRepository.save(progress);
 
         // Return the tasks with progress information
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
+
     @Transactional
     public void deleteTasksAndProgressIfEmpty(Long progressId) {
         // Fetch all tasks under the given progress ID

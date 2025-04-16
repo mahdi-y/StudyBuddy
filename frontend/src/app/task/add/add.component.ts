@@ -1,38 +1,71 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskService } from '../../task.service';
 import { Task } from '../task.model';
-import { firstValueFrom } from 'rxjs';
+import { ProgressService } from '../../progress.service';
+import { Progress } from '../../progress/progress.model';
 
 @Component({
   selector: 'app-add-task',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css']
 })
-export class AddTaskComponent {
+export class AddTaskComponent implements OnInit {
+
   newTask: Task = {
     title: '',
     description: '',
     dueDate: '',
     progressId: null,
-    completed: false,
-    // Don't send id or createdAt if backend auto-generates them
+    completed: false
   } as Task;
 
-  constructor(private taskService: TaskService, private router: Router) {}
+  progressList: Progress[] = [];
+  newProgressName: string = '';
+  createdAt: string = '';
 
+  constructor(
+    private taskService: TaskService,
+    private progressService: ProgressService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.loadProgressList();
+    const todayDate = new Date();
+    this.createdAt = todayDate.toISOString().split('T')[0];  // Format to YYYY-MM-DD
+
+  }
+
+  loadProgressList(): void {
+    this.progressService.getAllProgress().subscribe({
+      next: (data) => {
+        console.log('📦 Progress list received:', data);
+        this.progressList = data;
+      },
+      error: (err) => {
+        console.error('❌ Error fetching progress list', err);
+      }
+    });
+  }
 
   addTask(): void {
-    const taskToSend: Partial<Task> = {
+    const taskToSend: any = {
       title: this.newTask.title,
       description: this.newTask.description,
-      dueDate: this.formatDueDate(this.newTask.dueDate), // Format the dueDate before sending
+      dueDate: this.formatDueDate(this.newTask.dueDate),
       completed: this.newTask.completed,
-      progressId: this.newTask.progressId ? Number(this.newTask.progressId) : null
+      progressId: this.newTask.progressId,
     };
+    this.newTask.createdAt = this.createdAt;
+
+
+    // Include progressName if user entered a new one
+    if (this.newProgressName.trim() !== '') {
+      taskToSend.progressName = this.newProgressName.trim();
+    }
 
     console.log('🚀 Sending task:', taskToSend);
-    console.log('Formatted dueDate:', taskToSend.dueDate); // Log formatted dueDate
 
     this.taskService.createTask(taskToSend).subscribe({
       next: () => {
@@ -44,15 +77,17 @@ export class AddTaskComponent {
       }
     });
   }
-
-
-// Format the dueDate as ISO-8601 string (yyyy-MM-dd'T'HH:mm:ss)
-  private formatDueDate(date: string): string {
-    const formattedDate = new Date(date).toISOString(); // Converts date to ISO format
-    return formattedDate;
+  // Validates that at least one of the progress fields is filled
+  isProgressValid() {
+    return this.newTask.progressId !== null || this.newProgressName.trim() !== '';
   }
 
+  // Validates that not both progress fields are filled at the same time
+  isProgressExclusive() {
+    return !(this.newTask.progressId !== null && this.newProgressName.trim() !== '');
+  }
+
+  private formatDueDate(date: string): string {
+    return new Date(date).toISOString();
+  }
 }
-
-
-

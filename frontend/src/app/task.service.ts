@@ -16,7 +16,10 @@ export class TaskService {
     return this.http.post<Task>(`${this.apiUrl}/add`, task);
   }
 
-
+// Get all progress entries
+  getAllProgress(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:9098/api/progress/all'); // 👈 Use your correct backend endpoint here
+  }
 
   // Get all tasks
   getAllTasks(): Observable<Task[]> {
@@ -36,5 +39,6 @@ export class TaskService {
   deleteTask(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
+
 }
 

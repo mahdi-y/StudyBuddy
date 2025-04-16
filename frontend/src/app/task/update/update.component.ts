@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../task.service';
+import { ProgressService } from '../../progress.service';  // Service to fetch progress names
 import { Task } from '../task.model';
 
 @Component({
@@ -16,13 +17,18 @@ export class UpdateTaskComponent implements OnInit {
     description: '',
     dueDate: '',
     createdAt: '',
-    progressId: null,
+    progressId: null,  // Bind progressId here
+    progressName: '',  // Bind progressName for display purposes
     completed: false
   };
+
+  progressList: any[] = [];  // Holds progress options
+
 
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
+    private progressService: ProgressService,  // Inject Progress service
     private router: Router
   ) {}
 
@@ -32,32 +38,62 @@ export class UpdateTaskComponent implements OnInit {
       if (id) {
         this.taskId = +id;
         this.getTask();
+        this.getProgressList();  // Fetch available progress names
       }
     });
+    const todayDate = new Date();
+    this.task.createdAt = todayDate.toISOString().split('T')[0];  // Format to YYYY-MM-DD
+
   }
 
+  // Fetch task details
   getTask(): void {
     if (this.taskId !== null) {
       this.taskService.getTask(this.taskId).subscribe(task => {
         this.task = task;
-        // Ensure `dueDate` is in the right format
-        this.task.dueDate = this.formatDueDate(this.task.dueDate);
+
+        // Ensure dueDate is in the right format for the input field
+        if (this.task.dueDate) {
+          const dueDateObj = new Date(this.task.dueDate);
+          this.task.dueDate = dueDateObj.toISOString().split('T')[0];  // Ensure it's in yyyy-mm-dd format
+        }
+
+        // If progressName is not in the response, fetch it based on progressId
+        if (!this.task.progressName && this.task.progressId !== null) {
+          // Find progressName based on progressId
+          const selectedProgress = this.progressList.find(progress => progress.id === this.task.progressId);
+          if (selectedProgress) {
+            this.task.progressName = selectedProgress.name;
+          }
+        }
       });
     }
   }
 
+
+
+
+  // Fetch available progress options
+  getProgressList(): void {
+    this.progressService.getAllProgress().subscribe(progressList => {
+      this.progressList = progressList;
+    });
+  }
+
+  // Update task
   updateTask(): void {
     if (this.taskId !== null) {
-      // Ensure dueDate is properly formatted before updating
+      // Ensure dueDate is formatted properly before updating
       this.task.dueDate = this.formatDueDate(this.task.dueDate);
 
-      // Handle null progressId correctly (send null if not selected)
+      // Find progressId based on the selected progressName
+      const selectedProgress = this.progressList.find(progress => progress.name === this.task.progressName);
+
       const taskToUpdate: Task = {
         ...this.task,
-        progressId: this.task.progressId ?? null // Ensure null if no progress is selected
+        progressId: selectedProgress ? selectedProgress.id : null // Map progressName to progressId
       };
 
-      // Ensure the task object has the correct structure
       console.log('🚀 Sending updated task:', taskToUpdate);
 
       this.taskService.updateTask(this.taskId, taskToUpdate).subscribe({
@@ -72,9 +108,8 @@ export class UpdateTaskComponent implements OnInit {
     }
   }
 
-
+  // Format the due date
   private formatDueDate(date: string): string {
-    // Ensure the date is in ISO format before sending it to the backend
     const formattedDate = new Date(date);
     return formattedDate.toISOString();
   }

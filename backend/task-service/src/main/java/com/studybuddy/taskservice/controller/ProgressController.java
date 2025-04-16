@@ -39,10 +39,6 @@ public class ProgressController {
         progressService.deleteTasksAndProgressIfEmpty(progressId);
         return new ResponseEntity<>("Tasks and Progress deleted successfully if no tasks remain", HttpStatus.OK);
     }
-//    @GetMapping("/allNames")
-//    public ResponseEntity<List<Progress>> getAllProgressNames() {
-//        List<Progress> progressList = progressService.getAllProgressNames();
-//        return new ResponseEntity<>(progressList, HttpStatus.OK);
-//    }
+//
 
 }
