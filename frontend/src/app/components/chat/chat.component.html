@@ -3,17 +3,13 @@
     <div *ngIf="loadingMessages" class="loading-indicator">
       Loading messages...
     </div>
-
     <div *ngIf="!loadingMessages && messages.length === 0" class="empty-state">
       No messages yet. Start the conversation!
     </div>
-
     <div *ngFor="let message of messages; trackBy: trackByMessage" class="message" [class.current-user]="message.senderId === senderId">
       <div class="sender-name" *ngIf="message.senderId !== senderId">User {{message.senderId}}</div>
-
       <div class="message-bubble">
         <div class="message-content" *ngIf="!message.isEditable">{{message.content}}</div>
-
         <div class="edit-container" *ngIf="message.isEditable">
           <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>
           <div class="edit-actions">
@@ -21,7 +17,6 @@
             <button class="cancel-btn" (click)="cancelEdit(message)">Cancel</button>
           </div>
         </div>
-
         <div class="message-actions" *ngIf="message.senderId === senderId">
           <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
           <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
@@ -29,12 +24,10 @@
             <button class="menu-option delete-option" (click)="deleteMessage(message)">Delete</button>
           </div>
         </div>
-
         <div class="timestamp-hover">{{message.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
   </div>
-
   <div class="message-input">
     <button (click)="toggleUser()">Switch User (Current: {{senderId}})</button>
     <input

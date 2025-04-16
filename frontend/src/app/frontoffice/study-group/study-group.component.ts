@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudyGroupComponent implements OnInit {
 
-  studyGroups: any[] = []; // Example data
+  studyGroups: any[] = [];
   selectedGroup: any | null = null;
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
@@ -17,7 +17,6 @@ export class StudyGroupComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // Initialize the study groups (example data)
     this.studyGroups = [
       { id: 1, name: 'Group 1' },
       { id: 2, name: 'Group 2' },

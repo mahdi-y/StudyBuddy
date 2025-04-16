@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, HostListener} from '@angular/core';
+import {Component, OnInit, OnDestroy, HostListener, Input, SimpleChanges} from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { Subscription } from 'rxjs';
 import { Message } from '../../models/message';
@@ -11,8 +11,8 @@ import { Message } from '../../models/message';
 export class ChatComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   newMessage: string = '';
-  chatId = 1;
-  senderId = 123;
+  @Input() chatId!: number;
+  @Input() senderId = 123;
   loadingMessages = false;
   private messageSubscription: Subscription | null = null;
   editingContent: string = '';
@@ -22,6 +22,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadInitialMessages();
     this.subscribeToNewMessages();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chatId'] && !changes['chatId'].firstChange) {
+      this.messages = [];
+      this.messageSubscription?.unsubscribe();
+      this.loadInitialMessages();
+      this.subscribeToNewMessages();
+    }
   }
 
   private loadInitialMessages(): void {
@@ -145,7 +154,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chatService.deleteMessage(message.id, this.chatId)
         .catch(err => console.error('Failed to delete message:', err));
     }
-    message.showMenu = false; // Close the menu after action
+    message.showMenu = false;
   }
 
   toggleMenu(message: Message) {
@@ -169,5 +178,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   toggleUser() {
     this.senderId = this.senderId === 123 ? 456 : 123; // Switch between two users
   }
+
 
 }

@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {Client, IFrame, IMessage} from '@stomp/stompjs';
-import * as SockJS from 'sockjs-client';
+import {Client, IMessage} from '@stomp/stompjs';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
