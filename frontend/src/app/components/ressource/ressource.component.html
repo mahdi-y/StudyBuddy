@@ -1,0 +1,45 @@
+<div>
+  <h2>Add Ressource</h2>
+  <form (ngSubmit)="addRessource()" #ressourceForm="ngForm">
+    <input [(ngModel)]="newRessource.title" name="title" placeholder="Title" required />
+    <input [(ngModel)]="newRessource.fileUrl" name="fileUrl" placeholder="File URL" required />
+    <input [(ngModel)]="newRessource.type" name="type" placeholder="Type" required />
+    <input [(ngModel)]="newRessource.description" name="description" placeholder="Description" required />
+    <input [(ngModel)]="newRessource.category.idCategory" name="categoryId" placeholder="Category ID" type="number" required />
+    <button type="submit">Add</button>
+  </form>
+</div>
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Type</th>
+      <th>File URL</th>
+      <th>Uploaded At</th>
+      <th>Updated At</th>
+      <th>Category ID</th>
+      <th>User ID</th>
+      <th>Group ID</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let ressource of ressources">
+      <td>{{ ressource.title }}</td>
+      <td>{{ ressource.description }}</td>
+      <td>{{ ressource.type }}</td>
+      <td><a [href]="ressource.fileUrl" target="_blank">{{ ressource.fileUrl }}</a></td>
+      <td>{{ ressource.uploadedAt | date: 'medium' }}</td>
+      <td>{{ ressource.updatedAt | date: 'medium' }}</td>
+      <td>{{ ressource.category?.idCategory }}</td>
+      <td>{{ ressource.user?.idUser }}</td>
+      <td>{{ ressource.group?.idGroup }}</td>
+      <td><button (click)="deleteRessource(ressource.idResource)">Delete</button></td>
+    </tr>
+  </tbody>
+</table>
+

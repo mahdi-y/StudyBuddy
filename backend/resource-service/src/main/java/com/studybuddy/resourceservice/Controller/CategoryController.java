@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200") // Angular port
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {

@@ -1,0 +1,29 @@
+<h2>Add Category</h2>
+<form (ngSubmit)="addCategory()" #categoryForm="ngForm">
+  <input [(ngModel)]="newCategory.name" name="name" placeholder="Name" required />
+  <input [(ngModel)]="newCategory.description" name="description" placeholder="Description" />
+  <button type="submit">Add</button>
+</form>
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let category of categories">
+      <td>{{ category.idCategory }}</td>
+      <td>{{ category.name }}</td>
+      <td>{{ category.description }}</td>
+      <td>
+        <button (click)="deleteCategory(category.idCategory)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,5 +1,6 @@
 package com.studybuddy.resourceservice.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 
@@ -19,6 +20,7 @@ public class Ressource {
 
     @ManyToOne
     @JoinColumn(name = "categoryId")
+    @JsonIgnore  // This prevents serializing the full category object
     private Category category;
 
     @ManyToOne

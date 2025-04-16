@@ -1,10 +1,12 @@
 package com.studybuddy.resourceservice.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"ressources"})  // Ignore the 'ressources' field when serializing
 public class Category {
 
     @Id
