@@ -1,55 +1,133 @@
 <div class="container mt-5">
-  <h2 class="text-center mb-4">Progress Overview</h2>
+  <h2 class="text-center mb-4 text-primary fw-bold">📊 Progress Overview</h2>
 
   <!-- Iterate over each progress item -->
-  <div *ngFor="let progress of progressList" class="progress-card card mb-4 shadow-sm">
+  <div *ngFor="let progress of progressList">
+    <div *ngIf="!shouldArchiveProgress(progress)" class="card shadow-lg border-0 mb-5 rounded-4 bg-light-subtle">
 
-    <!-- Display Progress Details -->
-    <div class="card-header bg-light">
-      <h3 class="mb-2"> {{ progress.name }} - {{ progress.progressPercentage | number: '1.0-0' }}%</h3>
-      <p><strong>Total Tasks:</strong> {{ progress.totalTasks }}</p>
-      <p><strong>Completed Tasks:</strong> {{ progress.totalCompletedTasks }}</p>
+      <!-- Card Header -->
+      <div class="card-header bg-white rounded-top-4 py-4 px-4 border-bottom">
+        <h3 class="text-dark mb-2">
+          <i class="bi bi-diagram-3-fill text-info me-2"></i>
+          {{ progress.name }}
+          <span class="fs-5 text-muted">({{ progress.progressPercentage | number: '1.0-0' }}%)</span>
+        </h3>
+        <div class="d-flex flex-wrap gap-3">
+          <p class="mb-0"><strong>📝 Total Tasks:</strong> {{ filteredTasks(progress).length }}</p>
+          <p class="mb-0"><strong>✅ Completed:</strong> {{ getVisibleCompletedTasksCount() }}</p>
+          <p class="mb-0 text-secondary" *ngIf="getEstimatedCompletion(progress)">
+            <strong>📅 Estimated:</strong> {{ getEstimatedCompletion(progress) }}
+          </p>
+        </div>
 
-      <!-- Progress Bar -->
-      <div class="progress mt-3">
-        <div class="progress-bar" role="progressbar"
-             [style.width]="progress.progressPercentage + '%'"
-             [ngClass]="{
-               'bg-success': progress.progressPercentage === 100,
-               'bg-warning': progress.progressPercentage < 100 && progress.progressPercentage > 0,
-               'bg-danger': progress.progressPercentage === 0
-             }"
-             [attr.aria-valuenow]="progress.progressPercentage" aria-valuemin="0" aria-valuemax="100">
+        <!-- Progress Bar -->
+        <div class="progress mt-3 rounded-pill" style="height: 1rem;">
+          <div class="progress-bar fw-semibold"
+               role="progressbar"
+               [style.width]="progress.progressPercentage + '%'"
+               [ngClass]="{
+                 'bg-success': progress.progressPercentage === 100,
+                 'bg-warning': progress.progressPercentage < 100 && progress.progressPercentage > 0,
+                 'bg-danger': progress.progressPercentage === 0
+               }"
+               [attr.aria-valuenow]="progress.progressPercentage"
+               aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+
+        <!-- Badge -->
+        <span class="badge mt-3 fs-6 px-3 py-2 rounded-pill"
+              [ngClass]="{
+                'bg-secondary': progress.progressPercentage === 0,
+                'bg-info text-dark': progress.progressPercentage > 0 && progress.progressPercentage < 100,
+                'bg-success': progress.progressPercentage === 100
+              }">
+          {{ getProgressStatus(progress) }}
+        </span>
+      </div>
+
+      <!-- Card Body -->
+      <div class="card-body p-4" *ngIf="progress.tasks && progress.tasks.length > 0">
+        <h4 class="text-secondary mb-4">📌 Tasks</h4>
+
+        <!-- Filter Dropdown -->
+        <div class="mb-4">
+          <label for="task-filter" class="form-label fw-medium">Filter Tasks:</label>
+          <select id="task-filter" [(ngModel)]="filter" class="form-select w-auto d-inline-block" (change)="applyFilter()">
+            <option value="all">All</option>
+            <option value="completed">✅ Completed</option>
+            <option value="overdue">⚠️ Overdue</option>
+          </select>
+        </div>
+
+        <!-- Tasks Grid Layout -->
+        <div class="row g-4">
+          <div *ngFor="let task of getSortedTasks(filteredTasks(progress))" class="col-md-6 col-lg-4">
+            <div class="p-3 border rounded bg-white h-100">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="mb-2">
+                  <i class="bi me-2"
+                     [ngClass]="task.completed ? 'bi-check-circle-fill text-success' : 'bi-clock-fill text-warning'"></i>
+                  {{ task.title }}
+                </h5>
+                <span class="badge rounded-pill"
+                      [ngClass]="task.completed ? 'bg-success' : 'bg-warning text-dark'">
+                  {{ task.completed ? '✔️ Done' : '⌛ Pending' }}
+                </span>
+              </div>
+              <p class="mb-1 text-muted">{{ task.description }}</p>
+              <p class="mb-1 small text-secondary">
+                <strong>Due:</strong> {{ task.dueDate | date: 'short' }} |
+                <strong>Created:</strong> {{ task.createdAt | date: 'short' }}
+              </p>
+              <p class="mb-0 fw-medium"
+                 [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
+                <strong>Status:</strong> {{ task.completed ? 'Completed' : 'In Progress' }}
+              </p>
+              <div *ngIf="isOverdue(task)" class="mt-3 alert alert-danger py-1 px-2 small mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i> This task is overdue
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Display Tasks Associated with this Progress -->
-    <div *ngIf="progress.tasks && progress.tasks.length > 0" class="card-body">
-      <h4 class="mb-3">Tasks</h4>
-      <div *ngFor="let task of progress.tasks" class="task-item mb-3 card p-3 shadow-sm">
-        <h5>{{ task.title }}</h5>
-        <p>{{ task.description }}</p>
-        <p class="text-muted">
-          <strong>Due:</strong> {{ task.dueDate | date: 'short' }} | <strong>Created:</strong> {{ task.createdAt | date: 'short' }}
-        </p>
-        <p [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
-          <strong>Status:</strong>             {{ task.completed ? 'Completed' : 'In Progress' }}
-
-<!--          <span [ngClass]="{-->
-<!--                'badge': true,-->
-<!--                'badge-success': task.completed,-->
-<!--                'badge-warning': !task.completed-->
-<!--              }">-->
-<!--            {{ task.completed ? 'Completed' : 'In Progress' }}-->
-<!--          </span>-->
-        </p>
+      <!-- Empty state -->
+      <div *ngIf="!progress.tasks || progress.tasks.length === 0" class="text-muted p-4 text-center">
+        <i class="bi bi-folder-x fs-3 d-block mb-2 text-secondary"></i>
+        No tasks available for this progress.
       </div>
     </div>
+  </div>
 
-    <!-- No tasks message -->
-    <div *ngIf="progress.tasks && progress.tasks.length === 0" class="text-muted card-body">
-      No tasks available for this progress.
+  <!-- Summary Cards -->
+  <div class="alert alert-light shadow-sm border-0 mt-4">
+    <div class="row text-center">
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="card bg-primary text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-1">📊 Total Progress</h6>
+            <h3 class="card-title mb-0">{{ getNonArchivedProgressCount() }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3 mb-md-0">
+        <div class="card bg-info text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-1">🗂️ Total Tasks</h6>
+            <h3 class="card-title mb-0">{{ getVisibleTasksCount() }}</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-success text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-1">✅ Completed</h6>
+            <h3 class="card-title mb-0">{{ getVisibleCompletedTasksCount() }}</h3>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -7,9 +7,9 @@
         <h5 class="task-title">
           {{ task.title }}
         </h5>
-<!--        <span [ngClass]="getDueClass(task.dueDate)">-->
-<!--          {{ task.dueDate }}-->
-<!--        </span>-->
+        <!--        <span [ngClass]="getDueClass(task.dueDate)">-->
+        <!--          {{ task.dueDate }}-->
+        <!--        </span>-->
 
         <p class="task-status" [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
           {{ task.completed ? 'Completed' : 'In Progress' }}

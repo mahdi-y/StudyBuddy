@@ -42,39 +42,6 @@ export class TaskComponent implements OnInit {
     });
   }
 
-  // checkDueDates(): void {
-  //   const today = new Date();
-  //
-  //   this.tasks.forEach(task => {
-  //     if (task.dueDate) {
-  //       const due = new Date(task.dueDate);
-  //
-  //       // Check if the date is valid
-  //       if (!isNaN(due.getTime())) {
-  //         const daysLeft = Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  //         if (daysLeft <= 2 && daysLeft >= 0) {
-  //           alert(`🔔 Reminder: Task "${task.title}" is due ${daysLeft === 0 ? 'today' : 'in ' + daysLeft + ' day(s)'}!`);
-  //         }
-  //       } else {
-  //         console.warn(`Invalid due date for task "${task.title}":`, task.dueDate);
-  //       }
-  //     }
-  //   });
-  // }
-  //
-  // getDueClass(date: string): string {
-  //   const today = new Date();
-  //   const due = new Date(date);
-  //   const daysLeft = Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  //
-  //   if (daysLeft < 0) return 'text-muted'; // past due
-  //   if (daysLeft === 0) return 'text-danger'; // today
-  //   if (daysLeft <= 2) return 'text-warning'; // soon
-  //   return 'text-success'; // far away
-  // }
-
-
-
   editTask(id: number): void {
     this.router.navigate([`/task/update/${id}`]);
   }

@@ -105,9 +105,7 @@ public class ProgressService {
         }
 
     }
-//    public List<Progress> getAllProgressNames() {
-//        return progressRepository.findAll();
-//    }
+
 
     @Transactional
     public Progress getProgressByTaskId(Long taskId) {

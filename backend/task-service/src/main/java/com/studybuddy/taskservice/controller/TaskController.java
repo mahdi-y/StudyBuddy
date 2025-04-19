@@ -90,15 +90,6 @@ public class TaskController {
         return new ResponseEntity<>(taskDTOResponse, HttpStatus.CREATED);
     }
 
-
-
-
-
-
-
-
-
-
     // Get a Task by its ID
     @GetMapping("/get/{id}")
     public TaskDTO getTaskById(@PathVariable Long id) {
@@ -108,12 +99,7 @@ public class TaskController {
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();  // Fetch tasks from the service
     }
-    // Delete Task by ID
-//    @DeleteMapping("/delete/{id}")
-//    public ResponseEntity<String> deleteTask(@PathVariable Long id) {
-//        taskService.deleteTask(id);  // Call the delete method from the service
-//        return ResponseEntity.ok("Task deleted successfully");
-//    }
+
 
     @DeleteMapping("/delete/{id}")
     @Transactional
