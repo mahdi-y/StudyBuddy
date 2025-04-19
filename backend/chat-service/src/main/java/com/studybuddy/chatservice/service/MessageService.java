@@ -28,12 +28,11 @@ public class MessageService {
 
         // Check each word for toxicity
         for (String word : words) {
-            double toxicityScore = toxicityDetectionService.getToxicityScore(word);
-
-            // If toxic, replace the word with asterisks
-            if (toxicityScore >= 0.5) {
+            boolean isToxic = toxicityDetectionService.isWordToxic(word);
+            if (isToxic) {
                 cleanedMessage.append("*".repeat(word.length())).append(" ");
-            } else {
+            }
+            else {
                 cleanedMessage.append(word).append(" ");
             }
         }

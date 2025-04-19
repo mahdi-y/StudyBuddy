@@ -1,2 +1,3 @@
 *.html linguist-documentation
 *.js linguist-documentation
+*.scss linguist-documentation
