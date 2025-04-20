@@ -70,7 +70,7 @@ export class AddTaskComponent implements OnInit {
     this.taskService.createTask(taskToSend).subscribe({
       next: () => {
         console.log('✅ Task successfully added');
-        this.router.navigate(['/tasks']);
+        this.router.navigate(['/study-group']);
       },
       error: (err) => {
         console.error('❌ Error adding task:', err);

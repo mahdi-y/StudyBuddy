@@ -19,6 +19,7 @@ import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
 import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
 import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
 import {FormsModule} from "@angular/forms";
+import { AiChatComponent } from './ai-chat/ai-chat.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {FormsModule} from "@angular/forms";
     DashboardComponent,
     DashboardContentComponent,
     StudyGroupComponent,
+    AiChatComponent,
   ],
   imports: [
     BrowserModule,

@@ -99,7 +99,7 @@ export class UpdateTaskComponent implements OnInit {
       this.taskService.updateTask(this.taskId, taskToUpdate).subscribe({
         next: () => {
           console.log('✅ Task updated successfully');
-          this.router.navigate(['/tasks']);
+          this.router.navigate(['/study-group']);
         },
         error: (err) => {
           console.error('❌ Error updating task:', err);

@@ -1,6 +1,16 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4 text-primary fw-bold">📊 Progress Overview</h2>
 
+  <!-- Summary Cards as a Graph -->
+  <div class="alert alert-light shadow-sm border-0 mt-4">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <canvas id="summaryChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+<!--  <h2 class="text-center mb-4 text-primary fw-bold">📊 Progress Overview</h2>-->
+
   <!-- Iterate over each progress item -->
   <div *ngFor="let progress of progressList">
     <div *ngIf="!shouldArchiveProgress(progress)" class="card shadow-lg border-0 mb-5 rounded-4 bg-light-subtle">
@@ -65,29 +75,23 @@
           <div *ngFor="let task of getSortedTasks(filteredTasks(progress))" class="col-md-6 col-lg-4">
             <div class="p-3 border rounded bg-white h-100">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="mb-2">
+                <h5 class="mb-2 fw-bold">
                   <i class="bi me-2"
                      [ngClass]="task.completed ? 'bi-check-circle-fill text-success' : 'bi-clock-fill text-warning'"></i>
                   {{ task.title }}
                 </h5>
                 <span class="badge rounded-pill"
                       [ngClass]="task.completed ? 'bg-success' : 'bg-warning text-dark'">
-                  {{ task.completed ? '✔️ Done' : '⌛ Pending' }}
+                  {{ task.completed ? '✅ Completed' : '⌛ In Progress' }}
                 </span>
               </div>
-              <p class="mb-1 text-muted">{{ task.description }}</p>
+              <p class="mb-1 text-dark">{{ task.description }}</p>
               <p class="mb-1 small text-secondary">
-                <strong>Due:</strong> {{ task.dueDate | date: 'short' }} |
-                <strong>Created:</strong> {{ task.createdAt | date: 'short' }}
-              </p>
-              <p class="mb-0 fw-medium"
-                 [ngClass]="{ 'text-success': task.completed, 'text-warning': !task.completed }">
-                <strong>Status:</strong> {{ task.completed ? 'Completed' : 'In Progress' }}
+                <strong>Due:</strong> {{ task.dueDate | date: 'short' }}
               </p>
               <div *ngIf="isOverdue(task)" class="mt-3 alert alert-danger py-1 px-2 small mb-0">
                 <i class="bi bi-exclamation-triangle-fill me-1"></i> This task is overdue
               </div>
-
             </div>
           </div>
         </div>
@@ -101,33 +105,6 @@
     </div>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="alert alert-light shadow-sm border-0 mt-4">
-    <div class="row text-center">
-      <div class="col-md-4 mb-3 mb-md-0">
-        <div class="card bg-primary text-white">
-          <div class="card-body">
-            <h6 class="card-subtitle mb-1">📊 Total Progress</h6>
-            <h3 class="card-title mb-0">{{ getNonArchivedProgressCount() }}</h3>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3 mb-md-0">
-        <div class="card bg-info text-white">
-          <div class="card-body">
-            <h6 class="card-subtitle mb-1">🗂️ Total Tasks</h6>
-            <h3 class="card-title mb-0">{{ getVisibleTasksCount() }}</h3>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card bg-success text-white">
-          <div class="card-body">
-            <h6 class="card-subtitle mb-1">✅ Completed</h6>
-            <h3 class="card-title mb-0">{{ getVisibleCompletedTasksCount() }}</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-ai-chat></app-ai-chat>
+
 </div>

@@ -1,116 +1,107 @@
-<div class="container mt-4">
-  <h2>Add New Task</h2>
+<div class="container mt-5">
+  <div class="card shadow-sm rounded-3 p-4">
+    <h3 class="mb-4 text-primary">➕ Add New Task</h3>
 
-  <form (ngSubmit)="addTask()" #taskForm="ngForm">
-    <!-- Title Field -->
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input
-        id="title"
-        class="form-control"
-        type="text"
-        [(ngModel)]="newTask.title"
-        name="title"
-        required
-        #title="ngModel"
-      />
-      <div *ngIf="title.invalid && title.touched" class="text-danger">
-        Title is required.
+    <form (ngSubmit)="addTask()" #taskForm="ngForm" novalidate>
+
+      <!-- Title Field -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="form-control"
+          [(ngModel)]="newTask.title"
+          required
+          #title="ngModel"
+        />
+        <div *ngIf="title.invalid && title.touched" class="form-text text-danger">
+          Title is required.
+        </div>
       </div>
-    </div>
 
-    <!-- Description Field -->
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea
-        id="description"
-        class="form-control"
-        [(ngModel)]="newTask.description"
-        name="description"
-        required
-        #description="ngModel"
-      ></textarea>
-      <div *ngIf="description.invalid && description.touched" class="text-danger">
-        Description is required.
+      <!-- Description Field -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          rows="3"
+          [(ngModel)]="newTask.description"
+          required
+          #description="ngModel"
+        ></textarea>
+        <div *ngIf="description.invalid && description.touched" class="form-text text-danger">
+          Description is required.
+        </div>
       </div>
-    </div>
 
-    <!-- Due Date Field -->
-    <div class="form-group">
-      <label for="dueDate">Due Date</label>
-      <input
-        id="dueDate"
-        class="form-control"
-        type="date"
-        [(ngModel)]="newTask.dueDate"
-        name="dueDate"
-        [min]="createdAt"
-
-        required
-        #dueDate="ngModel"
-      />
-      <div *ngIf="dueDate.invalid && dueDate.touched" class="text-danger">
-        Due Date is required.
+      <!-- Due Date Field -->
+      <div class="mb-3">
+        <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+        <input
+          type="date"
+          id="dueDate"
+          name="dueDate"
+          class="form-control"
+          [min]="createdAt"
+          [(ngModel)]="newTask.dueDate"
+          required
+          #dueDate="ngModel"
+        />
+        <div *ngIf="dueDate.invalid && dueDate.touched" class="form-text text-danger">
+          Due Date is required.
+        </div>
       </div>
-    </div>
 
-    <!-- Progress Dropdown -->
-    <div class="form-group">
-      <label for="progressId">Select Progress</label>
-      <select
-        id="progressId"
-        class="form-control"
-        [(ngModel)]="newTask.progressId"
-        name="progressId"
-      >
-        <option [ngValue]="null">-- No Progress --</option>
-        <option *ngFor="let progress of progressList" [ngValue]="progress.id">
-          {{ progress.name }}
-        </option>
-      </select>
-    </div>
-
-    <!-- New Progress Input -->
-    <div class="form-group">
-      <label for="newProgress">Or Enter New Progress</label>
-      <input
-        id="newProgress"
-        class="form-control"
-        type="text"
-        [(ngModel)]="newProgressName"
-        name="newProgressName"
-        placeholder="New progress name (optional)"
-        [required]="newTask.progressId === null"
-      />
-      <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="text-danger">
-        New progress name is required when no progress is selected.
+      <!-- Select Existing Progress -->
+      <div class="mb-3">
+        <label for="progressId" class="form-label">Select Existing Progress</label>
+        <select
+          id="progressId"
+          name="progressId"
+          class="form-select"
+          [(ngModel)]="newTask.progressId"
+        >
+          <option [ngValue]="null">-- No Progress --</option>
+          <option *ngFor="let progress of progressList" [ngValue]="progress.id">
+            {{ progress.name }}
+          </option>
+        </select>
       </div>
-    </div>
-    <!-- Validation: Both Progress Fields Empty -->
-    <div *ngIf="(taskForm.submitted && newTask.progressId === null && !newProgressName) " class="text-danger">
-      Please select or enter a progress.
-    </div>
 
+      <!-- Or Enter New Progress -->
+      <div class="mb-3">
+        <label for="newProgressName" class="form-label">Or Enter New Progress</label>
+        <input
+          type="text"
+          id="newProgressName"
+          name="newProgressName"
+          class="form-control"
+          [(ngModel)]="newProgressName"
+          placeholder="e.g. Research, In Progress, Completed"
+          [required]="newTask.progressId === null"
+        />
+        <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="form-text text-danger">
+          New progress name is required if no existing progress is selected.
+        </div>
+      </div>
 
-    <!-- Validation for exclusive progress -->
-    <div *ngIf="!isProgressExclusive()" class="text-danger">
-      You cannot select both progress and enter a new progress at the same time.
-    </div>
+      <!-- Validation: Both Empty -->
+      <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="text-danger mb-2">
+        Please select or enter a progress.
+      </div>
 
-<!--    &lt;!&ndash; Completed Checkbox &ndash;&gt;-->
-<!--    <div class="form-check my-2">-->
-<!--      <input-->
-<!--        id="completed"-->
-<!--        class="form-check-input"-->
-<!--        type="checkbox"-->
-<!--        [(ngModel)]="newTask.completed"-->
-<!--        name="completed"-->
-<!--      />-->
-<!--      <label class="form-check-label" for="completed">Completed</label>-->
-<!--    </div>-->
+      <!-- Validation: Both Filled -->
+      <div *ngIf="!isProgressExclusive()" class="text-danger mb-2">
+        You cannot select an existing progress and enter a new one at the same time.
+      </div>
 
-    <button class="btn btn-primary mt-3" type="submit" [disabled]="taskForm.invalid">
-      Add Task
-    </button>
-  </form>
+      <button type="submit" class="btn btn-success mt-3" [disabled]="taskForm.invalid">
+         Add Task
+      </button>
+    </form>
+  </div>
 </div>
