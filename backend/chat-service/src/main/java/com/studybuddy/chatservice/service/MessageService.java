@@ -5,7 +5,6 @@ import com.studybuddy.chatservice.model.Message;
 import com.studybuddy.chatservice.repository.ChatRepository;
 import com.studybuddy.chatservice.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,37 +16,18 @@ public class MessageService {
 
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
-
-    @Autowired
-    private ToxicityDetectionService toxicityDetectionService;
+    private final ToxicityDetectionService toxicityDetectionService;
 
     public Message saveMessage(Long chatId, Long senderId, String content) {
-        // Split the message into words
-        String[] words = content.split("\\s+");
-        StringBuilder cleanedMessage = new StringBuilder();
+        String filteredContent = toxicityDetectionService.filterMessage(content);
 
-        // Check each word for toxicity
-        for (String word : words) {
-            boolean isToxic = toxicityDetectionService.isWordToxic(word);
-            if (isToxic) {
-                cleanedMessage.append("*".repeat(word.length())).append(" ");
-            }
-            else {
-                cleanedMessage.append(word).append(" ");
-            }
-        }
-
-        // Build the final message
-        String finalMessage = cleanedMessage.toString().trim();
-
-        // Save the message
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new RuntimeException("Chat not found"));
 
         Message message = Message.builder()
                 .chat(chat)
                 .senderId(senderId)
-                .content(finalMessage)
+                .content(filteredContent)
                 .timestamp(LocalDateTime.now())
                 .build();
 

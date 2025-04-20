@@ -1,6 +1,5 @@
 <div class="chat-container">
   <div class="search-bar">
-    <!-- Search Input -->
     <input
       [(ngModel)]="searchQuery"
       placeholder="Search messages..."
@@ -9,13 +8,10 @@
       class="search-input"
     />
 
-    <!-- Search Button -->
     <button class="btn btn-primary" (click)="performSearch()">Search</button>
 
-    <!-- Clear Button -->
     <button *ngIf="searchActive" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
 
-    <!-- Dropdown Menu -->
     <div class="dropdown">
       <button class="btn btn-icon dropdown-toggler" (click)="toggleDropdown()">
         <span class="material-icons">more_vert</span>
@@ -27,11 +23,6 @@
     </div>
   </div>
 
-  <!-- Search Results Info -->
-  <!--<div *ngIf="searchResultsCount > 0" class="search-results-count">
-    Found {{ searchResultsCount }} result(s)
-  </div>
--->
   <div class="messages-container">
     <div *ngIf="loadingMessages" class="loading-indicator">
       Loading messages...
@@ -40,12 +31,10 @@
       No messages yet. Start the conversation!
     </div>
 
-    <!-- Show search results count when searching -->
     <div *ngIf="searchActive" class="search-results-count">
       Found {{filteredMessages.length}} matching messages
     </div>
 
-    <!-- Display either filtered messages or all messages -->
     <div *ngFor="let message of (searchActive ? filteredMessages : messages); trackBy: trackByMessage"
          class="message"
          [class.current-user]="message.senderId === senderId">
@@ -56,7 +45,6 @@
              *ngIf="!message.isEditable"
              [innerHTML]="highlightMatches(message.content)"></div>
 
-        <!-- Rest of your existing message template -->
         <div class="edit-container" *ngIf="message.isEditable">
           <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>
           <div class="edit-actions">
@@ -65,7 +53,6 @@
           </div>
         </div>
 
-        <!-- Rest of your existing message actions -->
         <div class="message-actions" *ngIf="message.senderId === senderId">
           <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
           <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
@@ -79,7 +66,6 @@
     </div>
   </div>
 
-  <!-- Rest of your existing template -->
   <div class="message-input">
     <button (click)="toggleUser()">Switch User (Current: {{senderId}})</button>
     <input
