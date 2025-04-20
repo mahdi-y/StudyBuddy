@@ -19,6 +19,7 @@ public class ToxicityDetectionService {
     private static final String API_URL = "https://neutrinoapi.net/bad-word-filter";
 
     public String filterMessage(String content) {
+        
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();

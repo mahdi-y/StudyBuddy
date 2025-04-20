@@ -386,4 +386,18 @@
   border-radius: 2px;
 }
 
+/* Status indicator styling */
+.filter-status {
+  padding: 4px 12px;
+  margin: 8px 0;
+  border-radius: 16px;
+  background-color: #f0f0f0;
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #666;
+}
 
+.filter-status.active {
+  background-color: #d4edda;
+  color: #155724;
+}

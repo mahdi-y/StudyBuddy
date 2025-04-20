@@ -18,6 +18,9 @@ public class Chat {
 
     private Long studyGroupId;
 
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean profanityFilterEnabled = true;
+
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @JsonIgnore

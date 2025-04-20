@@ -160,4 +160,14 @@ export class ChatService implements OnDestroy {
       resolve();
     });
   }
+
+  getChatSettings(chatId: number): Observable<{ profanityFilterEnabled: boolean }> {
+    return this.http.get<{ profanityFilterEnabled: boolean }>(`${environment.apiUrl}/api/chats/${chatId}/settings`);
+  }
+
+  updateChatSettings(chatId: number, settings: { profanityFilterEnabled: boolean }): Observable<any> {
+    console.log('Sending updateChatSettings request for chatId:', chatId, 'with settings:', settings);
+    return this.http.patch(`${environment.apiUrl}/api/chats/${chatId}/settings`, settings);
+  }
+
 }

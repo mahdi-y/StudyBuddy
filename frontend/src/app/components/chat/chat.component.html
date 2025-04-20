@@ -19,8 +19,15 @@
       <div class="dropdown-menu" [class.show]="showDropdown">
         <button class="dropdown-item" (click)="scrollToTop()">Scroll to Top</button>
         <button class="dropdown-item" (click)="exportMessages()">Export as Text</button>
+        <button class="dropdown-item" (click)="toggleProfanityFilter()">
+          {{ profanityFilterEnabled ? 'Disable' : 'Enable' }} Profanity Filter
+        </button>
       </div>
     </div>
+  </div>
+
+  <div class="filter-status" [class.active]="profanityFilterEnabled">
+    Profanity Filter: {{ profanityFilterEnabled ? 'ON' : 'OFF' }}
   </div>
 
   <div class="messages-container">

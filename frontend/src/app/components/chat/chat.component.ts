@@ -21,6 +21,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   filteredMessages: Message[] = [];
   shouldScrollToBottom = false;
   showDropdown: boolean = false;
+  profanityFilterEnabled = true;
 
   constructor(private chatService: ChatService) {}
 
@@ -28,6 +29,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.loadInitialMessages();
     this.subscribeToNewMessages();
     this.shouldScrollToBottom = true;
+    this.loadChatSettings();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -38,6 +40,36 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.subscribeToNewMessages();
     }
   }
+
+  loadChatSettings() {
+    this.chatService.getChatSettings(this.chatId).subscribe(settings => {
+      this.profanityFilterEnabled = settings.profanityFilterEnabled;
+    });
+  }
+
+  toggleProfanityFilter(): void {
+    const newSetting = !this.profanityFilterEnabled;
+
+    console.log('Attempting to toggle profanity filter to:', newSetting);
+
+    // Optimistically update UI
+    this.profanityFilterEnabled = newSetting;
+    this.showDropdown = false;
+
+    // Send update to server
+    this.chatService.updateChatSettings(this.chatId, { profanityFilterEnabled: newSetting }).subscribe({
+      next: () => {
+        console.log('Profanity filter updated successfully');
+      },
+      error: (err) => {
+        console.error('Failed to update filter setting:', err);
+        // Revert UI change if the server update fails
+        this.profanityFilterEnabled = !newSetting;
+        alert('Failed to update profanity filter. Please try again.');
+      }
+    });
+  }
+
 
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
