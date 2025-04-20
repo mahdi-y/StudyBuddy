@@ -1,0 +1,209 @@
+// Import Angular Material's prebuilt theme
+@import '@angular/material/prebuilt-themes/indigo-pink.css'; // Use the theme of your choice
+
+$text-color: #333333;
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.frontoffice-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.profile-dropdown {
+  position: relative;
+
+  .profile-btn {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $text-color;
+    padding: 5px 10px;
+    border-radius: 20px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .profile-img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    .profile-name {
+      margin-right: 5px;
+      font-weight: 500;
+    }
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    min-width: 180px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 1000;
+    display: none;
+    padding: 10px 0;
+
+    &.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 15px;
+      color: $text-color;
+      text-decoration: none;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .material-icons {
+        margin-right: 10px;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.group-sidebar {
+  width: 400px;  /* Adjust the width */
+  background: linear-gradient(145deg, #1e3c72, #2a5298); /* vibrant gradient */
+  color: #ffffff;
+  transition: width 0.4s ease-in-out, padding 0.3s ease, background-color 0.3s ease;
+  overflow-y: auto;  /* Add vertical scrollbar when content overflows */
+  flex-shrink: 0;
+  padding: 1rem 0.5rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-height: 100vh;  /* Ensure the sidebar doesn't overflow the viewport */
+}
+
+
+.group-sidebar.collapsed {
+  width: 0;
+  padding: 0;
+  display: none;  /* Optional: completely hide when collapsed */
+}
+
+.sidebar-header {
+  padding: 0 1rem 1rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 1.5rem;  /* Increase font size */
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.group-list {
+  list-style: none;
+  padding: 0;
+}
+
+.group-list li {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem 1.75rem;  /* Increased padding */
+  margin: 0.5rem 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 1rem;
+}
+
+.group-list li:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(8px);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.group-list li.active {
+  background-color: #ffffff;
+  color: #2c3e50;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.group-list li span {
+  flex-grow: 1;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.group-sidebar input.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;  /* Increased padding */
+  width: 100%;  /* Makes the input take up the full width of the sidebar */
+}
+
+.group-sidebar input.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.main-content {
+  flex-grow: 1;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-width: 0;
+}
+
+.top-nav {
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.profile-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.content-grid {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.chat-container,
+  .tasks-container,
+  .resources-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    overflow-y: auto;
+  }
+
+

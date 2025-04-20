@@ -7,7 +7,7 @@ import { StudyGroup, CreateStudyGroup } from '../models/study-group.model';
   providedIn: 'root'
 })
 export class StudyGroupService {
-  private apiUrl = 'http://localhost:8080/api/groups';
+  private apiUrl = 'http://localhost:8081/api/groups';
 
   constructor(private http: HttpClient) {}
 
@@ -32,7 +32,7 @@ export class StudyGroupService {
 
 // study-group.service.ts
 getGroupById(id: number): Observable<StudyGroup> {
-  return this.http.get<StudyGroup>(`http://localhost:8080/api/groups/${id}`);  // Corrected endpoint
+  return this.http.get<StudyGroup>(`http://localhost:8081/api/groups/${id}`);  // Corrected endpoint
 }
 
   // Method to update an existing study group

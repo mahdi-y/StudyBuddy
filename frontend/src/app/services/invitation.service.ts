@@ -7,7 +7,7 @@ import { SendInvitation, Invitation } from '../models/invitation.model'; // ✅ 
   providedIn: 'root'
 })
 export class InvitationService {
-  private apiUrl = 'http://localhost:8080/api/invitations'; // Replace this with your actual API URL
+  private apiUrl = 'http://localhost:8081/api/invitations'; // Replace this with your actual API URL
 
   constructor(private http: HttpClient) {}
 

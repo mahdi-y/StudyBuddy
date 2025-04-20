@@ -129,7 +129,7 @@ a:focus {
 }
 
 .custom_nav-container .nav_search-btn {
-  background-image: url(assets/frontoffice/images/search-icon.png);
+  background-image: url(../images/search-icon.png);
   background-size: 17px;
   background-repeat: no-repeat;
   background-position-y: 7px;
@@ -175,7 +175,7 @@ a:focus {
 }
 
 .custom_nav-container .navbar-toggler .navbar-toggler-icon {
-  background-image: url(assets/frontoffice/images/menu.png);
+  background-image: url(../images/menu.png);
   background-size: 30px;
   width: 32px;
   height: 32px;
@@ -335,11 +335,11 @@ a:focus {
 }
 
 .slider_section .carousel_btn-container .carousel-control-prev {
-  background-image: url(assets/frontoffice/images/prev.png);
+  background-image: url(../images/prev.png);
 }
 
 .slider_section .carousel_btn-container .carousel-control-next {
-  background-image: url(assets/frontoffice/images/next.png);
+  background-image: url(../images/next.png);
 }
 
 .slider_section ol.carousel-indicators {
@@ -626,11 +626,11 @@ a:focus {
 }
 
 .client_section .carousel-control-prev {
-  background-image: url(assets/frontoffice/images/prev-angle.png);
+  background-image: url(../images/prev-angle.png);
 }
 
 .client_section .carousel-control-next {
-  background-image: url(assets/frontoffice/images/next-angle.png);
+  background-image: url(../images/next-angle.png);
 }
 
 /* info section */

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import {FormsModule} from "@angular/forms";
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { HomeComponent } from './frontoffice/home/home.component';
+import { AboutComponent } from './frontoffice/about/about.component';
+import { WorkComponent } from './frontoffice/work/work.component';
+import { CategoryComponent } from './frontoffice/category/category.component';
+import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
+import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
+import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
+
 
 
 
@@ -31,7 +38,6 @@ const routes: Routes = [
     AboutComponent,
     WorkComponent,
     CategoryComponent,
-    NotFoundComponent,
     DashboardComponent,
     DashboardContentComponent,
     StudyGroupComponent,
@@ -47,7 +53,6 @@ const routes: Routes = [
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    FormsModule,
     AppRoutingModule,
     FormsModule
   ],
