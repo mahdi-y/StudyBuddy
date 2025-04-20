@@ -16,12 +16,18 @@ export class ChatComponent implements OnInit, OnDestroy {
   loadingMessages = false;
   private messageSubscription: Subscription | null = null;
   editingContent: string = '';
+  searchQuery: string = '';
+  searchActive: boolean = false;
+  filteredMessages: Message[] = [];
+  shouldScrollToBottom = false;
+  showDropdown: boolean = false;
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit(): void {
     this.loadInitialMessages();
     this.subscribeToNewMessages();
+    this.shouldScrollToBottom = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -33,6 +39,37 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
+  scrollToTop(): void {
+    this.showDropdown = false;
+    const container = document.querySelector('.messages-container');
+    if (container) {
+      container.scrollTop = 0;
+    }
+  }
+
+  exportMessages(): void {
+    this.showDropdown = false;
+    const messagesToExport = this.searchActive ? this.filteredMessages : this.messages;
+    const exportContent = messagesToExport.map(m =>
+      `[${m.timestamp}] User ${m.senderId}: ${m.content}`
+    ).join('\n\n');
+
+    const blob = new Blob([exportContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chat_${this.chatId}_export.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+
   private loadInitialMessages(): void {
     this.loadingMessages = true;
     this.chatService.getMessages(this.chatId).subscribe({
@@ -40,12 +77,38 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.log('Received messages:', messages);
         this.messages = messages;
         this.loadingMessages = false;
+        this.shouldScrollToBottom = true;
       },
       error: (err) => {
         console.error('Error loading messages:', err);
         this.loadingMessages = false;
       }
     });
+  }
+
+  performSearch(): void {
+    if (!this.searchQuery.trim()) {
+      this.searchActive = false;
+      return;
+    }
+
+    this.searchActive = true;
+    const query = this.searchQuery.toLowerCase();
+    this.filteredMessages = this.messages.filter(message =>
+      message.content.toLowerCase().includes(query)
+    );
+  }
+
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchActive = false;
+  }
+
+  highlightMatches(content: string): string {
+    if (!this.searchActive) return content;
+    const query = this.searchQuery.toLowerCase();
+    const regex = new RegExp(query, 'gi');
+    return content.replace(regex, match => `<span class="highlight">${match}</span>`);
   }
 
   private subscribeToNewMessages(): void {
@@ -67,6 +130,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             // Add new message
             if (!this.messageExists(data)) {
               this.messages = [...this.messages, data];
+              this.shouldScrollToBottom = true;
             }
           }
         }
@@ -85,7 +149,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   trackByMessage(index: number, message: Message): string {
-    return `${message.id}-${message.timestamp}`;
+    return `${message.id}-${message.timestamp}-${this.searchActive}`;
   }
 
   async sendMessage(): Promise<void> {
@@ -112,8 +176,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  ngAfterViewChecked(): void {
+    if (this.shouldScrollToBottom) {
+      this.scrollToBottom();
+      this.shouldScrollToBottom = false;
+    }
   }
 
   private scrollToBottom(): void {
@@ -168,7 +235,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   onDocumentClick(event: MouseEvent) {
     if (!this.messages) return;
 
-    // Close all menus if click is outside any menu button or menu
+    const clickedInsideDropdown = (event.target as HTMLElement).closest('.dropdown');
+    if (!clickedInsideDropdown) {
+      this.showDropdown = false;
+    }
+
     const clickedInsideMenu = (event.target as HTMLElement).closest('.action-menu, .menu-btn');
     if (!clickedInsideMenu) {
       this.messages.forEach(m => m.showMenu = false);
@@ -176,7 +247,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   toggleUser() {
-    this.senderId = this.senderId === 123 ? 456 : 123; // Switch between two users
+    this.senderId = this.senderId === 123 ? 456 : 123;
   }
 
 

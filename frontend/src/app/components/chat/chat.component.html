@@ -1,4 +1,37 @@
 <div class="chat-container">
+  <div class="search-bar">
+    <!-- Search Input -->
+    <input
+      [(ngModel)]="searchQuery"
+      placeholder="Search messages..."
+      (keyup.enter)="performSearch()"
+      (keyup.escape)="clearSearch()"
+      class="search-input"
+    />
+
+    <!-- Search Button -->
+    <button class="btn btn-primary" (click)="performSearch()">Search</button>
+
+    <!-- Clear Button -->
+    <button *ngIf="searchActive" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+
+    <!-- Dropdown Menu -->
+    <div class="dropdown">
+      <button class="btn btn-icon dropdown-toggler" (click)="toggleDropdown()">
+        <span class="material-icons">more_vert</span>
+      </button>
+      <div class="dropdown-menu" [class.show]="showDropdown">
+        <button class="dropdown-item" (click)="scrollToTop()">Scroll to Top</button>
+        <button class="dropdown-item" (click)="exportMessages()">Export as Text</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Results Info -->
+  <!--<div *ngIf="searchResultsCount > 0" class="search-results-count">
+    Found {{ searchResultsCount }} result(s)
+  </div>
+-->
   <div class="messages-container">
     <div *ngIf="loadingMessages" class="loading-indicator">
       Loading messages...
@@ -6,10 +39,24 @@
     <div *ngIf="!loadingMessages && messages.length === 0" class="empty-state">
       No messages yet. Start the conversation!
     </div>
-    <div *ngFor="let message of messages; trackBy: trackByMessage" class="message" [class.current-user]="message.senderId === senderId">
+
+    <!-- Show search results count when searching -->
+    <div *ngIf="searchActive" class="search-results-count">
+      Found {{filteredMessages.length}} matching messages
+    </div>
+
+    <!-- Display either filtered messages or all messages -->
+    <div *ngFor="let message of (searchActive ? filteredMessages : messages); trackBy: trackByMessage"
+         class="message"
+         [class.current-user]="message.senderId === senderId">
+
       <div class="sender-name" *ngIf="message.senderId !== senderId">User {{message.senderId}}</div>
       <div class="message-bubble">
-        <div class="message-content" *ngIf="!message.isEditable">{{message.content}}</div>
+        <div class="message-content"
+             *ngIf="!message.isEditable"
+             [innerHTML]="highlightMatches(message.content)"></div>
+
+        <!-- Rest of your existing message template -->
         <div class="edit-container" *ngIf="message.isEditable">
           <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>
           <div class="edit-actions">
@@ -17,6 +64,8 @@
             <button class="cancel-btn" (click)="cancelEdit(message)">Cancel</button>
           </div>
         </div>
+
+        <!-- Rest of your existing message actions -->
         <div class="message-actions" *ngIf="message.senderId === senderId">
           <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
           <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
@@ -24,10 +73,13 @@
             <button class="menu-option delete-option" (click)="deleteMessage(message)">Delete</button>
           </div>
         </div>
+
         <div class="timestamp-hover">{{message.timestamp | date:'shortTime'}}</div>
       </div>
     </div>
   </div>
+
+  <!-- Rest of your existing template -->
   <div class="message-input">
     <button (click)="toggleUser()">Switch User (Current: {{senderId}})</button>
     <input
