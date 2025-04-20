@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SB Backoffice</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Add Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
+    <div class="sidebar-header">
+      <h2>SB Backoffice</h2>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="nav-item" [class.active]="activeLink === 'dashboard'">
+          <a (click)="setActive('dashboard')"  routerLink="/dashboard/dashboard-content" routerLinkActive="active">
+            <i class="material-icons">dashboard</i>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item" [class.active]="activeLink === 'study-groups'">
+          <a (click)="setActive('study-groups')" routerLinkActive="active">
+            <i class="material-icons">group</i>
+            <span class="nav-text">Study Groups</span>
+          </a>
+        </li>
+        <li class="nav-item" [class.active]="activeLink === 'resources'">
+          <a (click)="setActive('resources')" routerLinkActive="active">
+            <i class="material-icons">library_books</i>
+            <span class="nav-text">Resources</span>
+          </a>
+        </li>
+        <li class="nav-item" [class.active]="activeLink === 'tasks'">
+          <a (click)="setActive('tasks')" routerLinkActive="active">
+            <i class="material-icons">list</i>
+            <span class="nav-text">Tasks</span>
+          </a>
+        </li>
+        <li class="nav-item" [class.active]="activeLink === 'users'">
+          <a (click)="setActive('users')" routerLinkActive="active">
+            <i class="material-icons">people</i>
+            <span class="nav-text">Users</span>
+          </a>
+        </li>
+        <li class="nav-item" [class.active]="activeLink === 'settings'">
+          <a (click)="setActive('settings')" routerLinkActive="active">
+            <i class="material-icons">settings</i>
+            <span class="nav-text">Settings</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <span>© StudyBuddy {{ currentYear }}</span>
+<!--      <small>v1.0.0</small>-->
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content" [class.collapsed]="isSidebarCollapsed">
+    <!-- Top Navigation -->
+    <header class="top-nav">
+      <div class="nav-left">
+        <button class="sidebar-toggle" (click)="toggleSidebar()">
+          <i class="material-icons">menu</i>
+        </button>
+        <h3 class="page-title">{{ getPageTitle() }}</h3>
+      </div>
+
+      <div class="nav-right">
+        <div class="notifications">
+          <button class="notification-btn">
+            <i class="material-icons">notifications</i>
+            <span class="badge">3</span>
+          </button>
+        </div>
+
+        <div class="profile-dropdown">
+          <button class="profile-btn" (click)="toggleProfileDropdown()">
+            <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img">
+            <span class="profile-name">John</span>
+            <i class="material-icons">arrow_drop_down</i>
+          </button>
+
+          <div class="dropdown-menu" [class.show]="showProfileDropdown">
+            <a href="#" class="dropdown-item">
+              <i class="material-icons">settings</i> Settings
+            </a>
+            <a href="#" class="dropdown-item">
+              <i class="material-icons">logout</i> Sign Out
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- Content Area -->
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+</body>
+</html>

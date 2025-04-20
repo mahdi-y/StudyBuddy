@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+
+import {FormsModule} from "@angular/forms";
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router'; // Add Routes import
@@ -8,7 +11,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -21,9 +23,18 @@ const routes: Routes = [
 ];
 
 
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    AboutComponent,
+    WorkComponent,
+    CategoryComponent,
+    NotFoundComponent,
+    DashboardComponent,
+    DashboardContentComponent,
+    StudyGroupComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +47,8 @@ const routes: Routes = [
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    FormsModule,
+    AppRoutingModule,
     FormsModule
   ],
   providers: [],

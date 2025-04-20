@@ -4,17 +4,17 @@ body {
     margin: 0;
     padding: 20px;
   }
-  
+
   .group-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
   }
-  
+
   .group-card, .create-card {
     margin-bottom: 20px;
   }
-  
+
   .add-button {
     position: fixed;
     right: 30px;
