@@ -22,6 +22,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   shouldScrollToBottom = false;
   showDropdown: boolean = false;
   profanityFilterEnabled = true;
+  private typingTimeout: any;
+  typingUsers: Set<number> = new Set();
+  showProfanityConfirm = false;
+  showScrollToBottom = false;
+
 
   constructor(private chatService: ChatService) {}
 
@@ -30,6 +35,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.subscribeToNewMessages();
     this.shouldScrollToBottom = true;
     this.loadChatSettings();
+    this.subscribeToTypingIndicators();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -38,6 +44,16 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.messageSubscription?.unsubscribe();
       this.loadInitialMessages();
       this.subscribeToNewMessages();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    const container = document.querySelector('.messages-container');
+    if (container) {
+      container.addEventListener('scroll', () => {
+        const nearBottom = container.scrollTop + container.clientHeight >= container.scrollHeight - 50;
+        this.showScrollToBottom = !nearBottom;
+      });
     }
   }
 
@@ -79,7 +95,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.showDropdown = false;
     const container = document.querySelector('.messages-container');
     if (container) {
-      container.scrollTop = 0;
+      container.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
@@ -203,6 +219,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    clearTimeout(this.typingTimeout);
     if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
@@ -215,10 +232,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  private scrollToBottom(): void {
+  protected scrollToBottom(): void {
     const container = document.querySelector('.messages-container');
     if (container) {
-      container.scrollTop = container.scrollHeight;
+      container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
     }
   }
 
@@ -282,5 +299,52 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.senderId = this.senderId === 123 ? 456 : 123;
   }
 
+  onTyping(): void {
+    clearTimeout(this.typingTimeout); // Clear any existing timeout
+
+    // Send isTyping = true
+    this.chatService.sendTypingIndicator(this.chatId, this.senderId, true);
+
+    // Set a timeout to send isTyping = false after 2 seconds
+    this.typingTimeout = setTimeout(() => {
+      this.chatService.sendTypingIndicator(this.chatId, this.senderId, false);
+    }, 2000);
+  }
+
+
+  subscribeToTypingIndicators(): void {
+    this.chatService.subscribeToTypingIndicators(this.chatId).subscribe((indicator: any) => {
+      console.log('Handling typing indicator:', indicator);
+
+      if (indicator.senderId === this.senderId) return;
+
+      if (indicator.typing) {
+        this.typingUsers.add(indicator.senderId);
+      } else {
+        this.typingUsers.delete(indicator.senderId);
+      }
+      console.log('Current typing users:', Array.from(this.typingUsers));
+    });
+  }
+
+  getTypingIndicatorText(): string {
+    if (this.typingUsers.size === 0) return '';
+    if (this.typingUsers.size === 1) {
+      return `User ${Array.from(this.typingUsers)[0]} is typing...`;
+    }
+    return `${Array.from(this.typingUsers).join(', ')} are typing...`;
+  }
+
+  handleProfanityToggleRequest(): void {
+    // Show confirmation regardless of current state
+    this.showProfanityConfirm = true;
+  }
+
+  confirmProfanityToggle(confirmed: boolean): void {
+    if (confirmed) {
+      this.toggleProfanityFilter(); // Enable or disable
+    }
+    this.showProfanityConfirm = false;
+  }
 
 }

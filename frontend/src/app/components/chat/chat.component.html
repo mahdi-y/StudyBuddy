@@ -19,7 +19,7 @@
       <div class="dropdown-menu" [class.show]="showDropdown">
         <button class="dropdown-item" (click)="scrollToTop()">Scroll to Top</button>
         <button class="dropdown-item" (click)="exportMessages()">Export as Text</button>
-        <button class="dropdown-item" (click)="toggleProfanityFilter()">
+        <button class="dropdown-item" (click)="handleProfanityToggleRequest()">
           {{ profanityFilterEnabled ? 'Disable' : 'Enable' }} Profanity Filter
         </button>
       </div>
@@ -73,13 +73,42 @@
     </div>
   </div>
 
+  <div *ngIf="getTypingIndicatorText()" class="typing-indicator">
+    {{ getTypingIndicatorText() }}
+  </div>
+
   <div class="message-input">
-    <button (click)="toggleUser()">Switch User (Current: {{senderId}})</button>
+    <button (click)="toggleUser()" style="margin-right: 1%">Switch User (Current: {{senderId}})</button>
     <input
       [(ngModel)]="newMessage"
       placeholder="Type your message..."
+      (input)="onTyping()"
       (keyup.enter)="sendMessage()"
     />
     <button (click)="sendMessage()">Send</button>
   </div>
+
+  <!-- Confirmation Alert -->
+  <div *ngIf="showProfanityConfirm" class="confirmation-alert">
+    <p>
+      {{ profanityFilterEnabled
+      ? 'Are you sure you want to disable the Profanity Filter? Your chat members may send and be exposed to offensive language!'
+      : 'Are you sure you want to enable the Profanity Filter? Some words may be hidden or masked.' }}
+    </p>
+    <div class="alert-actions">
+      <button class="confirm-btn" (click)="confirmProfanityToggle(true)">
+        {{ profanityFilterEnabled ? 'Yes, Disable' : 'Yes, Enable' }}
+      </button>
+      <button class="cancel-btn" (click)="confirmProfanityToggle(false)">Cancel</button>
+    </div>
+  </div>
+
+  <button
+    class="scroll-to-bottom-btn"
+    *ngIf="showScrollToBottom"
+    (click)="scrollToBottom()"
+  >
+    <span class="material-icons">expand_more</span>
+  </button>
+
 </div>

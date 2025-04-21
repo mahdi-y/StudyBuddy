@@ -170,4 +170,42 @@ export class ChatService implements OnDestroy {
     return this.http.patch(`${environment.apiUrl}/api/chats/${chatId}/settings`, settings);
   }
 
+  sendTypingIndicator(chatId: number, senderId: number, isTyping: boolean): void {
+    if (!this.connectionSubject.value) {
+      throw new Error('Not connected to WebSocket');
+    }
+    console.log(`Sending typing indicator: ${isTyping} for chatId: ${chatId}, senderId: ${senderId}`);
+    this.stompClient.publish({
+      destination: '/app/typingIndicator',
+      body: JSON.stringify({ chatId, senderId, typing: isTyping }),
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+
+
+  subscribeToTypingIndicators(chatId: number): Observable<any> {
+    return new Observable(observer => {
+      const subscriptionId = `typing-${chatId}-${Date.now()}`;
+
+      const connectSubscription = this.connectionSubject.subscribe(isConnected => {
+        if (isConnected) {
+          this.stompClient.subscribe(`/topic/chats/${chatId}`, (message: IMessage) => {
+            try {
+              const parsedMessage = JSON.parse(message.body);
+              console.log('Received typing indicator:', parsedMessage);
+              observer.next(parsedMessage);
+            } catch (e) {
+              console.error('Error parsing typing indicator:', e);
+              observer.error(e);
+            }
+          });
+        }
+      });
+
+      return () => {
+        connectSubscription.unsubscribe();
+      };
+    });
+  }
+
 }

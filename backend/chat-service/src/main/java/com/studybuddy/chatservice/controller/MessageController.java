@@ -4,6 +4,7 @@ import com.studybuddy.chatservice.dto.*;
 import com.studybuddy.chatservice.model.Message;
 import com.studybuddy.chatservice.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -19,6 +20,7 @@ public class MessageController {
 
     private final MessageService messageService;
     private final SimpMessagingTemplate messagingTemplate;
+
 
     @GetMapping("/{chatId}")
     public List<Message> getMessages(@PathVariable Long chatId) {
@@ -66,5 +68,19 @@ public class MessageController {
         messagingTemplate.convertAndSend("/topic/chats/" + request.getChatId(),
                 new MessageResponseDTO(updatedMessage));
     }
+
+    @MessageMapping("/typingIndicator")
+    public void handleTypingIndicator(TypingIndicatorDTO typingIndicator) {
+        System.out.println("Received typing indicator: " + typingIndicator);
+
+        messagingTemplate.convertAndSend(
+                "/topic/chats/" + typingIndicator.getChatId(),
+                new TypingIndicatorResponse(typingIndicator.getSenderId(), typingIndicator.isTyping())
+        );
+
+        System.out.println("Broadcasted typing indicator for chatId: " + typingIndicator.getChatId());
+    }
+
+
 
 }
