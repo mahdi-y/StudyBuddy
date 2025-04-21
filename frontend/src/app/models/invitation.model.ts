@@ -4,6 +4,7 @@ export interface Invitation {
   type: string;
   inviterUserId: number;
   inviteeUserId: number;
+  inviteeEmail?: string; // 💌 optional, for email sending
   createdAt: string;
   studyGroup: {
     id: number;

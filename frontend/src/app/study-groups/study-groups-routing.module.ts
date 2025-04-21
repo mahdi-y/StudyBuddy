@@ -3,11 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { StudyGroupListComponent } from './study-group-list/study-group-list.component';
 import { StudyGroupCreateComponent } from './study-group-create/study-group-create.component';
 import { StudyGroupUpdateComponent } from './study-group-update/study-group-update.component'; // Import your update component
+import { FlashcardComponent } from './flashcards/flashcards.component';
 
 const routes: Routes = [
   { path: '', component: StudyGroupListComponent },          // Lists all groups
   { path: 'new', component: StudyGroupCreateComponent },     // For creating a new study group
-  { path: 'update-group/:id', component: StudyGroupUpdateComponent }, // For updating an existing study group by ID
+  { path: 'update-group/:id', component: StudyGroupUpdateComponent },
+  { path: 'flashcards', component: FlashcardComponent },
+  // For updating an existing study group by ID
 ];
 
 @NgModule({

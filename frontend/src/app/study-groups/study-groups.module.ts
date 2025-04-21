@@ -12,7 +12,8 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { StudyGroupsRoutingModule } from './study-groups-routing.module';
 import { RouterModule } from '@angular/router';
-import { StudyGroupUpdateComponent } from './study-group-update/study-group-update.component';   
+import { StudyGroupUpdateComponent } from './study-group-update/study-group-update.component';
+import { FlashcardComponent } from './flashcards/flashcards.component';
 
 
 
@@ -20,7 +21,8 @@ import { StudyGroupUpdateComponent } from './study-group-update/study-group-upda
   declarations: [
     StudyGroupListComponent,
     StudyGroupCreateComponent,
-    StudyGroupUpdateComponent
+    StudyGroupUpdateComponent,
+    FlashcardComponent,
   ],
   imports: [
     CommonModule,

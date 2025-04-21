@@ -24,7 +24,7 @@ export class StudyGroupListComponent implements OnInit {
   currentUserId: number = 1;
   selectedInviteeUserId: number = 2;
 
-  modal: bootstrap.Modal | null = null;  // Hold reference to the modal
+  modal: bootstrap.Modal | null = null;
 
   constructor(
     private studyGroupService: StudyGroupService,
@@ -42,6 +42,10 @@ export class StudyGroupListComponent implements OnInit {
     });
   }
 
+  get safeGroupId(): number | null {
+    return this.selectedGroup?.id ?? null;
+  }
+
   sendInvitation(groupId: number): void {
     const invitation: SendInvitation = {
       studyGroup: { id: groupId },
@@ -49,10 +53,23 @@ export class StudyGroupListComponent implements OnInit {
       inviteeUserId: this.selectedInviteeUserId
     };
 
+    const groupName = this.selectedGroup?.name || 'Unnamed Group';
+
     this.invitationService.sendInvitation(invitation).subscribe({
       next: (response) => {
         console.log('Invitation sent to group ID:', groupId, response);
         this.toastr.success('Invitation sent successfully!');
+
+        this.invitationService.sendEmail(groupName).subscribe({
+          next: (emailResponse) => {
+            console.log('Email sent successfully:', emailResponse);
+            this.toastr.success('Email notification sent!');
+          },
+          error: (emailError) => {
+            console.error('Error sending email:', emailError);
+            this.toastr.error('Failed to send email notification');
+          }
+        });
       },
       error: (error) => {
         console.error('Error sending invitation:', error);
@@ -71,8 +88,6 @@ export class StudyGroupListComponent implements OnInit {
 
   goToUpdateGroup(groupId: number): void {
     this.router.navigate([`/groups/update-group/${groupId}`]);
-
-    // Close the modal after update
     this.closeModal();
   }
 
@@ -82,8 +97,6 @@ export class StudyGroupListComponent implements OnInit {
         next: () => {
           this.toastr.success('Study group deleted successfully!');
           this.studyGroups = this.studyGroups.filter(group => group.id !== groupId);
-          
-          // Close the modal after deletion
           this.closeModal();
         },
         error: (err) => {
@@ -113,28 +126,40 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   openGroupDetails(group: StudyGroup): void {
-    if (group && group.id !== undefined) {
-      this.selectedDetailGroup = group; // Set the selected group
+    if (!group || group.id === undefined) {
+      this.toastr.error('Invalid group selected');
+      return;
+    }
+
+    // Hide modal if it's already open
+    if (this.modal) {
+      this.modal.hide();
+    }
+
+    // Reset the selected detail group to force re-render
+    this.selectedDetailGroup = null;
+
+    setTimeout(() => {
+      this.selectedDetailGroup = group;
+
       const modalEl = document.getElementById('groupDetailsModal');
       if (modalEl) {
-        // Initialize the modal if it hasn't been done yet
         this.modal = new bootstrap.Modal(modalEl);
-        this.modal.show(); // Show the modal
+        this.modal.show();
       }
-    } else {
-      this.toastr.error('Invalid group selected');
-    }
+    }, 0);
   }
 
-  // Helper method to close the modal
   closeModal(): void {
     if (this.modal) {
-      this.modal.hide(); // Close the modal using the reference
+      this.modal.hide();
     } else {
       const modalEl = document.getElementById('groupDetailsModal');
       if (modalEl) {
-        this.modal = new bootstrap.Modal(modalEl);
-        this.modal.hide(); // Close the modal if it's not initialized
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) {
+          modalInstance.hide();
+        }
       }
     }
   }

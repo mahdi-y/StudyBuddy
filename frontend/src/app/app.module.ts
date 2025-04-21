@@ -18,7 +18,6 @@ import { WorkComponent } from './frontoffice/work/work.component';
 import { CategoryComponent } from './frontoffice/category/category.component';
 import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
 import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
-import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
 
 
 
@@ -40,7 +39,6 @@ const routes: Routes = [
     CategoryComponent,
     DashboardComponent,
     DashboardContentComponent,
-    StudyGroupComponent,
   ],
   imports: [
     BrowserModule,

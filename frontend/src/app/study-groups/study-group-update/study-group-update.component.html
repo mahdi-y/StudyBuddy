@@ -1,17 +1,50 @@
-<div class="container">
-    <h2>Update Study Group</h2>
-    <form (ngSubmit)="updateGroup()">
-      <div class="form-group">
-        <label for="name">Group Name</label>
-        <input type="text" id="name" [(ngModel)]="studyGroup.name" name="name" class="form-control" required />
-      </div>
-      
-      <div class="form-group">
-        <label for="description">Group Description</label>
-        <textarea id="description" [(ngModel)]="studyGroup.description" name="description" class="form-control" required></textarea>
-      </div>
-      
-      <button mat-raised-button color="primary" type="submit">Update</button>
-    </form>
+<div class="container py-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
+      <h4 class="mb-0"><i class="material-icons me-2">edit</i> Update Study Group</h4>
+    </div>
+
+    <div class="card-body">
+      <form (ngSubmit)="updateGroup()" #form="ngForm" novalidate>
+        <!-- Group Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Group Name</label>
+          <input
+            type="text"
+            id="name"
+            [(ngModel)]="studyGroup.name"
+            name="name"
+            class="form-control"
+            placeholder="Enter group name"
+            required />
+          <div *ngIf="form.submitted && !studyGroup.name" class="text-danger mt-1">
+            Group name is required.
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Group Description</label>
+          <textarea
+            id="description"
+            [(ngModel)]="studyGroup.description"
+            name="description"
+            class="form-control"
+            rows="4"
+            placeholder="Briefly describe your group"
+            required></textarea>
+          <div *ngIf="form.submitted && !studyGroup.description" class="text-danger mt-1">
+            Description is required.
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-end">
+          <button class="btn btn-success px-4" type="submit">
+            <i class="material-icons me-1">check_circle</i> Update
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-  
+</div>

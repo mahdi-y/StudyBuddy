@@ -7,7 +7,6 @@ import {CategoryComponent} from "./frontoffice/category/category.component";
 import {NotFoundComponent} from "./frontoffice/not-found/not-found.component";
 import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
-import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
 
 const routes: Routes = [
   {
@@ -22,7 +21,7 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'work', component: WorkComponent},
   { path: 'category', component: CategoryComponent},
-  { path: 'study-group', component: StudyGroupComponent },
+
   {
     path: 'dashboard',
     component: DashboardComponent,
