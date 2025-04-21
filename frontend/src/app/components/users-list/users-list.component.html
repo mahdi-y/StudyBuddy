@@ -1,0 +1,32 @@
+<div class="container mt-4">
+    <h2>Gestion des utilisateurs</h2>
+    <a class="btn btn-primary mb-3" routerLink="/user/add">Ajouter un utilisateur</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nom d'utilisateur</th>
+          <th>Email</th>
+          <th>Rôle</th>
+          <th>Photo de profil</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.iduser }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.useremail }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <img *ngIf="user.profile_picture" [src]="user.profile_picture" alt="Profile Picture" width="50" />
+          </td>
+          <td>
+            <a class="btn btn-info btn-sm" [routerLink]="['/user', user.iduser]">Détails</a>
+            <a class="btn btn-warning btn-sm" [routerLink]="['/user/edit', user.iduser]">Modifier</a>
+            <button class="btn btn-danger btn-sm" (click)="deleteUser(user.iduser!)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

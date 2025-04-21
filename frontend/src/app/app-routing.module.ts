@@ -1,20 +1,19 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { UsersListComponent } from './users-list/users-list.component';
-import { UserAddComponent } from './user-add/user-add.component';
-import { UserEditComponent } from './user-edit/user-edit.component';
-import { UserDetailComponent } from './user-detail/user-detail.component';
+import { Routes } from '@angular/router';
+import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { AuthGuard } from './guards/auth.guard';
+import { RegisterComponent } from './components/register/register.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
-const routes: Routes = [
-  { path: '', redirectTo: '/users', pathMatch: 'full' },
-  { path: 'users', component: UsersListComponent },
-  { path: 'user/add', component: UserAddComponent },
-  { path: 'user/edit/:id', component: UserEditComponent },
-  { path: 'user/:id', component: UserDetailComponent }
+export const routes: Routes = [
+    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    // {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+    { path: 'register', component: RegisterComponent },
+    {
+        path: '', component: LayoutComponent,
+        children: [
+            { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
+        ]
+    }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {}
