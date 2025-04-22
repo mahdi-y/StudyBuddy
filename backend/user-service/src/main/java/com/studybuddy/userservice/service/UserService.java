@@ -1,7 +1,8 @@
-package com.jts.login.service;
+package com.studybuddy.userservice.service;
 
-import com.jts.login.dto.User;
-import com.jts.login.repo.LoginRepository;
+
+import com.studybuddy.userservice.dto.User;
+import com.studybuddy.userservice.repo.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

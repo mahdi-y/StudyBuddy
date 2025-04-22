@@ -1,0 +1,64 @@
+
+  <h2>User Management</h2>
+  
+  <!-- Create User Form -->
+ 
+
+  <!-- Users Table -->
+  <table *ngIf="users.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Address</th>
+        <th>Mobile No</th>
+        <th>Age</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.name }}</span>
+          <input *ngIf="user.editing" [(ngModel)]="user.name" name="name">
+        </td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.username }}</span>
+          <input *ngIf="user.editing" [(ngModel)]="user.username" name="username">
+        </td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.address }}</span>
+          <input *ngIf="user.editing" [(ngModel)]="user.address" name="address">
+        </td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.mobileNo }}</span>
+          <input *ngIf="user.editing" [(ngModel)]="user.mobileNo" name="mobileNo">
+        </td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.age }}</span>
+          <input *ngIf="user.editing" [(ngModel)]="user.age" name="age" type="number">
+        </td>
+        <td>
+          <span *ngIf="!user.editing">{{ user.role }}</span>
+          <select *ngIf="user.editing" [(ngModel)]="user.role" name="role">
+            <option value="ADMIN">ADMIN</option>
+            <option value="USER">USER</option>
+          </select>
+        </td>
+        <td>
+          <button *ngIf="!user.editing" (click)="editUser(user)">Edit</button>
+          <button *ngIf="user.editing" (click)="onUpdateUser(user)">Save</button>
+          <button *ngIf="user.editing" (click)="cancelEdit(user)">Cancel</button>
+          <button (click)="onDeleteUser(user.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  
+
+
+

@@ -1,4 +1,4 @@
-package com.jts.login.dto;
+package com.studybuddy.userservice.dto;
 
 import lombok.Getter;
 import lombok.Setter;

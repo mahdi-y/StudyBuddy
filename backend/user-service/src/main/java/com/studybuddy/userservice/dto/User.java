@@ -1,4 +1,4 @@
-package com.jts.login.dto;
+package com.studybuddy.userservice.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

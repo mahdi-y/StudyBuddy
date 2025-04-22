@@ -1,4 +1,4 @@
-package com.jts.login.config;
+package com.studybuddy.userservice.config;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,25 +1,31 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-
-import { AppComponent } from './app.component';
-import { UsersListComponent } from './components/users-list/users-list.component';
-import { UserAddComponent } from './components/user-add/user-add.component';
-import { UserEditComponent } from './components/user-edit/user-edit.component';
-import { UserDetailComponent } from './components/user-detail/user-detail.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { AppRoutingModule } from './app-routing.module'; // Must be imported
+import { AppComponent } from './app.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { BackofficeComponent } from './backoffice/backoffice.component';
+import { AuthGuard } from './services/auth.guard.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UsersListComponent,
-    UserAddComponent,
-    UserEditComponent,
-    UserDetailComponent
+    RegisterComponent,
+    LoginComponent,
+    DashboardComponent,
+    BackofficeComponent
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, FormsModule],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    ReactiveFormsModule,
+    FormsModule,
+    AppRoutingModule // Ensure this is included
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

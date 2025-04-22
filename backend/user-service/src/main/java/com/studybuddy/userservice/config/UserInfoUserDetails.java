@@ -1,15 +1,16 @@
-package com.jts.login.config;
+package com.studybuddy.userservice.config;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.studybuddy.userservice.dto.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.jts.login.dto.User;
+
 
 public class UserInfoUserDetails implements UserDetails {
 

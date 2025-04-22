@@ -1,4 +1,4 @@
-package com.jts.login.config;
+package com.studybuddy.userservice.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

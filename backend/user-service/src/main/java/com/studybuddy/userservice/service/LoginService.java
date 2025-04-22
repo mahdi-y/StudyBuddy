@@ -1,16 +1,17 @@
-package com.jts.login.service;
+package com.studybuddy.userservice.service;
 
 import java.util.Optional;
 
+import com.studybuddy.userservice.dto.LoginRequest;
+import com.studybuddy.userservice.dto.SignupRequest;
+import com.studybuddy.userservice.dto.SignupResponse;
+import com.studybuddy.userservice.dto.User;
+import com.studybuddy.userservice.repo.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.jts.login.dto.LoginRequest;
-import com.jts.login.dto.SignupRequest;
-import com.jts.login.dto.SignupResponse;
-import com.jts.login.dto.User;
-import com.jts.login.repo.LoginRepository;
+
 
 @Service
 public class LoginService {
