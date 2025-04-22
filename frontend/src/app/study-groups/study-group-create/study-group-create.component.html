@@ -1,50 +1,55 @@
-<div class="container">
-  <h2>Create a Study Group</h2>
+<div class="container mt-5 p-4 shadow rounded-4 bg-white" style="max-width: 600px;">
+  <h2 class="text-center mb-4 text-primary fw-bold">🎓 Create a Study Group</h2>
 
-  <!-- Display any error message -->
-  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
+  <div *ngIf="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
 
-  <!-- Display success message -->
-  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-
-  <form (ngSubmit)="createGroup()" #groupForm="ngForm">
-    <div class="form-group">
-      <label for="name">Group Name</label>
+  <form (ngSubmit)="createGroup()" #groupForm="ngForm" novalidate>
+    <!-- Group Name -->
+    <div class="mb-3">
+      <label for="name" class="form-label fw-semibold">Group Name</label>
       <input
         type="text"
         id="name"
-        class="form-control"
+        class="form-control rounded-3"
         [(ngModel)]="groupData.name"
+        (ngModelChange)="onNameChange($event)"
         name="name"
         required
         #name="ngModel"
+        placeholder="e.g., Angular Enthusiasts"
       />
-      <div *ngIf="name.invalid && name.touched" class="text-danger">
-        Group Name is required.
-      </div>
+      <small *ngIf="name.invalid && name.touched" class="text-danger">Group name is required.</small>
     </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="description" class="form-label fw-semibold">Description</label>
       <textarea
         id="description"
-        class="form-control"
+        class="form-control rounded-3"
         [(ngModel)]="groupData.description"
         name="description"
         required
         #description="ngModel"
+        rows="4"
+        placeholder="What is this group about?"
       ></textarea>
-      <div *ngIf="description.invalid && description.touched" class="text-danger">
-        Description is required.
-      </div>
+      <small *ngIf="description.invalid && description.touched" class="text-danger">Description is required.</small>
     </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || groupForm.invalid">
-      Create Group
-    </button>
+    <!-- Submit Button -->
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary btn-lg rounded-pill" [disabled]="isSubmitting || groupForm.invalid">
+        💾 Create Group
+      </button>
+    </div>
 
-    <div *ngIf="isSubmitting" class="spinner-border" role="status">
-      <span class="sr-only">Submitting...</span>
+    <!-- Spinner -->
+    <div *ngIf="isSubmitting" class="d-flex justify-content-center mt-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Submitting...</span>
+      </div>
     </div>
   </form>
 </div>

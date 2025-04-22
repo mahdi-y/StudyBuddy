@@ -67,6 +67,7 @@ public class OpenAIService {
                 System.err.println("OpenRouter API Error: No choices in response");
                 return List.of();
             }
+            
 
             Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
             if (message == null || message.get("content") == null) {
@@ -94,4 +95,59 @@ public class OpenAIService {
             return List.of();
         }
     }
+    public String generateGroupDescription(String groupName) {
+        try {
+            String prompt = String.format("""
+            You are a helpful assistant. Generate a short and engaging description for a study group called "%s".
+            The description should explain the group's focus and who it is for.
+            Limit it to 2-3 sentences.
+            """, groupName);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("Authorization", "Bearer " + apiKey);
+
+            Map<String, Object> requestBody = Map.of(
+                    "model", "mistralai/mistral-7b-instruct",
+                    "temperature", 0.7,
+                    "messages", List.of(Map.of(
+                            "role", "user",
+                            "content", prompt
+                    ))
+            );
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
+
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    request,
+                    Map.class
+            );
+
+            if (response.getStatusCode() != HttpStatus.OK || response.getBody() == null) {
+                System.err.println("OpenRouter API Error: Empty response or non-OK status");
+                return "";
+            }
+
+            List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
+            if (choices == null || choices.isEmpty()) {
+                System.err.println("OpenRouter API Error: No choices in response");
+                return "";
+            }
+
+            Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+            if (message == null || message.get("content") == null) {
+                System.err.println("OpenRouter API Error: No message content in response");
+                return "";
+            }
+
+            return ((String) message.get("content")).trim();
+
+        } catch (Exception e) {
+            System.err.println("OpenRouter Description Generation Failed:");
+            e.printStackTrace();
+            return "";
+        }
+    }
+
 }

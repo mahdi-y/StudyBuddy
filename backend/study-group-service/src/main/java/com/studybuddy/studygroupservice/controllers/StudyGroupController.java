@@ -3,6 +3,7 @@ package com.studybuddy.studygroupservice.controllers;
 import com.studybuddy.studygroupservice.dto.StudyGroupDTO;
 import com.studybuddy.studygroupservice.entities.StudyGroup;
 import com.studybuddy.studygroupservice.services.StudyGroupService;
+import com.studybuddy.studygroupservice.services.FlashcardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class StudyGroupController {
 
     private final StudyGroupService studyGroupService;
+    private final FlashcardService flashcardService;  // Inject FlashcardService to delete flashcards
 
     // Create a new study group
     @PostMapping
@@ -23,13 +25,14 @@ public class StudyGroupController {
         StudyGroup createdGroup = studyGroupService.createGroup(studyGroupDTO);
         return mapToStudyGroupDTO(createdGroup);
     }
+
     @GetMapping("/{id}")
     public StudyGroupDTO getGroupById(@PathVariable Long id) {
         StudyGroup group = studyGroupService.getGroupById(id);
         return mapToStudyGroupDTO(group);
     }
 
-    // Add this to your StudyGroupController.java
+    // Get all groups for a user
     @GetMapping("/user/{userId}")
     public List<StudyGroupDTO> getUserGroups(@PathVariable Long userId) {
         List<StudyGroup> studyGroups = studyGroupService.getUserGroups(userId);
@@ -38,7 +41,6 @@ public class StudyGroupController {
                 .collect(Collectors.toList());
     }
 
-
     // Update an existing study group
     @PutMapping("/{id}")
     public StudyGroupDTO updateGroup(@PathVariable Long id, @RequestBody StudyGroupDTO studyGroupDTO) {
@@ -46,21 +48,25 @@ public class StudyGroupController {
         StudyGroup updatedStudyGroup = studyGroupService.updateGroup(id, studyGroupDTO);
         return mapToStudyGroupDTO(updatedStudyGroup);
     }
+
+    // Get all study groups
     @GetMapping
     public List<StudyGroupDTO> getAllGroups() {
         List<StudyGroup> studyGroups = studyGroupService.getAllGroups();
         return studyGroups.stream()
-                .map(this::mapToStudyGroupDTO)  // Convert each StudyGroup entity to DTO
+                .map(this::mapToStudyGroupDTO)
                 .collect(Collectors.toList());
     }
-
 
     // Delete a study group
     @DeleteMapping("/{id}")
     public void deleteGroup(@PathVariable Long id) {
+        // First, delete all related flashcards
+        flashcardService.deleteByGroupId(id);
+
+        // Then delete the study group
         studyGroupService.deleteGroup(id);
     }
-
 
     // Convert StudyGroup entity to StudyGroupDTO
     private StudyGroupDTO mapToStudyGroupDTO(StudyGroup studyGroup) {

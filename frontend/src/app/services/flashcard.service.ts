@@ -18,4 +18,6 @@ export class FlashcardService {
   generate(groupId: number): Observable<Flashcard[]> {
     return this.http.post<Flashcard[]>(`${this.baseUrl}/generate/${groupId}`, {});
   }
+
+  
 }

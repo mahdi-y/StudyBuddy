@@ -39,4 +39,11 @@ getGroupById(id: number): Observable<StudyGroup> {
   updateGroup(groupId: number, groupData: StudyGroup): Observable<StudyGroup> {
     return this.http.put<StudyGroup>(`${this.apiUrl}/${groupId}`, groupData);
   }
+  generateDescription(groupName: string): Observable<string> {
+    return this.http.get('http://localhost:8081/api/openai/group-description', {
+      params: { groupName },
+      responseType: 'text'
+    });
+  }
+  
 }

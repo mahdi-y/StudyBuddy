@@ -9,9 +9,10 @@ import { StudyGroup } from 'src/app/models/study-group.model';
   styleUrls: ['./study-group-update.component.css']
 })
 export class StudyGroupUpdateComponent implements OnInit {
-  groupId!: number; // ✅ corrigé avec `!` pour dire à TypeScript "je le définirai plus tard"
-  studyGroup: StudyGroup = {} as StudyGroup; // ✅ évite le `new StudyGroup()` si c’est une interface
-  
+  groupId!: number;
+  studyGroup: StudyGroup = {} as StudyGroup;
+  originalGroup: StudyGroup = {} as StudyGroup; // Store original values for change detection
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -20,27 +21,45 @@ export class StudyGroupUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
-  
-    // ✅ Assure-toi que cette méthode existe dans ton service
+
+    // Fetch the group by ID and store original values
     this.studyGroupService.getGroupById(this.groupId).subscribe({
       next: (group: StudyGroup) => {
-        this.studyGroup = group;
+        this.studyGroup = { ...group }; // Copy the data to studyGroup
+        this.originalGroup = { ...group }; // Store original values for comparison
       },
       error: (err: any) => {
-        console.error('Erreur lors de la récupération du groupe:', err);
+        console.error('Error fetching group:', err);
       }
     });
   }
 
+  // Method to detect if there are any changes
+  hasChanges(): boolean {
+    return this.studyGroup.name !== this.originalGroup.name || this.studyGroup.description !== this.originalGroup.description;
+  }
+
   updateGroup(): void {
-    // ✅ Assure-toi que cette méthode existe dans ton service
+    // Validate fields
+    if (this.studyGroup.name.trim() === '' || this.studyGroup.description.trim() === '') {
+      console.log('Both group name and description are required.');
+      return; // Prevent update if fields are empty
+    }
+
+    // Prevent update if no changes have been made
+    if (this.studyGroup.name === this.originalGroup.name && this.studyGroup.description === this.originalGroup.description) {
+      console.log('No changes detected.');
+      return; // Prevent update if no changes
+    }
+
+    // Proceed with the update
     this.studyGroupService.updateGroup(this.groupId, this.studyGroup).subscribe({
       next: () => {
-        console.log('Groupe mis à jour avec succès');
+        console.log('Group updated successfully');
         this.router.navigate(['/groups']);
       },
       error: (err: any) => {
-        console.error('Erreur lors de la mise à jour:', err);
+        console.error('Error during update:', err);
       }
     });
   }

@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import { StudyGroupService } from '../../services/study-group.service';
 import { InvitationService } from '../../services/invitation.service';
 import { Router } from '@angular/router';
@@ -6,6 +5,8 @@ import { StudyGroup } from '../../models/study-group.model';
 import { SendInvitation } from '../../models/invitation.model';
 import { ToastrService } from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
+import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component'; // Adjust path accordingly
 
 @Component({
   selector: 'app-study-group-list',
@@ -13,6 +14,8 @@ import * as bootstrap from 'bootstrap';
   styleUrls: ['./study-group-list.component.scss']
 })
 export class StudyGroupListComponent implements OnInit {
+  @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
+
   studyGroups: StudyGroup[] = [];
   selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;

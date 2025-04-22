@@ -16,9 +16,13 @@
             name="name"
             class="form-control"
             placeholder="Enter group name"
-            required />
-          <div *ngIf="form.submitted && !studyGroup.name" class="text-danger mt-1">
-            Group name is required.
+            required
+            minlength="3"
+            maxlength="50"
+            #name="ngModel"
+            [class.is-invalid]="name.invalid && (form.submitted || name.touched)">
+          <div *ngIf="name.invalid && (form.submitted || name.touched)" class="text-danger mt-1">
+            Group name is required and should be between 3 to 50 characters.
           </div>
         </div>
 
@@ -32,15 +36,19 @@
             class="form-control"
             rows="4"
             placeholder="Briefly describe your group"
-            required></textarea>
-          <div *ngIf="form.submitted && !studyGroup.description" class="text-danger mt-1">
-            Description is required.
+            required
+            minlength="10"
+            maxlength="200"
+            #description="ngModel"
+            [class.is-invalid]="description.invalid && (form.submitted || description.touched)"></textarea>
+          <div *ngIf="description.invalid && (form.submitted || description.touched)" class="text-danger mt-1">
+            Description is required and should be between 10 to 200 characters.
           </div>
         </div>
 
         <!-- Submit Button -->
         <div class="text-end">
-          <button class="btn btn-success px-4" type="submit">
+          <button class="btn btn-success px-4" type="submit" [disabled]="form.invalid || !hasChanges()">
             <i class="material-icons me-1">check_circle</i> Update
           </button>
         </div>

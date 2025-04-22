@@ -27,4 +27,11 @@ public class FlashcardController {
         List<Flashcard> flashcards = flashcardService.getByGroup(groupId);
         return ResponseEntity.ok(flashcards);
     }
+
+    // New endpoint to delete flashcards by groupId
+    @DeleteMapping("/group/{groupId}")
+    public ResponseEntity<Void> deleteByGroupId(@PathVariable Long groupId) {
+        flashcardService.deleteByGroupId(groupId);
+        return ResponseEntity.noContent().build();  // Respond with no content (204 status)
+    }
 }

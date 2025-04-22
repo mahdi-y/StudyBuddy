@@ -14,6 +14,7 @@ public class StudyGroup {
     private Long id;
 
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "owner_user_id")
