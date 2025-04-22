@@ -19,6 +19,9 @@ export class ProgressComponent implements OnInit {
   chart: any;
   archivedProgressNames: string[] = [];
   archivedProgressIds: number[] = JSON.parse(localStorage.getItem('archivedProgress') || '[]');
+  archivedProgressList: any[] = [];
+  showArchivedModal: boolean = false;
+  showChart = false;
 
 
 
@@ -33,10 +36,12 @@ export class ProgressComponent implements OnInit {
 
   loadProgress(): void {
     this.progressService.getAllProgress().subscribe((progressList: Progress[]) => {
-      this.progressList = progressList;
+      // Filter out archived progress
+      this.progressList = progressList.filter(progress => !progress.archived);
       this.loadTasksForEachProgress();
     });
   }
+
 
   loadTasksForEachProgress(): void {
     let loadedCount = 0;
@@ -94,13 +99,20 @@ export class ProgressComponent implements OnInit {
     return latest.toDateString();
   }
 
+  // progress.component.ts
   archiveProgress(id: number): void {
-    if (!this.archivedProgressIds.includes(id)) {
-      this.archivedProgressIds.push(id);
-      localStorage.setItem('archivedProgress', JSON.stringify(this.archivedProgressIds));
-      this.updateChartData(); // ⬅️ Update the chart visually
-    }
+    // Call the backend to archive the progress
+    this.progressService.archive(id).subscribe(() => {
+      // If the archive operation is successful, update the local UI state
+      if (!this.archivedProgressIds.includes(id)) {
+        this.archivedProgressIds.push(id);
+        localStorage.setItem('archivedProgress', JSON.stringify(this.archivedProgressIds));
+      }
+      this.updateChartData(); // Update the chart visually
+    });
   }
+
+
   isArchived(progress: Progress): boolean {
     return this.archivedProgressIds.includes(progress.id);
   }
@@ -156,7 +168,35 @@ export class ProgressComponent implements OnInit {
     const timeDiff = due - now;
     return timeDiff > 0 && timeDiff <= 24 * 60 * 60 * 1000; // within 24h
   }
+// Fetch archived progresses
+  getArchivedProgresses(): void {
+    this.progressService.getArchivedProgresses().subscribe((data) => {
+      this.archivedProgressList = data;
+    });
+  }
 
+  // Method to show the archived progresses modal
+  showArchivedProgressesModal(): void {
+    this.getArchivedProgresses(); // Fetch the archived progresses when the modal is triggered
+    this.showArchivedModal = true; // Show the modal
+  }
+
+  // Close the modal
+  closeModal(): void {
+    this.showArchivedModal = false;
+  }
+  toggleChart() {
+    this.showChart = !this.showChart;
+
+    setTimeout(() => {
+      if (this.showChart && !this.chart) {
+        this.createChart();
+      } else if (!this.showChart && this.chart) {
+        this.chart.destroy();
+        this.chart = null;
+      }
+    }, 100); // ensures the canvas exists in the DOM
+  }
   createChart() {
     const progressCount = this.getNonArchivedProgressCount();
     const taskCount = this.getVisibleTasksCount();

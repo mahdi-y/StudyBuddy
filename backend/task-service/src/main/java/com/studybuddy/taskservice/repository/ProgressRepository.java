@@ -11,5 +11,7 @@ import java.util.Optional;
 public interface ProgressRepository extends JpaRepository<Progress, Long> {
     Optional<Progress> findByTasksId(Long taskId);
     Optional<Progress> findByName(String name);
+    List<Progress> findByArchived(boolean archived); // 👈 this is what you add
+
 }
 

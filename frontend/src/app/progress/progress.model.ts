@@ -6,5 +6,6 @@ export interface Progress {
   totalTasks: number;
   totalCompletedTasks: number;
   name : string;
+  archived?: boolean; // optional for flexibility
   tasks?: Task[]; // Adding tasks as an optional property
 }

@@ -4,6 +4,7 @@ import { TaskService } from '../../task.service';
 import { Task } from '../task.model';
 import { ProgressService } from '../../progress.service';
 import { Progress } from '../../progress/progress.model';
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-add-task',
@@ -38,10 +39,12 @@ export class AddTaskComponent implements OnInit {
   }
 
   loadProgressList(): void {
-    this.progressService.getAllProgress().subscribe({
-      next: (data) => {
-        console.log('📦 Progress list received:', data);
-        this.progressList = data;
+    this.progressService.getAllProgress().pipe(
+      map(progressList => progressList.filter(p => !p.archived))
+    ).subscribe({
+      next: (filteredProgress) => {
+        console.log('📦 Unarchived progress list received:', filteredProgress);
+        this.progressList = filteredProgress;
       },
       error: (err) => {
         console.error('❌ Error fetching progress list', err);

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../task.service';
 import { ProgressService } from '../../progress.service';  // Service to fetch progress names
 import { Task } from '../task.model';
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-update-task',
@@ -76,10 +77,19 @@ export class UpdateTaskComponent implements OnInit {
 
   // Fetch available progress options
   getProgressList(): void {
-    this.progressService.getAllProgress().subscribe(progressList => {
-      this.progressList = progressList;
+    this.progressService.getAllProgress().pipe(
+      map(progressList => progressList.filter(p => !p.archived))
+    ).subscribe({
+      next: (filteredProgress) => {
+        console.log('📦 Unarchived progress list received:', filteredProgress);
+        this.progressList = filteredProgress;
+      },
+      error: (err) => {
+        console.error('❌ Error fetching progress list', err);
+      }
     });
   }
+
 
   // Update task
   updateTask(): void {

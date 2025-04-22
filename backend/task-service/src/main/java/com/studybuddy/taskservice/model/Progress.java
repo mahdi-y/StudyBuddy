@@ -21,11 +21,23 @@ public class Progress {
     private double progressPercentage;
     private Integer totalTasks;
     private Integer totalCompletedTasks;
+    @Column(nullable = true)
+    private boolean archived = false; // 👈 this is what you add
+
     @Column(unique = true)
     private String name; // Add this field to represent the name of the progress
 
 
     // Getters and Setters
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
     public String getName() {
         return name;
     }

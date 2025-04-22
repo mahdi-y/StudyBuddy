@@ -1,7 +1,60 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4 text-primary fw-bold">📊 Progress Overview</h2>
+  <!-- Buttons Container with spacing -->
+  <div class="d-flex flex-wrap gap-3 mb-4">
+    <!-- Archived Button -->
+    <button class="btn btn-outline-success px-4 py-2"
+            (click)="showArchivedProgressesModal()">
+      <i class="bi bi-archive me-2"></i> View Archived Progresses
+    </button>
+
+    <!-- Chart Toggle Button -->
+    <button class="btn btn-outline-primary px-4 py-2" (click)="toggleChart()">
+      <i class="bi" [ngClass]="showChart ? 'bi-eye-slash' : 'bi-eye'"></i>
+      {{ showChart ? 'Hide' : 'Show' }} Progress Summary Chart
+    </button>
+  </div>
+
+  <!-- Archived Progresses Modal -->
+  <div *ngIf="showArchivedModal" class="modal fade show" tabindex="-1" style="display: block;" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content rounded-3 shadow-lg">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Archived Progresses</h5>
+          <button type="button" class="btn-close text-white" (click)="closeModal()" aria-label="Close"></button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body p-4">
+<!--          <h6 class="fw-semibold text-success mb-3">All Completed Progresses</h6>-->
+
+          <ul class="list-group">
+            <li *ngFor="let progress of archivedProgressList" class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="text-dark fs-5">{{ progress.name }}</span>
+              <span class="badge bg-success text-white rounded-pill">Completed</span>
+            </li>
+          </ul>
+
+          <div *ngIf="archivedProgressList.length === 0" class="text-center text-muted mt-4">
+            <i class="bi bi-folder-x fs-3 mb-3"></i>
+            <p>No archived progresses available.</p>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-outline-dark px-4 py-2" (click)="closeModal()">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   <!-- Summary Cards as a Graph -->
+  <div *ngIf="showChart" class="alert alert-light shadow-sm border-0 mt-4">
   <div class="alert alert-light shadow-sm border-0 mt-4">
     <div class="row text-center">
       <div class="col-md-12">
@@ -9,7 +62,9 @@
       </div>
     </div>
   </div>
-<!--  <h2 class="text-center mb-4 text-primary fw-bold">📊 Progress Overview</h2>-->
+  </div>
+
+
 
   <!-- Iterate over each progress item -->
   <div *ngFor="let progress of progressList">
@@ -69,10 +124,18 @@
         </button>
       </div>
 
+      <div *ngIf="progress.archived" class="d-flex justify-content-between align-items-center mt-3">
+        <button
+          class="btn btn-outline-info btn-sm"
+          (click)="showArchivedProgressesModal()"
+        >
+          View Archived Progresses
+        </button>
+      </div>
 
       <!-- Card Body -->
       <div class="card-body p-4" *ngIf="progress.tasks && progress.tasks.length > 0">
-        <h4 class="text-secondary mb-4">📌 Tasks</h4>
+        <h4 class="mb-1 text-dark">📌 Tasks</h4>
 
         <!-- Filter Dropdown -->
         <div class="mb-4">
