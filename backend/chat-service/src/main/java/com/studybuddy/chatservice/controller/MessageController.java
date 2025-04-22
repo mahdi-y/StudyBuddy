@@ -4,7 +4,6 @@ import com.studybuddy.chatservice.dto.*;
 import com.studybuddy.chatservice.model.Message;
 import com.studybuddy.chatservice.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -80,7 +79,4 @@ public class MessageController {
 
         System.out.println("Broadcasted typing indicator for chatId: " + typingIndicator.getChatId());
     }
-
-
-
 }

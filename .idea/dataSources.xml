@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="chat_db" uuid="a05f0c99-9462-413b-8ac0-936206fee123">
+    <data-source source="LOCAL" name="chat database" uuid="5243aa15-9ba9-4fca-bbd9-b1de9939ac61">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/backend/chat-service/src/main/resources/application.properties</remarks>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://localhost:5432/chat_db</jdbc-url>
       <jdbc-additional-properties>

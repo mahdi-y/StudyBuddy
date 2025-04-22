@@ -407,7 +407,18 @@
   font-size: 0.8em;
   color: #6c757d;
   margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  height: auto;
 }
+.typing-indicator.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 
 .confirmation-alert {
   background-color: #fff3cd;

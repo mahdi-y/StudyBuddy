@@ -73,9 +73,13 @@
     </div>
   </div>
 
-  <div *ngIf="getTypingIndicatorText()" class="typing-indicator">
+  <div
+    [class.typing-indicator]="true"
+    [class.active]="getTypingIndicatorText()"
+  >
     {{ getTypingIndicatorText() }}
   </div>
+
 
   <div class="message-input">
     <button (click)="toggleUser()" style="margin-right: 1%">Switch User (Current: {{senderId}})</button>
