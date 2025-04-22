@@ -19,6 +19,10 @@ export class RessourceService {
    addResource(resource: Ressource): Observable<Ressource> {
     return this.http.post<Ressource>(this.apiUrl, resource);
   }
+  uploadFile(formData: FormData): Observable<any> {
+    return this.http.post<any>('http://localhost:8081/api/upload', formData);
+  }
+
 
   // Update an existing resource
   updateResource(resource: Ressource): Observable<Ressource> {
