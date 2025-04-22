@@ -1,0 +1,21 @@
+<div class="container">
+  <h2>Resources List</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Uploaded At</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let resource of resources">
+        <td>{{ resource.title }}</td>
+        <td>{{ resource.description }}</td>
+        <td>{{ resource.type }}</td>
+        <td>{{ resource.uploadedAt | date: 'short' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

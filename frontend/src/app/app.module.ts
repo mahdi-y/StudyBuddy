@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './frontoffice/home/home.component';
@@ -13,6 +12,8 @@ import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
 import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
 import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
 import {FormsModule} from "@angular/forms";
+import { RessourceComponent } from './pages/ressource/ressource.component';
+import { RessourceService } from './services/ressource.service';
 
 @NgModule({
   declarations: [
@@ -25,11 +26,13 @@ import {FormsModule} from "@angular/forms";
     DashboardComponent,
     DashboardContentComponent,
     StudyGroupComponent,
+    RessourceComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

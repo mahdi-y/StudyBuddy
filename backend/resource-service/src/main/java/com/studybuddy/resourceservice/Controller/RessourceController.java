@@ -1,5 +1,6 @@
 package com.studybuddy.resourceservice.Controller;
-
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
 import com.studybuddy.resourceservice.Entity.Ressource;
 import com.studybuddy.resourceservice.Entity.StudyGroup;
 import com.studybuddy.resourceservice.Service.RessourceService;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+
+@Validated
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/ressources")
+@RequestMapping("/api/ressources")  // Updated path to '/api/ressources'
 public class RessourceController {
 
     @Autowired
@@ -32,7 +35,7 @@ public class RessourceController {
     }
 
     @PostMapping
-    public Ressource create(@RequestBody Ressource ressource) {
+    public Ressource create(@Valid @RequestBody Ressource ressource) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         ressource.setUploadedAt(now);
         ressource.setUpdatedAt(now);

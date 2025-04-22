@@ -1,5 +1,5 @@
 package com.studybuddy.resourceservice.Entity;
-
+import javax.validation.constraints.Pattern;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
@@ -12,7 +12,10 @@ public class Ressource {
     private Long idResource;
 
     private String title;
+
+    @Pattern(regexp = "^.*\\.pdf$", message = "File URL must end with .pdf")
     private String fileUrl;
+
     private Timestamp uploadedAt;
     private String type;
     private Timestamp updatedAt;

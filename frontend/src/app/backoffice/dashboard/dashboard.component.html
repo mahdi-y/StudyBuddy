@@ -21,7 +21,7 @@
     <nav class="sidebar-nav">
       <ul>
         <li class="nav-item" [class.active]="activeLink === 'dashboard'">
-          <a (click)="setActive('dashboard')"  routerLink="/dashboard/dashboard-content" routerLinkActive="active">
+          <a (click)="setActive('dashboard')" routerLink="/dashboard/dashboard-content" routerLinkActive="active">
             <i class="material-icons">dashboard</i>
             <span class="nav-text">Dashboard</span>
           </a>
@@ -33,11 +33,13 @@
           </a>
         </li>
         <li class="nav-item" [class.active]="activeLink === 'resources'">
-          <a (click)="setActive('resources')" routerLinkActive="active">
+          <!-- Corrected routerLink -->
+          <a (click)="setActive('resources')" routerLink="/dashboard/resources" routerLinkActive="active">
             <i class="material-icons">library_books</i>
             <span class="nav-text">Resources</span>
           </a>
         </li>
+
         <li class="nav-item" [class.active]="activeLink === 'tasks'">
           <a (click)="setActive('tasks')" routerLinkActive="active">
             <i class="material-icons">list</i>
@@ -60,7 +62,6 @@
     </nav>
     <div class="sidebar-footer">
       <span>© StudyBuddy {{ currentYear }}</span>
-<!--      <small>v1.0.0</small>-->
     </div>
   </aside>
 
