@@ -21,5 +21,4 @@ export class ProgressService {
   getTasksByProgressId(progressId: number): Observable<Task[]> {
     return this.http.get<Task[]>(`${this.apiUrl}/${progressId}/tasks`); // Using the correct endpoint to fetch tasks
   }
-
 }

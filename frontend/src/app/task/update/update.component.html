@@ -50,7 +50,7 @@
           name="dueDate"
           class="form-control"
           [(ngModel)]="task.dueDate"
-          [min]="task.createdAt"
+          [min]="today"
           required
           #dueDate="ngModel"
         />

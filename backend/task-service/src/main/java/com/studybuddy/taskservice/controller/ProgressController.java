@@ -2,6 +2,7 @@ package com.studybuddy.taskservice.controller;
 
 import com.studybuddy.taskservice.model.Progress;
 import com.studybuddy.taskservice.model.Task;
+import com.studybuddy.taskservice.repository.ProgressRepository;
 import com.studybuddy.taskservice.service.ProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,6 @@ public class ProgressController {
     public List<Progress> getAllProgress() {
         return progressService.getAllProgress();
     }
-
     // Get tasks by progress ID (fixed return type)
     @GetMapping("/{id}/tasks")
     public ResponseEntity<List<Task>> getTasksByProgressId(@PathVariable Long id) {
@@ -39,6 +39,4 @@ public class ProgressController {
         progressService.deleteTasksAndProgressIfEmpty(progressId);
         return new ResponseEntity<>("Tasks and Progress deleted successfully if no tasks remain", HttpStatus.OK);
     }
-//
-
 }

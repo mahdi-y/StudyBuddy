@@ -17,6 +17,10 @@ export class ProgressComponent implements OnInit {
   progressList: Progress[] = [];
   filter: 'all' | 'completed' | 'overdue' = 'all'; // Default filter
   chart: any;
+  archivedProgressNames: string[] = [];
+  archivedProgressIds: number[] = JSON.parse(localStorage.getItem('archivedProgress') || '[]');
+
+
 
   constructor(
     private taskService: TaskService,
@@ -39,10 +43,16 @@ export class ProgressComponent implements OnInit {
     this.progressList.forEach(progress => {
       this.progressService.getTasksByProgressId(progress.id).subscribe((tasks: Task[]) => {
         progress.tasks = tasks;
+
+        // ✅ Recalculate the percentage after tasks are loaded
+        const total = tasks.length;
+        const completed = tasks.filter(t => t.completed).length;
+        progress.progressPercentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
         loadedCount++;
 
         if (loadedCount === this.progressList.length) {
-          this.createChart(); // Only after all progress.tasks are loaded
+          this.createChart(); // Only after all progress.tasks are loaded and percentages updated
         }
       });
     });
@@ -84,34 +94,67 @@ export class ProgressComponent implements OnInit {
     return latest.toDateString();
   }
 
-  shouldArchiveProgress(progress: Progress): boolean {
-    if (progress.progressPercentage !== 100) return false;
+  archiveProgress(id: number): void {
+    if (!this.archivedProgressIds.includes(id)) {
+      this.archivedProgressIds.push(id);
+      localStorage.setItem('archivedProgress', JSON.stringify(this.archivedProgressIds));
+      this.updateChartData(); // ⬅️ Update the chart visually
+    }
+  }
+  isArchived(progress: Progress): boolean {
+    return this.archivedProgressIds.includes(progress.id);
+  }
+  updateChartData(): void {
+    if (!this.chart) return;
 
-    const completedTasks = progress.tasks?.filter(t => t.completed);
-    if (!completedTasks || completedTasks.length === 0) return false;
+    const nonArchivedProgress = this.progressList.filter(p => !this.isArchived(p));
 
-    const latestCompletionDate = Math.max(
-      ...completedTasks.map(t => new Date(t.dueDate).getTime())
+    const labels = ['Total Progress', 'Total Tasks', 'Completed'];
+    const progressCount = nonArchivedProgress.length;
+    const taskCount = nonArchivedProgress.reduce((sum, p) => sum + (p.tasks?.length || 0), 0);
+    const completedCount = nonArchivedProgress.reduce(
+      (sum, p) => sum + (p.tasks?.filter(t => t.completed).length || 0),
+      0
     );
 
-    const daysPassed = (Date.now() - latestCompletionDate) / (1000 * 60 * 60 * 24);
-    return daysPassed > 7;
+    // Update chart data directly
+    this.chart.data.labels = labels;
+    this.chart.data.datasets[0].data = [progressCount, taskCount, completedCount];
+
+    this.chart.update(); // ⬅️ Refresh the chart
   }
 
   getNonArchivedProgressCount(): number {
-    return this.progressList.filter(p => !this.shouldArchiveProgress(p)).length;
+    return this.progressList.filter(p => !this.isArchived(p)).length;
   }
 
   getVisibleTasksCount(): number {
     return this.progressList
-      .filter(p => !this.shouldArchiveProgress(p))
-      .reduce((sum, p) => sum + (p.tasks?.length || 0), 0);
+      .filter(p => !this.isArchived(p))
+      .reduce((sum, p) => sum + (p.tasks?.length ?? 0), 0);
   }
+
+  getCompletedTasksCountForProgress(progress: Progress): number {
+    if (this.isArchived(progress)) {
+      return 0;
+    }
+
+    return progress.tasks?.filter(task => task.completed).length ?? 0;
+  }
+
 
   getVisibleCompletedTasksCount(): number {
     return this.progressList
-      .filter(p => !this.shouldArchiveProgress(p))
+      .filter(p => !this.isArchived(p))
       .reduce((sum, p) => sum + (p.tasks?.filter(t => t.completed).length || 0), 0);
+  }
+
+  isTaskDueSoon(task: Task): boolean {
+    if (task.completed || !task.dueDate) return false;
+    const now = new Date().getTime();
+    const due = new Date(task.dueDate).getTime();
+    const timeDiff = due - now;
+    return timeDiff > 0 && timeDiff <= 24 * 60 * 60 * 1000; // within 24h
   }
 
   createChart() {
@@ -160,6 +203,7 @@ export class ProgressComponent implements OnInit {
       }
     });
   }
+
   applyFilter(): void {
     // This will trigger change detection if needed
   }

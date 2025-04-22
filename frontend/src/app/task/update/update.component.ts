@@ -23,6 +23,7 @@ export class UpdateTaskComponent implements OnInit {
   };
 
   progressList: any[] = [];  // Holds progress options
+  today: string = new Date().toISOString().split('T')[0];
 
 
   constructor(

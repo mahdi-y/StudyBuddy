@@ -13,7 +13,7 @@
 
   <!-- Iterate over each progress item -->
   <div *ngFor="let progress of progressList">
-    <div *ngIf="!shouldArchiveProgress(progress)" class="card shadow-lg border-0 mb-5 rounded-4 bg-light-subtle">
+    <div *ngIf="!isArchived(progress)" class="card shadow-lg border-0 mb-5 rounded-4 bg-light-subtle">
 
       <!-- Card Header -->
       <div class="card-header bg-white rounded-top-4 py-4 px-4 border-bottom">
@@ -24,7 +24,7 @@
         </h3>
         <div class="d-flex flex-wrap gap-3">
           <p class="mb-0"><strong>📝 Total Tasks:</strong> {{ filteredTasks(progress).length }}</p>
-          <p class="mb-0"><strong>✅ Completed:</strong> {{ getVisibleCompletedTasksCount() }}</p>
+          <p class="mb-0"><strong>✅ Completed:</strong> {{ getCompletedTasksCountForProgress(progress) }}</p>
           <p class="mb-0 text-secondary" *ngIf="getEstimatedCompletion(progress)">
             <strong>📅 Estimated:</strong> {{ getEstimatedCompletion(progress) }}
           </p>
@@ -55,6 +55,20 @@
           {{ getProgressStatus(progress) }}
         </span>
       </div>
+      <!-- Smart Archive Suggestion -->
+      <div
+        *ngIf="progress.progressPercentage === 100 && !isArchived(progress)"
+        class="alert alert-success d-flex justify-content-between align-items-center p-2 mt-3"
+      >
+        <span>🎉 This progress is completed. Do you want to archive it?</span>
+        <button
+          class="btn btn-outline-success btn-sm"
+          (click)="archiveProgress(progress.id)"
+        >
+          Archive
+        </button>
+      </div>
+
 
       <!-- Card Body -->
       <div class="card-body p-4" *ngIf="progress.tasks && progress.tasks.length > 0">
@@ -75,11 +89,20 @@
           <div *ngFor="let task of getSortedTasks(filteredTasks(progress))" class="col-md-6 col-lg-4">
             <div class="p-3 border rounded bg-white h-100">
               <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5 class="mb-2 fw-bold">
-                  <i class="bi me-2"
-                     [ngClass]="task.completed ? 'bi-check-circle-fill text-success' : 'bi-clock-fill text-warning'"></i>
-                  {{ task.title }}
-                </h5>
+                <div class="d-flex flex-column mb-2">
+                  <h5 class="fw-bold">
+                    <i class="bi me-2"
+                       [ngClass]="task.completed ? 'bi-check-circle-fill text-success' : 'bi-clock-fill text-warning'"></i>
+                    {{ task.title }}
+                  </h5>
+
+                  <!-- "Due Soon!" below the title -->
+                  <span *ngIf="isTaskDueSoon(task)" class="text-danger mt-1">
+    <i class="bi bi-alarm-fill me-1"></i> ⏰ Due Soon!
+  </span>
+                </div>
+
+
                 <span class="badge rounded-pill"
                       [ngClass]="task.completed ? 'bg-success' : 'bg-warning text-dark'">
                   {{ task.completed ? '✅ Completed' : '⌛ In Progress' }}
