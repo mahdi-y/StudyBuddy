@@ -61,6 +61,24 @@ export class RessourceComponent implements OnInit {
       });
     }
   }
+  downloadFile(resource: Ressource): void {
+    const byteCharacters = atob(resource.fileUrl); // Decode base64
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' }); // Set MIME type to PDF
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${resource.title || 'download'}.pdf`;
+    link.click();
+    window.URL.revokeObjectURL(url); // Cleanup
+  }
+
 
   deleteResource(id: number): void {
     this.ressourcesService.deleteResource(id).subscribe({

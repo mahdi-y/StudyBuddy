@@ -7,6 +7,7 @@
         <th>Description</th>
         <th>Type</th>
         <th>Uploaded At</th>
+        <th>Download</th> <!-- Added Download Column -->
       </tr>
     </thead>
     <tbody>
@@ -15,6 +16,9 @@
         <td>{{ resource.description }}</td>
         <td>{{ resource.type }}</td>
         <td>{{ resource.uploadedAt | date: 'short' }}</td>
+        <td>
+          <button (click)="downloadFile(resource)">Download</button> <!-- Added Download Button -->
+        </td>
       </tr>
     </tbody>
   </table>
