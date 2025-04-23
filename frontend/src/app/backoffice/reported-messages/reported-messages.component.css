@@ -1,62 +1,85 @@
 .reported-messages-container {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+    margin: 0;
+}
+
+.reported-header {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #222;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 8px;
 }
 
 .empty-state {
     text-align: center;
-    color: #666;
+    font-style: italic;
+    color: #999;
+    margin-top: 20px;
 }
 
-.report-item {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 4px;
+.report-card {
+    background: #fefefe;
+    border: 1px solid #e3e3e3;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.report-card:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
 }
 
 .report-message {
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 1.05rem;
     color: #333;
+    margin-bottom: 10px;
 }
 
 .report-details {
-    color: #666;
-    font-size: 0.9em;
-    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
 }
 
 .report-actions {
-    margin-top: 10px;
     display: flex;
     gap: 10px;
+    justify-content: flex-end;
 }
 
-.delete-btn {
+.btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.action-delete {
     background-color: #f44336;
     color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.delete-btn:hover {
+.action-delete:hover {
     background-color: #d32f2f;
 }
 
-.dismiss-btn {
+.action-dismiss {
     background-color: #2196f3;
     color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
-.dismiss-btn:hover {
+.action-dismiss:hover {
     background-color: #1976d2;
 }

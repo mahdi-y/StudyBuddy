@@ -52,16 +52,12 @@
              *ngIf="!message.isEditable"
              [innerHTML]="highlightMatches(message.content)"></div>
 
-        <!-- Report Button -->
-        <button
-          *ngIf="message.senderId !== senderId"
-          class="flag-btn"
-          (click)="openReportOverlay(message)"
-          matTooltip="Report Message"
-          matTooltipPosition="above"
-        >
-          <span class="material-icons">flag</span>
-        </button>
+        <div class="message-actions" *ngIf="message.senderId !== senderId">
+          <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
+          <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
+            <button class="menu-option" (click)="openReportOverlay(message)">Report</button>
+          </div>
+        </div>
 
         <div class="edit-container" *ngIf="message.isEditable">
           <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>

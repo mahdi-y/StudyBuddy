@@ -1,24 +1,24 @@
 <div class="reported-messages-container">
-    <h3>Reported Messages</h3>
+    <h3 class="reported-header">Reported Messages</h3>
 
-    <!-- Empty State -->
     <div *ngIf="reportedMessages.length === 0" class="empty-state">
         No reported messages yet.
     </div>
 
-    <!-- List of Reported Messages -->
-    <div *ngFor="let report of reportedMessages" class="report-item">
-        <div class="report-message">{{ report.message.content }}</div>
-        <div class="report-details">
-            <span>Reported by: User {{ report.reporterId }}</span>
-            <span>Reason: {{ report.reason }}</span>
-            <span>Timestamp: {{ report.timestamp | date:'medium' }}</span>
+    <div *ngFor="let report of reportedMessages" class="report-card">
+        <div class="report-message">
+            "{{ report.message.content }}"
         </div>
 
-        <!-- Actions -->
+        <div class="report-details">
+            <span><strong>Reporter:</strong> User {{ report.reporterId }}</span>
+            <span><strong>Reason:</strong> {{ report.reason }}</span>
+            <span><strong>Reported at:</strong> {{ report.timestamp | date:'medium' }}</span>
+        </div>
+
         <div class="report-actions">
-            <button class="delete-btn" (click)="deleteMessage(report)">Delete Message</button>
-            <button class="dismiss-btn" (click)="dismissReport(report)">Dismiss Report</button>
+            <button class="btn action-delete" (click)="deleteMessage(report)">Delete Message</button>
+            <button class="btn action-dismiss" (click)="dismissReport(report)">Dismiss Report</button>
         </div>
     </div>
 </div>
