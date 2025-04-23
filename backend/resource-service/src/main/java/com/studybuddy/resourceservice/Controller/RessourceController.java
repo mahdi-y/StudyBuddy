@@ -1,26 +1,33 @@
 package com.studybuddy.resourceservice.Controller;
-import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
+
 import com.studybuddy.resourceservice.Entity.Ressource;
 import com.studybuddy.resourceservice.Entity.StudyGroup;
-import com.studybuddy.resourceservice.Service.RessourceService;
 import com.studybuddy.resourceservice.Entity.User;
+import com.studybuddy.resourceservice.Service.OCRService;
+import com.studybuddy.resourceservice.Service.RessourceService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.List;
-
 
 @Validated
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/api/ressources")  // Updated path to '/api/ressources'
+@RequestMapping("/api/ressources")
 public class RessourceController {
 
     @Autowired
     private RessourceService ressourceService;
+
+    @Autowired
+    private OCRService ocrService;
 
     @GetMapping
     public List<Ressource> getAll() {
@@ -40,23 +47,16 @@ public class RessourceController {
         ressource.setUploadedAt(now);
         ressource.setUpdatedAt(now);
 
-        // Dummy objects assignment
         User user = new User();
-        user.setIdUser(1L); // Assigning a dummy user with ID 1L
+        user.setIdUser(1L); // Dummy
         ressource.setUser(user);
 
         StudyGroup group = new StudyGroup();
-        group.setIdGroup(1L); // Assigning a dummy study group with ID 1L
+        group.setIdGroup(1L); // Dummy
         ressource.setGroup(group);
-
-        // Assuming categoryId is sent in the request and is valid
-        //Category category = new Category();
-        //category.setIdCategory(ressource.getCategory().getId()); // Assuming the client sends the category ID
-        //ressource.setCategory(category);
 
         return ressourceService.save(ressource);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<Ressource> update(@PathVariable Long id, @RequestBody Ressource updated) {
@@ -74,5 +74,42 @@ public class RessourceController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         ressourceService.deleteById(id);
+    }
+
+    // NEW: Image upload with OCR and PDF generation
+    @PostMapping("/upload")
+    public ResponseEntity<Ressource> uploadImageAndSaveRessource(
+            @RequestParam("file") MultipartFile file,  // Changed from 'fileUrl' to 'file'
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("type") String type
+    ) {
+        try {
+            byte[] pdfBytes = ocrService.processImageToPdf(file); // Process image to PDF using OCR
+            String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);  // Encode PDF as Base64
+
+            Ressource ressource = new Ressource();
+            ressource.setTitle(title);
+            ressource.setDescription(description);
+            ressource.setFileUrl(base64Pdf);  // Store Base64 PDF string
+            ressource.setType(type);
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            ressource.setUploadedAt(now);
+            ressource.setUpdatedAt(now);
+
+            User user = new User();
+            user.setIdUser(1L); // Dummy user
+            ressource.setUser(user);
+
+            StudyGroup group = new StudyGroup();
+            group.setIdGroup(1L); // Dummy group
+            ressource.setGroup(group);
+
+            Ressource saved = ressourceService.save(ressource);  // Save the ressource
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();  // Handle error
+        }
     }
 }

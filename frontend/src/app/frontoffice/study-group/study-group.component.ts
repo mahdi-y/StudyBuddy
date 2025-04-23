@@ -66,6 +66,7 @@ export class StudyGroupComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      console.log('Selected file:', file);  // Log the file to check if it's correct
       this.selectedFile = file;
 
       const reader = new FileReader();
@@ -78,22 +79,40 @@ export class StudyGroupComponent implements OnInit {
   }
 
   createResource(): void {
-    if (this.newResource.title && this.newResource.fileUrl && this.newResource.description) {
-      const resourceToAdd: any = {
-        ...this.newResource
-      };
+    if (this.newResource.title && this.newResource.fileUrl && this.newResource.description && this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+      console.log('FormData being sent:', formData);  // Log FormData
 
-      // Only add group if one is selected
-      if (this.selectedGroup) {
-        resourceToAdd.category = { id: this.selectedGroup.id };
-      }
+      // Send the file for OCR processing
+      this.ressourceService.uploadImageForOCR(formData).subscribe({
+        next: (response) => {
+          console.log('OCR processing response:', response);  // Log the backend response
+          if (response.base64File) {
+            this.newResource.fileUrl = response.base64File;
 
-      this.saveResource(resourceToAdd);
+            // Save the resource with the OCR PDF
+            const resourceToAdd = {
+              ...this.newResource,
+              category: this.selectedGroup ? { id: this.selectedGroup.id } : null,
+            };
+
+            this.saveResource(resourceToAdd);
+          } else {
+            alert('OCR processing failed: No Base64 file returned.');
+          }
+        },
+        error: (err) => {
+          console.error('Error during OCR processing:', err);
+          alert('An error occurred during OCR processing.');
+        }
+      });
     } else {
       alert('Please fill out all fields and select a file.');
     }
-    this.loadResources();
   }
+
+
 
   saveResource(resourceToAdd: any): void {
     this.ressourceService.addResource(resourceToAdd).subscribe({

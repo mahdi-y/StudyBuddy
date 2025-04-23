@@ -36,5 +36,10 @@ export class RessourceService {
   deleteResource(resourceId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${resourceId}`);
   }
+  uploadImageForOCR(formData: FormData): Observable<any> {
+    return this.http.post<any>('http://localhost:8081/api/ocr/upload-ocr', formData);  // Updated URL
+  }
+
+
 }
 

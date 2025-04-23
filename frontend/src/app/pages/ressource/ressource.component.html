@@ -1,23 +1,28 @@
+<!-- Include Material Icons if not already -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
 <div class="container">
-  <h2>Resources List</h2>
-  <table class="table">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th>Title</th>
-        <th>Description</th>
-        <th>Type</th>
         <th>Uploaded At</th>
-        <th>Download</th> <!-- Added Download Column -->
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let resource of resources">
         <td>{{ resource.title }}</td>
-        <td>{{ resource.description }}</td>
-        <td>{{ resource.type }}</td>
         <td>{{ resource.uploadedAt | date: 'short' }}</td>
         <td>
-          <button (click)="downloadFile(resource)">Download</button> <!-- Added Download Button -->
+          <div class="d-flex">
+            <button class="btn btn-success btn-sm me-2" (click)="downloadFile(resource)">
+              <span class="material-icons">download</span> Download
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteResource(resource.idResource)">
+              <span class="material-icons">delete</span> Delete
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>
