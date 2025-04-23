@@ -64,7 +64,7 @@
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
               <h3>Resources</h3>
-              <app-ressource></app-ressource> <!-- Show resources list -->
+<app-ressource [resources]="resources" (refreshRequested)="loadResources()"></app-ressource>
 
               <!-- Add Resource Button (handles modal display) -->
               <button class="btn btn-primary" (click)="openAddResourceModal()">Add Resource</button>

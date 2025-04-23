@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { RessourceService } from 'src/app/services/ressource.service';
 import { Ressource } from 'src/app/models/resource.model';
 
@@ -8,19 +8,27 @@ import { Ressource } from 'src/app/models/resource.model';
   styleUrls: ['./ressource.component.css']
 })
 export class RessourceComponent implements OnInit {
-  resources: Ressource[] = [];
+  @Input() resources: Ressource[] = [];  // This receives resources from the parent
+  @Output() refreshRequested = new EventEmitter<void>();  // This will emit the refresh request
   newResource: Ressource = new Ressource();  // Initialize using the constructor
   selectedResource: Ressource | null = null;
 
   constructor(private ressourcesService: RessourceService) {}
 
   ngOnInit(): void {
-    this.loadResources();
+    // Initially load resources, you can remove this if resources are already passed as input
+    if (this.resources.length === 0) {
+      this.loadResources();
+    }
   }
 
   loadResources(): void {
+    console.log('Loading resources...');
     this.ressourcesService.getResources().subscribe({
-      next: (data) => this.resources = data,
+      next: (data) => {
+        console.log('Resources received:', data);
+        this.resources = data;
+      },
       error: (error) => console.error('Error fetching resources', error)
     });
   }
@@ -29,8 +37,9 @@ export class RessourceComponent implements OnInit {
     if (this.newResource.title) {  // Use title instead of name
       this.ressourcesService.addResource(this.newResource).subscribe({
         next: (res) => {
-          this.resources.push(res);
+          this.resources.push(res);  // Add the new resource to the list
           this.newResource = new Ressource();  // Reset after adding
+          this.refreshRequested.emit();  // Emit refresh request to parent component
         },
         error: (err) => console.error('Error creating resource', err)
       });
@@ -45,7 +54,7 @@ export class RessourceComponent implements OnInit {
     if (this.selectedResource) {
       this.ressourcesService.updateResource(this.selectedResource).subscribe({
         next: () => {
-          this.loadResources();
+          this.refreshRequested.emit();  // Emit refresh request after update
           this.selectedResource = null;
         },
         error: (err) => console.error('Error updating resource', err)
@@ -57,6 +66,7 @@ export class RessourceComponent implements OnInit {
     this.ressourcesService.deleteResource(id).subscribe({
       next: () => {
         this.resources = this.resources.filter(r => r.idResource !== id);
+        this.refreshRequested.emit();  // Emit refresh request after delete
       },
       error: (err) => console.error('Error deleting resource', err)
     });

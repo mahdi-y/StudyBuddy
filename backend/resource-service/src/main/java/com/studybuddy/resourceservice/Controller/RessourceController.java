@@ -40,17 +40,23 @@ public class RessourceController {
         ressource.setUploadedAt(now);
         ressource.setUpdatedAt(now);
 
-        // Dummy objects
+        // Dummy objects assignment
         User user = new User();
-        user.setIdUser(1L);
+        user.setIdUser(1L); // Assigning a dummy user with ID 1L
         ressource.setUser(user);
 
         StudyGroup group = new StudyGroup();
-        group.setIdGroup(1L);
+        group.setIdGroup(1L); // Assigning a dummy study group with ID 1L
         ressource.setGroup(group);
+
+        // Assuming categoryId is sent in the request and is valid
+        //Category category = new Category();
+        //category.setIdCategory(ressource.getCategory().getId()); // Assuming the client sends the category ID
+        //ressource.setCategory(category);
 
         return ressourceService.save(ressource);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Ressource> update(@PathVariable Long id, @RequestBody Ressource updated) {

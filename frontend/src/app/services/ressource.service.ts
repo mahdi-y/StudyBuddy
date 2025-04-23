@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ressource } from '../models/resource.model';
-
+import { tap } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,9 +12,12 @@ export class RessourceService {
   constructor(private http: HttpClient) {}
 
   // Define the getResources method that uses the apiUrl property
-  getResources(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  getResources(): Observable<Ressource[]> {
+    return this.http.get<Ressource[]>(this.apiUrl).pipe(
+      tap(data => console.log('Resources fetched from API:', data))  // Add this
+    );
   }
+
    // Add a new resource
    addResource(resource: Ressource): Observable<Ressource> {
     return this.http.post<Ressource>(this.apiUrl, resource);

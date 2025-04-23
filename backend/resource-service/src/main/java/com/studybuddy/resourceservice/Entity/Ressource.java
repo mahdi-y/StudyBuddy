@@ -13,7 +13,8 @@ public class Ressource {
 
     private String title;
 
-    @Pattern(regexp = "^.*\\.pdf$", message = "File URL must end with .pdf")
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String fileUrl;
 
     private Timestamp uploadedAt;
