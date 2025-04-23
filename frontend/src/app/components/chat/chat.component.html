@@ -52,6 +52,17 @@
              *ngIf="!message.isEditable"
              [innerHTML]="highlightMatches(message.content)"></div>
 
+        <!-- Report Button -->
+        <button
+          *ngIf="message.senderId !== senderId"
+          class="flag-btn"
+          (click)="openReportOverlay(message)"
+          matTooltip="Report Message"
+          matTooltipPosition="above"
+        >
+          <span class="material-icons">flag</span>
+        </button>
+
         <div class="edit-container" *ngIf="message.isEditable">
           <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>
           <div class="edit-actions">
@@ -114,5 +125,24 @@
   >
     <span class="material-icons">expand_more</span>
   </button>
+
+  <!-- Report Overlay -->
+  <div *ngIf="selectedMessageForReport" class="report-overlay">
+    <div class="report-modal">
+      <h3>Report Message</h3>
+      <p>Select a reason for reporting this message:</p>
+
+      <!-- Reason Options -->
+      <div class="reason-options">
+        <button (click)="setReportReason('Inappropriate Content')">Inappropriate Content</button>
+        <button (click)="setReportReason('Spam')">Spam</button>
+        <button (click)="setReportReason('Harassment')">Harassment</button>
+        <button (click)="setReportReason('Other')">Other</button>
+      </div>
+
+      <!-- Cancel Button -->
+      <button class="cancel-btn" (click)="closeReportOverlay()">Cancel</button>
+    </div>
+  </div>
 
 </div>

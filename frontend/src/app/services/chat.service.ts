@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {Client, IMessage} from '@stomp/stompjs';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import {Observable, Subject, BehaviorSubject, lastValueFrom} from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
@@ -206,6 +206,79 @@ export class ChatService implements OnDestroy {
         connectSubscription.unsubscribe();
       };
     });
+  }
+
+  reportMessageViaWebSocket(chatId: number, messageId: number, reporterId: number, reason: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.connectionSubject.value) {
+        reject(new Error('Not connected to WebSocket'));
+        return;
+      }
+
+      this.stompClient.publish({
+        destination: '/app/reportMessage',
+        body: JSON.stringify({ chatId, messageId, reporterId, reason }),
+        headers: { 'content-type': 'application/json' }
+      });
+      resolve();
+    });
+  }
+
+  subscribeToReports(): Observable<any> {
+    return new Observable(observer => {
+      console.log('Subscribing to /topic/reports');
+
+      // Subscribe to the connection status
+      const connectionSubscription = this.connectionSubject.subscribe(isConnected => {
+        if (isConnected) {
+          // WebSocket is connected; proceed with subscription
+          const subscription = this.stompClient.subscribe('/topic/reports', (message: IMessage) => {
+            try {
+              const parsedMessage = JSON.parse(message.body);
+              observer.next(parsedMessage);
+            } catch (e) {
+              console.error('Error parsing report:', e);
+              observer.error(e);
+            }
+          });
+
+          // Return cleanup function to unsubscribe
+          return () => {
+            subscription.unsubscribe();
+          };
+        } else {
+          // Return a no-op function when not connected
+          return () => {};
+        }
+      });
+    });
+  }
+
+  getReportedMessages(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/api/reports`);
+  }
+
+  // Delete a reported message via WebSocket
+  deleteReportedMessage(messageId: number, chatId: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.connectionSubject.value) {
+        reject(new Error('Not connected to WebSocket'));
+        return;
+      }
+
+      this.stompClient.publish({
+        destination: '/app/deleteMessage',
+        body: JSON.stringify({ messageId, chatId }),
+        headers: { 'content-type': 'application/json' }
+      });
+      resolve();
+    });
+  }
+
+  // Dismiss a report via HTTP
+  dismissReport(reportId: number): Promise<void> {
+    const url = `${environment.apiUrl}/api/reports/dismiss/${reportId}`;
+    return lastValueFrom(this.http.post(url, {})).then(() => {});
   }
 
 }

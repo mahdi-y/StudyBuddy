@@ -26,6 +26,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   typingUsers: Set<number> = new Set();
   showProfanityConfirm = false;
   showScrollToBottom = false;
+  selectedMessageForReport: any = null; // Holds the message being reported
+  reportReason: string | null = null;  // Holds the selected report reason
 
 
   constructor(private chatService: ChatService) {}
@@ -36,6 +38,44 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.shouldScrollToBottom = true;
     this.loadChatSettings();
     this.subscribeToTypingIndicators();
+  }
+
+  openReportOverlay(message: any): void {
+    this.selectedMessageForReport = message;
+  }
+
+  closeReportOverlay(): void {
+    this.selectedMessageForReport = null;
+    this.reportReason = null;
+  }
+
+  setReportReason(reason: string): void {
+    this.reportReason = reason;
+
+    if (this.selectedMessageForReport) {
+      this.reportMessage(this.selectedMessageForReport, this.reportReason);
+      this.closeReportOverlay();
+    }
+  }
+
+  reportMessage(message: any, reason: string): void {
+    if (!message.id) {
+      console.error('Cannot report message - messageId is undefined');
+      return;
+    }
+
+    const chatId = this.chatId; // Assuming chatId is available in the component
+    const reporterId = this.senderId; // Assuming senderId is the current user's ID
+
+    this.chatService.reportMessageViaWebSocket(chatId, message.id, reporterId, reason)
+      .then(() => {
+        console.log('Message reported successfully');
+        alert('Message reported successfully');
+      })
+      .catch(err => {
+        console.error('Failed to report message:', err);
+        alert('Failed to report message. Please try again.');
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

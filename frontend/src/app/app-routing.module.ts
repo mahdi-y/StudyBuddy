@@ -8,6 +8,7 @@ import {NotFoundComponent} from "./frontoffice/not-found/not-found.component";
 import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
 import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
+import {ReportedMessagesComponent} from "./backoffice/reported-messages/reported-messages.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full' },
       { path: 'dashboard-content', component: DashboardContentComponent },
+      { path: 'message-reports', component: ReportedMessagesComponent}
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },

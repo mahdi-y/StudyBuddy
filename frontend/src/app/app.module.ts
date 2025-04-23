@@ -14,6 +14,7 @@ import { StudyGroupComponent } from './frontoffice/study-group/study-group.compo
 import {FormsModule} from "@angular/forms";
 import {ChatComponent} from "./components/chat/chat.component";
 import {HttpClientModule} from "@angular/common/http";
+import { ReportedMessagesComponent } from './backoffice/reported-messages/reported-messages.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {HttpClientModule} from "@angular/common/http";
     DashboardContentComponent,
     StudyGroupComponent,
     AppComponent,
-    ChatComponent
+    ChatComponent,
+    ReportedMessagesComponent
   ],
   imports: [
     BrowserModule,

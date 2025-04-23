@@ -1,0 +1,62 @@
+.reported-messages-container {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #666;
+}
+
+.report-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.report-message {
+    font-weight: bold;
+    color: #333;
+}
+
+.report-details {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.report-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+}
+
+.dismiss-btn {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.dismiss-btn:hover {
+    background-color: #1976d2;
+}

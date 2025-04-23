@@ -1,0 +1,24 @@
+<div class="reported-messages-container">
+    <h3>Reported Messages</h3>
+
+    <!-- Empty State -->
+    <div *ngIf="reportedMessages.length === 0" class="empty-state">
+        No reported messages yet.
+    </div>
+
+    <!-- List of Reported Messages -->
+    <div *ngFor="let report of reportedMessages" class="report-item">
+        <div class="report-message">{{ report.message.content }}</div>
+        <div class="report-details">
+            <span>Reported by: User {{ report.reporterId }}</span>
+            <span>Reason: {{ report.reason }}</span>
+            <span>Timestamp: {{ report.timestamp | date:'medium' }}</span>
+        </div>
+
+        <!-- Actions -->
+        <div class="report-actions">
+            <button class="delete-btn" (click)="deleteMessage(report)">Delete Message</button>
+            <button class="dismiss-btn" (click)="dismissReport(report)">Dismiss Report</button>
+        </div>
+    </div>
+</div>
