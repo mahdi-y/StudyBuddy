@@ -22,8 +22,6 @@ public class NotificationController {
         try {
             // Call the service to send the email
             notificationService.sendEmail(groupName);
-
-            // Return a success response
             Map<String, String> response = new HashMap<>();
             response.put("message", "Email sent successfully!");
             return ResponseEntity.ok(response);

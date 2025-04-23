@@ -82,7 +82,7 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   goToCreateGroup(): void {
-    this.router.navigate(['/groups/new']);
+    this.router.navigate(['/study-groups/new']);
   }
 
   toggleStudyGroupsVisibility(): void {
@@ -90,10 +90,17 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   goToUpdateGroup(groupId: number): void {
-    this.router.navigate([`/groups/update-group/${groupId}`]);
+    this.router.navigate([`/study-groups/update-group/${groupId}`]);
     this.closeModal();
   }
-
+  openFlashcardModal() {
+    const modalElement = document.getElementById('flashcardModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+  
   deleteStudyGroup(groupId: number): void {
     if (confirm('Are you sure you want to delete this study group?')) {
       this.studyGroupService.deleteStudyGroup(groupId).subscribe({

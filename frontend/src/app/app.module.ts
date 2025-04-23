@@ -18,18 +18,6 @@ import { WorkComponent } from './frontoffice/work/work.component';
 import { CategoryComponent } from './frontoffice/category/category.component';
 import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
 import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
-
-
-
-
-const routes: Routes = [
-  { path: 'groups', loadChildren: () => import('./study-groups/study-groups.module').then(m => m.StudyGroupsModule) },
-  { path: 'invitations', loadChildren: () => import('./invitations/invitations.module').then(m => m.InvitationsModule) },
-  { path: '', redirectTo: '/groups', pathMatch: 'full' }
-];
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +32,6 @@ const routes: Routes = [
     BrowserModule,
     ToastrModule.forRoot(),
     HttpClientModule,
-    RouterModule.forRoot(routes),  // Correct way
     BrowserAnimationsModule,
     MatCardModule,
     MatButtonModule,

@@ -10,7 +10,7 @@ import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboar
 
 const routes: Routes = [
   {
-    path: 'groups',
+    path: 'study-groups',
     loadChildren: () => import('./study-groups/study-groups.module').then(m => m.StudyGroupsModule)
   },
   {

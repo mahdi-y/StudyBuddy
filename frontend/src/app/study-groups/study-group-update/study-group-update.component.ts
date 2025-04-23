@@ -34,10 +34,14 @@ export class StudyGroupUpdateComponent implements OnInit {
     });
   }
 
-  // Method to detect if there are any changes
   hasChanges(): boolean {
-    return this.studyGroup.name !== this.originalGroup.name || this.studyGroup.description !== this.originalGroup.description;
+    // Make sure both original and current data are loaded
+    if (!this.originalGroup || !this.studyGroup) return false;
+  
+    return this.studyGroup.name !== this.originalGroup.name ||
+           this.studyGroup.description !== this.originalGroup.description;
   }
+  
 
   updateGroup(): void {
     // Validate fields
@@ -56,7 +60,7 @@ export class StudyGroupUpdateComponent implements OnInit {
     this.studyGroupService.updateGroup(this.groupId, this.studyGroup).subscribe({
       next: () => {
         console.log('Group updated successfully');
-        this.router.navigate(['/groups']);
+        this.router.navigate(['/study-groups']);
       },
       error: (err: any) => {
         console.error('Error during update:', err);

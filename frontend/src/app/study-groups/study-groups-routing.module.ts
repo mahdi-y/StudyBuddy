@@ -10,6 +10,8 @@ const routes: Routes = [
   { path: 'new', component: StudyGroupCreateComponent },     // For creating a new study group
   { path: 'update-group/:id', component: StudyGroupUpdateComponent },
   { path: 'flashcards', component: FlashcardComponent },
+  { path: 'study-groups', component: StudyGroupListComponent },
+
   // For updating an existing study group by ID
 ];
 
