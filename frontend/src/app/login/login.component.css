@@ -1,113 +1,108 @@
+/* The background wrapper */
 .parent {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #74ebd5, #9face6);
+  position: relative;
 }
 
 img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    object-fit: cover;
-    z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  z-index: -1;
 }
 
+/* The login container */
 .container {
-    width: 400px;
-    color: #fff;
-    padding: 30px 40px;
-    border-radius: 15px;
-    background: rgba(5, 5, 5, .7);
+  background: rgba(5, 5, 5, 0.8);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 15px;
+  color: #fff;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.input-box {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    margin: 30px 0;
+/* Smooth fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.input-box input {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    border-radius: 5px;
-    color: #fff;
-    border: 2px solid #fff;
-    font-size: 16px;
-    padding: 10px;
+/* Input field styles */
+.custom-input {
+  background: transparent;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.input-box i {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
+.custom-input:focus {
+  border-color: #74ebd5;
+  box-shadow: 0 0 5px rgba(116, 235, 213, 0.5);
 }
 
-.remember {
-    display: flex;
-    justify-content: space-between;
-    font-size: 15px;
-    margin: -10px 0 15px;
+.custom-btn {
+  background-color: #04fff0;
+  color: #000;
+  border: none;
+  border-radius: 25px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.3s ease;
 }
 
-.remember a {
-    border-bottom: 2px solid transparent;
-    color: #fff;
+.custom-btn:hover {
+  background-color: transparent;
+  border: 2px solid #04fff0;
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #04fff0;
 }
 
-.remember a:hover {
-    /* border-bottom: 2px solid #fff; */
-    color: #000dff;
+.link-primary {
+  color: #74ebd5;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.btn {
-    width: 100%;
-    height: 40px;
-    background: #04fff0;
-    color: #000;
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    box-shadow: 0 0 20px #04fff0;
-    font-size: 15px;
-    font-weight: 600;
-    transition: 1s;
-    margin-top: 20px;
-}
-
-.btn:hover {
-    background: transparent;
-    border: 2px solid #04fff0;
-    color: #fff;
-    transform: scale(1.1);
-    box-shadow: 0 0 20px #04fff0;
-}
-
-.register {
-    font-size: 14px;
-    margin-top: 20px;
-    text-align: center;
-}
-
-.register p a {
-    font-weight: 600;
-    color: #fff;
-    font-size: 18px;
-}
-
-.register p a:hover {
-    color: #000dff;
+.link-primary:hover {
+  color: #000dff;
+  text-decoration: underline;
 }
 
 .text-danger {
-    color: red;
-    font-size: 12px;
+  color: red;
+  font-size: 12px;
+}
+
+.register p a {
+  font-weight: 600;
+  color: #fff;
+  font-size: 18px;
+}
+
+.register p a:hover {
+  color: #000dff;
 }

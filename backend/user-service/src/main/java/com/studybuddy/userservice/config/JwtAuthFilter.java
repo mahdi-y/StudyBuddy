@@ -51,13 +51,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 			if (jwtService.validateToken(token, userDetails)) {
 				String role = jwtService.extractRole(token);
-				logger.info("Extracted role: {}", role);
+				int userId = jwtService.extractUserId(token); // 👈 Extract ID here
+				logger.info("Extracted role: {}, userId: {}", role, userId);
+
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
 						userDetails,
 						null,
 						Collections.singletonList(new SimpleGrantedAuthority(role))
 				);
-				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+				// 👇 Add userId as additional details if you want to retrieve it later
+				authToken.setDetails(userId);
+
 				SecurityContextHolder.getContext().setAuthentication(authToken);
 			} else {
 				logger.warn("Token validation failed for user: {}", username);
@@ -66,4 +71,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
 		filterChain.doFilter(request, response);
 	}
+
 }

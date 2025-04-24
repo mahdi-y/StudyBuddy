@@ -28,6 +28,10 @@ public class JWTService {
 		return extractClaim(token, claims -> claims.get("role", String.class));
 	}
 
+	public int extractUserId(String token) {
+		return extractClaim(token, claims -> claims.get("id", int.class));
+	}
+
 	private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = extractAllClaims(token);
 		return claimsResolver.apply(claims);
@@ -50,9 +54,11 @@ public class JWTService {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
-	public String generateToken(String username, String role) {
+	// 🔽 Updated method to accept id
+	public String generateToken(String username, int userId, String role) {
 		Map<String, Object> claims = new HashMap<>();
-		claims.put("role", role); // Keep as "ADMIN" without prefix
+		claims.put("id", userId);      // Include user ID
+		claims.put("role", role);      // Include role
 		return createToken(claims, username);
 	}
 

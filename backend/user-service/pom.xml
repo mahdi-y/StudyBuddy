@@ -11,7 +11,7 @@
     <groupId>com.jts</groupId>
     <artifactId>login-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>login-example</name>
+    <name>user-service</name>
     <description>Demo project for Spring Boot</description>
     <url/>
     <licenses>

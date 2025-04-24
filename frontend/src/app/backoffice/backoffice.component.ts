@@ -11,6 +11,7 @@ export class BackofficeComponent implements OnInit {
   isAdmin: boolean = false;
   newUser: any = { name: '', username: '', password: '', address: '', mobileNo: '', age: null, role: 'USER' };
   originalUsers: any[] = [];
+  currentUser: any = null;
 
   constructor(private userService: UserService) {}
 
@@ -28,6 +29,7 @@ export class BackofficeComponent implements OnInit {
       console.log('Token payload:', payload);
       console.log('Role from token:', payload.role);
       this.isAdmin = payload.role === 'ADMIN';
+      this.currentUser = payload;  // Store current user details
       console.log('isAdmin:', this.isAdmin);
     } else {
       console.log('No token found in local storage');
@@ -37,8 +39,9 @@ export class BackofficeComponent implements OnInit {
   loadUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (users) => {
-        this.users = users.map(user => ({ ...user, editing: false }));
-        this.originalUsers = JSON.parse(JSON.stringify(users));
+        // Filter out the current user from the list
+        this.users = users.filter(user => user.id !== this.currentUser.id).map(user => ({ ...user, editing: false }));
+        this.originalUsers = JSON.parse(JSON.stringify(this.users));
         console.log('Users loaded:', this.users);
       },
       error: (err) => {
@@ -94,6 +97,4 @@ export class BackofficeComponent implements OnInit {
       }
     });
   }
-
- 
 }

@@ -45,7 +45,7 @@ public class LoginController {
 		if (authentication.isAuthenticated()) {
 			User user = loginRepository.findByUsername(request.getUsername())
 					.orElseThrow(() -> new RuntimeException("User not found"));
-			response.setToken(jwtService.generateToken(request.getUsername(), user.getRole()));
+			response.setToken(jwtService.generateToken(request.getUsername(),  user.getId(), user.getRole()));
 		} else {
 			throw new RuntimeException("Invalid credentials");
 		}

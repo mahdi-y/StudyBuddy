@@ -5,12 +5,13 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
+import {GuestGuardService} from "./services/guest-guard.service";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'register', component: RegisterComponent , canActivate: [GuestGuardService]},
+  { path: 'login', component: LoginComponent , canActivate: [GuestGuardService] },
+  { path: 'dashboard', component: DashboardComponent , canActivate: [AuthGuard]},
   { path: 'backoffice', component: BackofficeComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/login', pathMatch: 'full' }
 ];
