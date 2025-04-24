@@ -11,7 +11,9 @@ import { StudyGroup } from 'src/app/models/study-group.model';
 export class StudyGroupUpdateComponent implements OnInit {
   groupId!: number;
   studyGroup: StudyGroup = {} as StudyGroup;
-  originalGroup: StudyGroup = {} as StudyGroup; // Store original values for change detection
+  originalGroup: StudyGroup = {} as StudyGroup;
+
+  errorMessage: string = ''; // 👈 for displaying user-facing messages
 
   constructor(
     private route: ActivatedRoute,
@@ -22,11 +24,10 @@ export class StudyGroupUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.groupId = Number(this.route.snapshot.paramMap.get('id'));
 
-    // Fetch the group by ID and store original values
     this.studyGroupService.getGroupById(this.groupId).subscribe({
       next: (group: StudyGroup) => {
-        this.studyGroup = { ...group }; // Copy the data to studyGroup
-        this.originalGroup = { ...group }; // Store original values for comparison
+        this.studyGroup = { ...group };
+        this.originalGroup = { ...group };
       },
       error: (err: any) => {
         console.error('Error fetching group:', err);
@@ -35,35 +36,36 @@ export class StudyGroupUpdateComponent implements OnInit {
   }
 
   hasChanges(): boolean {
-    // Make sure both original and current data are loaded
     if (!this.originalGroup || !this.studyGroup) return false;
-  
+
     return this.studyGroup.name !== this.originalGroup.name ||
            this.studyGroup.description !== this.originalGroup.description;
   }
-  
 
   updateGroup(): void {
-    // Validate fields
+    this.errorMessage = ''; // Reset error message
+
+    // Check required fields
     if (this.studyGroup.name.trim() === '' || this.studyGroup.description.trim() === '') {
-      console.log('Both group name and description are required.');
-      return; // Prevent update if fields are empty
+      this.errorMessage = 'Both group name and description are required.';
+      return;
     }
 
-    // Prevent update if no changes have been made
-    if (this.studyGroup.name === this.originalGroup.name && this.studyGroup.description === this.originalGroup.description) {
-      console.log('No changes detected.');
-      return; // Prevent update if no changes
+    // Check for actual changes
+    if (!this.hasChanges()) {
+      this.errorMessage = 'No changes detected. Please modify the form before updating.';
+      return;
     }
 
-    // Proceed with the update
+    // Proceed with update
     this.studyGroupService.updateGroup(this.groupId, this.studyGroup).subscribe({
       next: () => {
         console.log('Group updated successfully');
-        this.router.navigate(['/study-groups']);
+        this.router.navigate(['/study-group']);
       },
       error: (err: any) => {
         console.error('Error during update:', err);
+        this.errorMessage = 'An error occurred while updating the group.';
       }
     });
   }

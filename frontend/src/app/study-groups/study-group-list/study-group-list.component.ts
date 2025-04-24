@@ -82,7 +82,7 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   goToCreateGroup(): void {
-    this.router.navigate(['/study-groups/new']);
+    this.router.navigate(['/study-group/new']);
   }
 
   toggleStudyGroupsVisibility(): void {
@@ -90,7 +90,7 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   goToUpdateGroup(groupId: number): void {
-    this.router.navigate([`/study-groups/update-group/${groupId}`]);
+    this.router.navigate([`/study-group/update-group/${groupId}`]);
     this.closeModal();
   }
   openFlashcardModal() {

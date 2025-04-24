@@ -39,6 +39,11 @@
             Description is required.
           </div>
         </div>
+        <!-- Error Message Display -->
+<div *ngIf="errorMessage" class="alert alert-danger mt-3">
+  {{ errorMessage }}
+</div>
+
 
         <!-- Submit Button -->
         <div class="text-end">
