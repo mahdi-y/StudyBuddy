@@ -30,6 +30,12 @@
     Profanity Filter: {{ profanityFilterEnabled ? 'ON' : 'OFF' }}
   </div>
 
+  <div class="in-app-alert" [class.show]="messageReported">
+    <p>Message reported successfully!</p>
+<!--    <button class="close-btn" (click)="closeAlert()" aria-label="Close notification">×</button>-->
+  </div>
+
+
   <div class="messages-container">
     <div *ngIf="loadingMessages" class="loading-indicator">
       Loading messages...

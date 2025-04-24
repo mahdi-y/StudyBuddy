@@ -539,7 +539,6 @@
   background: #c62828;
 }
 
-/* Cancel Button */
 .cancel-btn {
   background: #e0e0e0;
   color: #333;
@@ -555,7 +554,6 @@
   background: #bdbdbd;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0 }
   to { opacity: 1 }
@@ -570,4 +568,59 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+.in-app-alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  background-color: #4caf50;
+  color: white;
+  padding: 15px 40px 15px 25px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.in-app-alert.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.in-app-alert .close-btn {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  margin: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.in-app-alert p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
 }

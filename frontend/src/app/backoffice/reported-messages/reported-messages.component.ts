@@ -11,7 +11,6 @@ import { saveAs } from 'file-saver';
 export class ReportedMessagesComponent implements OnInit, OnDestroy {
   reportedMessages: any[] = []; // Holds all reported messages
   filteredMessages: any[] = []; // Holds filtered messages
-  reasons: string[] = []; // Holds unique reasons for filtering
   selectedReason: string = 'All';// Stores the selected reason for filtering
   private reportsSubscription: Subscription | null = null;
   reportToDismiss: any = null;
@@ -26,8 +25,6 @@ export class ReportedMessagesComponent implements OnInit, OnDestroy {
     'Inappropriate Content',
     'Other'
   ];
-
-
 
   constructor(private chatService: ChatService) {}
 
@@ -115,6 +112,7 @@ export class ReportedMessagesComponent implements OnInit, OnDestroy {
   }
 
   // Confirm dismissal and remove the report
+  // Confirm dismissal and remove the report
   confirmDismiss(): void {
     if (!this.reportToDismiss?.id) {
       console.error('Cannot dismiss report - reportId is undefined');
@@ -127,12 +125,15 @@ export class ReportedMessagesComponent implements OnInit, OnDestroy {
         this.reportedMessages = this.reportedMessages.filter(r => r.id !== this.reportToDismiss.id);
         this.reportToDismiss = null;
         this.showToast('Report dismissed successfully.', 'success');
+        // Reload the page after dismissal
+        window.location.reload();
       })
       .catch(err => {
         console.error('Failed to dismiss report:', err);
         this.showToast('Failed to dismiss report.', 'error');
       });
   }
+
 
   // Show toast messages for feedback
   showToast(message: string, type: 'success' | 'error') {

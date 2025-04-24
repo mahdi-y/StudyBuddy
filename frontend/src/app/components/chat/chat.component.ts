@@ -26,8 +26,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   typingUsers: Set<number> = new Set();
   showProfanityConfirm = false;
   showScrollToBottom = false;
-  selectedMessageForReport: any = null; // Holds the message being reported
-  reportReason: string | null = null;  // Holds the selected report reason
+  selectedMessageForReport: any = null;
+  reportReason: string | null = null;
+  messageReported: boolean = false;
+  messageReportedTimeout: any;
 
 
   constructor(private chatService: ChatService) {}
@@ -64,18 +66,44 @@ export class ChatComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const chatId = this.chatId; // Assuming chatId is available in the component
+    const chatId = this.chatId;
     const reporterId = this.senderId;
 
     this.chatService.reportMessageViaWebSocket(chatId, message.id, reporterId, reason)
       .then(() => {
         console.log('Message reported successfully');
-        alert('Message reported successfully');
+        this.showAlert();
       })
       .catch(err => {
         console.error('Failed to report message:', err);
-        alert('Failed to report message. Please try again.');
+        this.showErrorAlert('Failed to report message. Please try again.');
       });
+  }
+
+  showAlert(): void {
+    this.messageReported = true;
+
+    // Clear any existing timeout
+    if (this.messageReportedTimeout) {
+      clearTimeout(this.messageReportedTimeout);
+    }
+
+    // Hide after 3 seconds with fade out
+    this.messageReportedTimeout = setTimeout(() => {
+      this.messageReported = false;
+    }, 3000);
+  }
+
+  showErrorAlert(message: string): void {
+    // You can implement a separate error alert with red styling
+    // Similar to showAlert but with different styling
+  }
+
+  closeAlert(): void {
+    this.messageReported = false;
+    if (this.messageReportedTimeout) {
+      clearTimeout(this.messageReportedTimeout);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
