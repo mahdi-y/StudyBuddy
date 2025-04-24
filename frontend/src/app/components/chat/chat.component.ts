@@ -30,6 +30,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   reportReason: string | null = null;
   messageReported: boolean = false;
   messageReportedTimeout: any;
+  selectedMessageToDelete: Message | null = null;
 
 
   constructor(private chatService: ChatService) {}
@@ -413,6 +414,32 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.toggleProfanityFilter(); // Enable or disable
     }
     this.showProfanityConfirm = false;
+  }
+
+  openDeleteConfirmation(message: Message) {
+    this.selectedMessageToDelete = message;
+  }
+
+  confirmDelete() {
+    if (!this.selectedMessageToDelete?.id) {
+      console.error('Cannot delete message - messageId is undefined');
+      return;
+    }
+
+    this.chatService.deleteMessage(this.selectedMessageToDelete.id, this.chatId)
+      .then(() => {
+        // Optionally update the local message list (if not handled via WebSocket)
+        this.messages = this.messages.filter(m => m.id !== this.selectedMessageToDelete?.id);
+      })
+      .catch(err => {
+        console.error('Failed to delete message:', err);
+      });
+
+    this.selectedMessageToDelete = null; // Close modal
+  }
+
+  cancelDelete() {
+    this.selectedMessageToDelete = null;
   }
 
 }
