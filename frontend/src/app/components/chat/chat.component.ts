@@ -65,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
 
     const chatId = this.chatId; // Assuming chatId is available in the component
-    const reporterId = this.senderId; // Assuming senderId is the current user's ID
+    const reporterId = this.senderId;
 
     this.chatService.reportMessageViaWebSocket(chatId, message.id, reporterId, reason)
       .then(() => {

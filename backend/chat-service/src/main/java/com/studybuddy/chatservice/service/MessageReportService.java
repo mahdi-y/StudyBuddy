@@ -37,4 +37,12 @@ public class MessageReportService {
     public Iterable<MessageReport> getAllReports() {
         return reportRepository.findAll();
     }
+
+    public void dismissReport(Long reportId) {
+        if (!reportRepository.existsById(reportId)) {
+            throw new RuntimeException("Report not found with ID: " + reportId);
+        }
+        reportRepository.deleteById(reportId);
+    }
+
 }

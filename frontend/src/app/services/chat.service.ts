@@ -258,27 +258,10 @@ export class ChatService implements OnDestroy {
     return this.http.get<any[]>(`${environment.apiUrl}/api/reports`);
   }
 
-  // Delete a reported message via WebSocket
-  deleteReportedMessage(messageId: number, chatId: number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (!this.connectionSubject.value) {
-        reject(new Error('Not connected to WebSocket'));
-        return;
-      }
 
-      this.stompClient.publish({
-        destination: '/app/deleteMessage',
-        body: JSON.stringify({ messageId, chatId }),
-        headers: { 'content-type': 'application/json' }
-      });
-      resolve();
-    });
-  }
-
-  // Dismiss a report via HTTP
   dismissReport(reportId: number): Promise<void> {
     const url = `${environment.apiUrl}/api/reports/dismiss/${reportId}`;
-    return lastValueFrom(this.http.post(url, {})).then(() => {});
+    return lastValueFrom(this.http.delete<void>(url));
   }
 
 }

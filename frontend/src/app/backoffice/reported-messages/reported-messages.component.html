@@ -1,24 +1,61 @@
 <div class="reported-messages-container">
-    <h3 class="reported-header">Reported Messages</h3>
+  <div *ngIf="isLoading" class="loading-spinner"></div>
 
-    <div *ngIf="reportedMessages.length === 0" class="empty-state">
-        No reported messages yet.
+  <h3 class="reported-header">Reported Messages</h3>
+
+  <div class="filter-export-row">
+    <div class="filter-container">
+      <label for="reasonFilter">Filter by Reason:</label>
+      <select id="reasonFilter" [(ngModel)]="selectedReason" (ngModelChange)="filterReports()">
+        <option value="All">All</option>
+        <option *ngFor="let reason of allReasons" [value]="reason">{{ reason }}</option>
+      </select>
     </div>
 
-    <div *ngFor="let report of reportedMessages" class="report-card">
-        <div class="report-message">
-            "{{ report.message.content }}"
-        </div>
-
-        <div class="report-details">
-            <span><strong>Reporter:</strong> User {{ report.reporterId }}</span>
-            <span><strong>Reason:</strong> {{ report.reason }}</span>
-            <span><strong>Reported at:</strong> {{ report.timestamp | date:'medium' }}</span>
-        </div>
-
-        <div class="report-actions">
-            <button class="btn action-delete" (click)="deleteMessage(report)">Delete Message</button>
-            <button class="btn action-dismiss" (click)="dismissReport(report)">Dismiss Report</button>
-        </div>
+    <div class="export-container">
+      <button class="btn export" (click)="exportToCSV()" [disabled]="filteredMessages.length === 0">
+        Export to CSV
+      </button>
     </div>
+  </div>
+
+
+
+  <!-- Only show the empty state message once loading is done and no reports exist -->
+  <div *ngIf="!isLoading && filteredMessages.length === 0" class="empty-state">
+    No reported messages yet.
+  </div>
+
+  <div *ngFor="let report of filteredMessages" class="report-card">
+    <div class="report-message">
+      "{{ report.message.content }}"
+    </div>
+
+    <div class="report-details">
+      <span><strong>Sender:</strong> User {{ report.message.senderId }}</span>
+      <span><strong>Reporter:</strong> User {{ report.reporterId }}</span>
+      <span><strong>Reason:</strong> {{ report.reason }}</span>
+      <span><strong>Reported at:</strong> {{ report.timestamp | date:'medium' }}</span>
+    </div>
+
+    <div class="report-actions">
+      <button class="btn action-delete" (click)="deleteMessage(report)">Delete Message</button>
+      <button class="btn action-dismiss" (click)="openDismissConfirm(report)">Dismiss Report</button>
+    </div>
+  </div>
+
+  <div class="confirmation-overlay" *ngIf="reportToDismiss">
+    <div class="confirmation-box">
+      <p>Are you sure you want to dismiss this report?</p>
+      <div class="confirmation-actions">
+        <button class="btn confirm" (click)="confirmDismiss()">Yes, Dismiss</button>
+        <button class="btn cancel" (click)="cancelDismiss()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast for success or error messages -->
+<div *ngIf="toastMessage" class="toast" [ngClass]="toastType">
+  {{ toastMessage }}
 </div>

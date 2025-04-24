@@ -22,28 +22,31 @@ public class MessageReportController {
         this.messagingTemplate = messagingTemplate;
     }
 
-    // REST API: Report a message
     @PostMapping
     public ResponseEntity<MessageReport> reportMessage(@RequestBody MessageReportRequest request) {
         MessageReport report = reportService.reportMessage(request);
         return ResponseEntity.ok(report);
     }
 
-    // WebSocket: Report a message in real-time
     @MessageMapping("/reportMessage")
     public void handleReportMessage(MessageReportRequest request) {
         MessageReport report = reportService.reportMessage(request);
 
-        // Broadcast the report to all admins
         messagingTemplate.convertAndSend("/topic/reports", report);
         System.out.println("Message reported: " + report.getMessage().getContent());
     }
 
-    // REST API: Fetch all reported messages
     @GetMapping
     public List<MessageReport> getAllReports() {
         List<MessageReport> reports = (List<MessageReport>) reportService.getAllReports();
         System.out.println("Fetched reports: " + reports); // Log the response
         return reports;
     }
+
+    @DeleteMapping("/dismiss/{reportId}")
+    public ResponseEntity<Void> dismissReport(@PathVariable Long reportId) {
+        reportService.dismissReport(reportId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
