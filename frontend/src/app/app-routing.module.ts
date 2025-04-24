@@ -10,18 +10,29 @@ import {AboutComponent} from "./frontoffice/about/about.component";
 import {WorkComponent} from "./frontoffice/work/work.component";
 import {CategoryComponent} from "./frontoffice/category/category.component";
 import {NotFoundComponent} from "./frontoffice/not-found/not-found.component";
-import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
-import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
 import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
+import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
+import {StudyGroupListComponent} from "./study-groups/study-group-list/study-group-list.component";
+import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
+import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
+import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
 
 const routes: Routes = [
+
+  {
+    path: 'invitations',
+    loadChildren: () => import('./invitations/invitations.module').then(m => m.InvitationsModule)
+  },
   { path: '', component: HomeComponent },
   { path: 'register', component: RegisterComponent , canActivate: [GuestGuardService]},
   { path: 'login', component: LoginComponent , canActivate: [GuestGuardService] },
   { path: 'about', component: AboutComponent },
   { path: 'work', component: WorkComponent},
   { path: 'category', component: CategoryComponent},
-  { path: 'study-group', component: StudyGroupComponent , canActivate: [AuthGuard]},
+  { path: 'study-group', component: StudyGroupListComponent, canActivate: [AuthGuard]},
+  { path: 'study-group/new', component: StudyGroupCreateComponent, canActivate: [AuthGuard] },     // For creating a new study group
+  { path: 'study-group/update-group/:id', component: StudyGroupUpdateComponent, canActivate: [AuthGuard] },
+  { path: 'flashcards', component: FlashcardComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,

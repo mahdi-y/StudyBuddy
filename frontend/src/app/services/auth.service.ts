@@ -9,35 +9,38 @@ import {LocalStorageService} from './local-storage.service';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
-  private apiUrl = 'http://localhost:8083/api';
+    private apiUrl = 'http://localhost:8083/api';
 
-  constructor(private http: HttpClient, private storage: LocalStorageService) {
-  }
-
-  register(request: SignupRequest): Observable<SignupResponse> {
-    return this.http.post<SignupResponse>(`${this.apiUrl}/doRegister`, request);
-  }
-
-  login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/doLogin`, request);
-  }
-
-  getCurrentUser(): { username: string; role: string } | null {
-    const token = this.storage.get('auth-token');
-    if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      return {username: payload.sub, role: payload.role};
-    } catch (e) {
-      return null;
+    constructor(private http: HttpClient, private storage: LocalStorageService) {
     }
-  }
 
-  isLoggedIn(): boolean {
-    return !!this.storage.get('auth-token');
-  }
+    register(request: SignupRequest): Observable<SignupResponse> {
+        return this.http.post<SignupResponse>(`${this.apiUrl}/doRegister`, request);
+    }
 
-  logout(): void {
-    this.storage.remove('auth-token');
-  }
+    login(request: LoginRequest): Observable<LoginResponse> {
+        return this.http.post<LoginResponse>(`${this.apiUrl}/doLogin`, request);
+    }
+
+    getCurrentUser(): {
+        id: number;
+        username: string; role: string
+    } | null {
+        const token = this.storage.get('auth-token');
+        if (!token) return null;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return {id: payload.id ,username: payload.sub, role: payload.role};
+        } catch (e) {
+            return null;
+        }
+    }
+
+    isLoggedIn(): boolean {
+        return !!this.storage.get('auth-token');
+    }
+
+    logout(): void {
+        this.storage.remove('auth-token');
+    }
 }

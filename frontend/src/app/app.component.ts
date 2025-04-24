@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,4 +16,10 @@ export class AppComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  goToInvitations() {
+    console.log('Navigating to /invitations');
+    this.router.navigate(['/invitations']);
+  }
+
 }

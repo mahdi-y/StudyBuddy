@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.5",
+    "ngx-qrcode2": "^9.0.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/bootstrap": "^5.2.10"
+  }
+}
