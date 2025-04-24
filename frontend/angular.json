@@ -25,9 +25,11 @@
               "src/assets"
             ],
             "styles": [
-                "node_modules/bootstrap/dist/css/bootstrap.min.css",
-                "src/styles.css"
-
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/assets/frontoffice/css/style.css",
+              "src/assets/frontoffice/css/responsive.css",
+              "src/assets/frontoffice/css/style.scss"
             ],
             "scripts": []
           },
@@ -91,7 +93,21 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/frontoffice/js/jquery-3.4.1.min.js",
+              "src/assets/frontoffice/js/bootstrap.js",
+              "src/assets/frontoffice/js/custom.js",
+              "src/assets/backoffice/js/jquery-3.4.1.min.js",
+              "src/assets/backoffice/js/bootstrap.js",
+              "src/assets/backoffice/js/custom.js",
+              "src/assets/backoffice/js/off-canvas.js",
+              "src/assets/backoffice/js/hoverable-collapse.js",
+              "src/assets/backoffice/js/template.js",
+              "src/assets/backoffice/js/settings.js",
+              "src/assets/backoffice/js/todolist.js",
+              "src/assets/backoffice/js/dashboard.js",
+              "src/assets/backoffice/js/Chart.roundedBarCharts.js"
+            ]
           }
         }
       }

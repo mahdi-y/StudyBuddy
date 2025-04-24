@@ -1,0 +1,175 @@
+.dashboard-content {
+  padding: 20px;
+
+  .welcome-section {
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #666;
+    }
+  }
+
+  .stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+
+      .card-title {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      .card-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .card-change {
+        font-size: 0.8rem;
+
+        &.positive {
+          color: #4caf50;
+        }
+
+        &.negative {
+          color: #f44336;
+        }
+
+        &.neutral {
+          color: #999;
+        }
+
+        .material-icons {
+          vertical-align: middle;
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .chart-section {
+    margin-bottom: 20px;
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+
+      .card-title {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      canvas {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .resources-table {
+    margin-bottom: 20px;
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+
+      .card-title {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        thead {
+          th {
+            text-align: left;
+            color: #333;
+            font-weight: bold;
+            padding: 10px 0;
+          }
+        }
+
+        tbody {
+          td {
+            padding: 10px 0;
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+
+  .notifications-section {
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+
+      .card-title {
+        font-size: 1rem;
+        color: #555;
+        margin-bottom: 10px;
+      }
+
+      .notifications-list {
+        list-style: none;
+        padding: 0;
+
+        li {
+          margin-bottom: 10px;
+
+          .notification-item {
+            display: flex;
+            align-items: center;
+
+            .avatar {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              margin-right: 10px;
+            }
+
+            .notification-details {
+              p {
+                margin: 0;
+                font-size: 0.9rem;
+                color: #333;
+              }
+
+              small {
+                font-size: 0.8rem;
+                color: #999;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
