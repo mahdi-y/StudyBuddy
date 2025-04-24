@@ -1,6 +1,5 @@
 // Import Angular Material's prebuilt theme
 @import '@angular/material/prebuilt-themes/indigo-pink.css'; // Use the theme of your choice
-
 $text-color: #333333;
 
 body, html {
@@ -26,6 +25,7 @@ body, html {
     color: $text-color;
     padding: 5px 10px;
     border-radius: 20px;
+    //@include transition();
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.05);
@@ -66,6 +66,7 @@ body, html {
       padding: 8px 15px;
       color: $text-color;
       text-decoration: none;
+      //@include transition();
 
       &:hover {
         background-color: rgba(0, 0, 0, 0.05);
@@ -80,29 +81,28 @@ body, html {
 }
 
 .group-sidebar {
-  width: 400px;  /* Adjust the width */
+  width: 350px;
   background: linear-gradient(145deg, #1e3c72, #2a5298); /* vibrant gradient */
   color: #ffffff;
-  transition: width 0.4s ease-in-out, padding 0.3s ease, background-color 0.3s ease;
-  overflow-y: auto;  /* Add vertical scrollbar when content overflows */
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
   flex-shrink: 0;
   padding: 1rem 0.5rem;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
   position: relative;
-  max-height: 100vh;  /* Ensure the sidebar doesn't overflow the viewport */
-}
 
+
+}
 
 .group-sidebar.collapsed {
   width: 0;
   padding: 0;
-  display: none;  /* Optional: completely hide when collapsed */
 }
 
 .sidebar-header {
   padding: 0 1rem 1rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  font-size: 1.5rem;  /* Increase font size */
+  font-size: 1.25rem;
   font-weight: bold;
   letter-spacing: 0.5px;
 }
@@ -110,17 +110,18 @@ body, html {
 .group-list {
   list-style: none;
   padding: 0;
+  //margin-top: 1rem;
 }
 
 .group-list li {
   display: flex;
   align-items: center;
-  padding: 1.25rem 1.75rem;  /* Increased padding */
+  padding: 1rem 1.5rem;
   margin: 0.5rem 0;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 1rem;
+  font-size: 1rem; // Increase font size for better readability
 }
 
 .group-list li:hover {
@@ -149,13 +150,14 @@ body, html {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  padding: 0.75rem;  /* Increased padding */
-  width: 100%;  /* Makes the input take up the full width of the sidebar */
+  //margin: 0.5rem 1rem 1rem 1rem;
+  padding: 0.5rem;
 }
 
 .group-sidebar input.form-control::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
+
 
 .main-content {
   flex-grow: 1;
@@ -205,6 +207,29 @@ body, html {
   height: 100%;
   overflow-y: auto;
 }
+
+.side-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.tasks-container {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.resources-container {
+  flex: 1;
+}
+
+.toggle-btn {
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}
+
   .flashcard-image-card {
     position: relative;
     width: 150px;
@@ -215,19 +240,19 @@ body, html {
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
   }
-  
+
   .flashcard-image-card:hover {
     transform: scale(1.05);
   }
-  
+
   .flashcard-image-card .card-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
 
-  
+
+
   .flashcard-content {
     width: 100%;
     height: 100%;
@@ -240,11 +265,15 @@ body, html {
     border-radius: 8px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
+
   .flashcard-icon {
     width: 30px;
     height: 30px;
   }
-  
- 
-  
+
+.toggle-btn {
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+}

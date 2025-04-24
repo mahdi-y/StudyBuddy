@@ -80,7 +80,7 @@ export class StudyGroupCreateComponent implements OnInit, OnDestroy {
         next: () => {
           this.successMessage = 'Study group created successfully!';
           this.errorMessage = '';
-          this.router.navigate(['/groups']);
+          this.router.navigate(['/study-groups']);
         },
         error: (error: HttpErrorResponse) => {
           this.errorMessage = error.error?.message || 'An error occurred while creating the group';
