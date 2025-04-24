@@ -33,9 +33,9 @@ export class LoginComponent {
             this.storage.set('auth-token', res.token);
             const user = this.authService.getCurrentUser();
             if (user?.role === 'ADMIN') {
-              this.router.navigate(['/backoffice']);
-            } else {
               this.router.navigate(['/dashboard']);
+            } else {
+              this.router.navigate(['/study-group']);
             }
           } else {
             this.msg = 'Login failed: No token received';

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
 import {GuestGuardService} from "./services/guest-guard.service";
@@ -13,6 +12,7 @@ import {CategoryComponent} from "./frontoffice/category/category.component";
 import {NotFoundComponent} from "./frontoffice/not-found/not-found.component";
 import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
 import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
+import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,6 +29,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full'  },
       { path: 'dashboard-content', component: DashboardContentComponent },
+      { path: 'backoffice', component: BackofficeComponent },
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },

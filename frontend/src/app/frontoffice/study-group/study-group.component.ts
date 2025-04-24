@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-study-group',
@@ -12,9 +14,11 @@ export class StudyGroupComponent implements OnInit {
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown = false;
+  user: { username: string; role: string } | null;
 
-
-  constructor() {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.user = this.authService.getCurrentUser();
+  }
 
   ngOnInit(): void {
     // Initialize the study groups (example data)
@@ -58,5 +62,10 @@ export class StudyGroupComponent implements OnInit {
   // Toggle profile dropdown visibility
   toggleProfileDropdown() {
     this.showProfileDropdown = !this.showProfileDropdown;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

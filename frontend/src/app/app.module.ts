@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,9 +14,9 @@ import { DashboardContentComponent } from './backoffice/dashboard-content/dashbo
 import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
+import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 
 @NgModule({
   declarations: [
@@ -34,7 +32,6 @@ import { AuthGuard } from './services/auth.guard.service';
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    DashboardComponent,
     BackofficeComponent
   ],
   imports: [

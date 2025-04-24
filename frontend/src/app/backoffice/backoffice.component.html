@@ -1,3 +1,6 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+
 <h2>User Management</h2>
 
 <!-- Create User Form -->
@@ -7,7 +10,7 @@
 <table *ngIf="users.length > 0">
   <thead>
   <tr>
-    <th>ID</th>
+<!--    <th>ID</th>-->
     <th>Name</th>
     <th>Username</th>
     <th>Address</th>
@@ -19,7 +22,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let user of users">
-    <td>{{ user.id }}</td>
+<!--    <td>{{ user.id }}</td>-->
     <td>
       <span *ngIf="!user.editing">{{ user.name }}</span>
       <input *ngIf="user.editing" [(ngModel)]="user.name" name="name">
@@ -48,10 +51,10 @@
       </select>
     </td>
     <td>
-      <button *ngIf="!user.editing" (click)="editUser(user)">Edit</button>
+      <button *ngIf="!user.editing" (click)="editUser(user)" class="btn-edit">Edit</button>
       <button *ngIf="user.editing" (click)="onUpdateUser(user)">Save</button>
       <button *ngIf="user.editing" (click)="cancelEdit(user)">Cancel</button>
-      <button (click)="onDeleteUser(user.id)">Delete</button>
+      <button (click)="onDeleteUser(user.id)" class="btn-delete">Delete</button>
     </td>
   </tr>
   </tbody>
