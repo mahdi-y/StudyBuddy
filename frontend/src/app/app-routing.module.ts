@@ -16,6 +16,9 @@ import {StudyGroupListComponent} from "./study-groups/study-group-list/study-gro
 import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
 import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
+import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
+import {ReportedMessagesComponent} from "./backoffice/reported-messages/reported-messages.component";
+import {UnauthorizedComponent} from "./frontoffice/unauthorized/unauthorized.component";
 
 const routes: Routes = [
 
@@ -33,13 +36,16 @@ const routes: Routes = [
   { path: 'study-group/new', component: StudyGroupCreateComponent, canActivate: [AuthGuard] },     // For creating a new study group
   { path: 'study-group/update-group/:id', component: StudyGroupUpdateComponent, canActivate: [AuthGuard] },
   { path: 'flashcards', component: FlashcardComponent },
+  { path: 'unauthorized', component: UnauthorizedComponent},
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
+    data: { role: 'admin' },
     children: [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full'  },
       { path: 'dashboard-content', component: DashboardContentComponent },
+      { path: 'message-reports', component: ReportedMessagesComponent},
       { path: 'backoffice', component: BackofficeComponent },
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },

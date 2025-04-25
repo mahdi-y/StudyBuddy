@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore application.properties
+src/main/resources/neutrino.properties
+backend/chat-service/src/main/resources/neutrino.properties
+
 ### STS ###
 .apt_generated
 .classpath

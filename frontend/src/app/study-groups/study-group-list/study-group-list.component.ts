@@ -1,13 +1,15 @@
-import { StudyGroupService } from '../../services/study-group.service';
-import { InvitationService } from '../../services/invitation.service';
-import { Router } from '@angular/router';
-import { StudyGroup } from '../../models/study-group.model';
-import { SendInvitation } from '../../models/invitation.model';
-import { ToastrService } from 'ngx-toastr';
+import {StudyGroupService} from '../../services/study-group.service';
+import {InvitationService} from '../../services/invitation.service';
+import {Router} from '@angular/router';
+import {StudyGroup} from '../../models/study-group.model';
+import {SendInvitation} from '../../models/invitation.model';
+import {ToastrService} from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
-import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
-import {AuthService} from "../../services/auth.service"; // Adjust path accordingly
+import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {AuthService} from "../../services/auth.service";
+import {ChatService} from "../../services/chat.service"; // Adjust path accordingly
+import {firstValueFrom} from 'rxjs';
+
 
 @Component({
   selector: 'app-study-group-list',
@@ -18,14 +20,17 @@ export class StudyGroupListComponent implements OnInit {
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
 
   studyGroups: StudyGroup[] = [];
-  selectedGroup: StudyGroup | null = null;
+  selectedGroup: any | null = null;
   selectedDetailGroup: StudyGroup | null = null;
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown: boolean = false;
   showAllGroups: boolean = false;
   currentUserId!: number;
-  selectedInviteeUserId = 4;
+  selectedInviteeUserId = 9;
+  chatId: number | null = null;
+  loadingChatId: boolean = false;
+
 
   modal: bootstrap.Modal | null = null;
   user: { username: string; role: string } | null;
@@ -35,12 +40,15 @@ export class StudyGroupListComponent implements OnInit {
     private invitationService: InvitationService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService // Add this line
+    private authService: AuthService,
+    private chatService: ChatService
   ) {
     this.user = this.authService.getCurrentUser();
   }
 
   ngOnInit(): void {
+    this.loadChatIdForSelectedGroup();
+    console.log('Fetched chatId:', this.chatId);
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
@@ -51,6 +59,20 @@ export class StudyGroupListComponent implements OnInit {
           this.selectedGroup = this.studyGroups[0];
         }
       });
+    }
+  }
+
+  async loadChatIdForSelectedGroup(): Promise<void> {
+    if (this.selectedGroup?.id) {
+      this.loadingChatId = true;
+      try {
+        this.chatId = await firstValueFrom(this.chatService.getChatIdByStudyGroupId(this.selectedGroup.id));
+        console.log('Fetched chatId:', this.chatId);
+      } catch (error) {
+        console.error('Failed to fetch chat ID:', error);
+      } finally {
+        this.loadingChatId = false;
+      }
     }
   }
 
@@ -140,6 +162,7 @@ export class StudyGroupListComponent implements OnInit {
 
   selectGroup(group: StudyGroup): void {
     this.selectedGroup = group;
+    this.loadChatIdForSelectedGroup();
   }
 
   toggleProfileDropdown(): void {

@@ -18,6 +18,10 @@ import { WorkComponent } from './frontoffice/work/work.component';
 import { CategoryComponent } from './frontoffice/category/category.component';
 import { NotFoundComponent } from './frontoffice/not-found/not-found.component';
 import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
+import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
+import {ChatComponent} from "./components/chat/chat.component";
+import { ReportedMessagesComponent } from './backoffice/reported-messages/reported-messages.component';
+
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
@@ -27,6 +31,7 @@ import { StudyGroupListComponent} from "./study-groups/study-group-list/study-gr
 import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
 import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
+import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +51,11 @@ import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component
     StudyGroupCreateComponent,
     StudyGroupUpdateComponent,
     FlashcardComponent,
+    StudyGroupComponent,
+    AppComponent,
+    ChatComponent,
+    ReportedMessagesComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -58,9 +68,8 @@ import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component
     MatFormFieldModule,
     MatInputModule,
     AppRoutingModule,
-    HttpClientModule,
-    ReactiveFormsModule,
     FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

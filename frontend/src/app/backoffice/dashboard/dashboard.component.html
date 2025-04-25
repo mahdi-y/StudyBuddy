@@ -7,12 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <!-- Add Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="dashboard-container">
-  <!-- Sidebar -->
   <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header">
       <h2>SB Backoffice</h2>
@@ -50,6 +48,12 @@
             <span class="nav-text">Users</span>
           </a>
         </li>
+        <li class="nav-item" [class.active]="activeLink === 'messages'">
+          <a (click)="setActive('messages')" routerLink="/dashboard/message-reports" routerLinkActive="active">
+            <i class="material-icons">mail</i>
+            <span class="nav-text">Messages</span>
+          </a>
+        </li>
         <li class="nav-item" [class.active]="activeLink === 'settings'">
           <a (click)="setActive('settings')" routerLinkActive="active">
             <i class="material-icons">settings</i>
@@ -60,13 +64,10 @@
     </nav>
     <div class="sidebar-footer">
       <span>© StudyBuddy {{ currentYear }}</span>
-<!--      <small>v1.0.0</small>-->
     </div>
   </aside>
 
-  <!-- Main Content -->
   <div class="main-content" [class.collapsed]="isSidebarCollapsed">
-    <!-- Top Navigation -->
     <header class="top-nav">
       <div class="nav-left">
         <button class="sidebar-toggle" (click)="toggleSidebar()">
@@ -103,7 +104,6 @@
 
     </header>
 
-    <!-- Content Area -->
     <div class="content-area">
       <router-outlet></router-outlet>
     </div>

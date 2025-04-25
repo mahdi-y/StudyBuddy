@@ -42,4 +42,9 @@ public class UserService {
     public void deleteUser(int id) {
         loginRepository.deleteById(id);
     }
+
+    public Optional<User> getUserById(int id) {
+        return loginRepository.findById(id);
+    }
+
 }

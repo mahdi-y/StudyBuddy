@@ -3,6 +3,8 @@
 /workspace.xml
 .idea/discord.xml
 .idea/material_theme_project_new.xml
+.idea/dataSources/
+.idea/dataSources.xml
 material_theme_project_new.xml
 discord.xml
 # Editor-based HTTP Client requests
@@ -10,5 +12,7 @@ discord.xml
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# Ignore application.properties
+src/main/resources/application.properties
 
 

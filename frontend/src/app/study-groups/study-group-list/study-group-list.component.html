@@ -57,6 +57,7 @@
           <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img rounded-circle me-2">
           <span class="profile-name">{{ user?.username }}</span>
           <i class="material-icons">arrow_drop_down</i>
+
         </button>
 
         <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="showProfileDropdown">
@@ -76,8 +77,12 @@
         <!-- Chat Section -->
         <div class="col-md-8 h-100">
           <div class="chat-container border rounded p-3 h-100">
-            <h3>Chat</h3>
-            <!-- <app-chat [group]="selectedGroup"></app-chat> -->
+            <div *ngIf="loadingChatId">Loading chat...</div>
+            <app-chat
+              *ngIf="!loadingChatId && chatId !== null"
+              [chatId]="chatId"
+              [senderId]="currentUserId">
+            </app-chat>
           </div>
         </div>
 

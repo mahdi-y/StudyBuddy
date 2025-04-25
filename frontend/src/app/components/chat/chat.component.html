@@ -1,0 +1,171 @@
+<div class="chat-container">
+  <div class="search-bar">
+    <input
+      [(ngModel)]="searchQuery"
+      placeholder="Search messages..."
+      (keyup.enter)="performSearch()"
+      (keyup.escape)="clearSearch()"
+      class="search-input"
+    />
+
+    <button class="btn btn-primary" (click)="performSearch()">Search</button>
+
+    <button *ngIf="searchActive" class="btn btn-secondary" (click)="clearSearch()">Clear</button>
+
+    <div class="dropdown">
+      <button class="btn btn-icon dropdown-toggler" (click)="toggleDropdown()">
+        <span class="material-icons">more_vert</span>
+      </button>
+      <div class="dropdown-menu" [class.show]="showDropdown">
+        <button class="dropdown-item" (click)="scrollToTop()">Scroll to Top</button>
+        <button class="dropdown-item" (click)="exportMessages()">Export as Text</button>
+        <button class="dropdown-item" (click)="handleProfanityToggleRequest()">
+          {{ profanityFilterEnabled ? 'Disable' : 'Enable' }} Profanity Filter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-status" [class.active]="profanityFilterEnabled">
+    Profanity Filter: {{ profanityFilterEnabled ? 'ON' : 'OFF' }}
+  </div>
+
+  <div class="in-app-alert" [class.show]="messageReported">
+    <p>Message reported successfully!</p>
+<!--    <button class="close-btn" (click)="closeAlert()" aria-label="Close notification">×</button>-->
+  </div>
+
+
+  <div class="messages-container">
+    <div *ngIf="loadingMessages" class="loading-indicator">
+      Loading messages...
+    </div>
+    <div *ngIf="!loadingMessages && messages.length === 0" class="empty-state">
+      No messages yet. Start the conversation!
+    </div>
+
+    <div *ngIf="searchActive" class="search-results-count">
+      Found {{filteredMessages.length}} matching messages
+    </div>
+
+    <div *ngFor="let message of (searchActive ? filteredMessages : messages); trackBy: trackByMessage"
+         class="message"
+         [class.current-user]="message.senderId === currentUserId">
+
+      <div class="sender-name" *ngIf="message.senderId !== currentUserId">
+        {{ senderUserMap[message.senderId] || 'Unknown' }}
+      </div>
+
+      <div class="message-bubble">
+        <div class="message-content"
+             *ngIf="!message.isEditable"
+             [innerHTML]="highlightMatches(message.content)"></div>
+
+        <div class="message-actions" *ngIf="message.senderId !== currentUserId">
+          <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
+          <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
+            <button class="menu-option" (click)="openReportOverlay(message)">Report</button>
+          </div>
+        </div>
+
+        <div class="edit-container" *ngIf="message.isEditable">
+          <textarea [(ngModel)]="editingContent" class="edit-textarea"></textarea>
+          <div class="edit-actions">
+            <button class="save-btn" (click)="saveEdit(message)">Save</button>
+            <button class="cancel-btn" (click)="cancelEdit(message)">Cancel</button>
+          </div>
+        </div>
+
+        <div class="message-actions" *ngIf="message.senderId === currentUserId">
+          <button class="menu-btn" (click)="toggleMenu(message)">⋮</button>
+          <div class="action-menu" [class.show]="message.showMenu" *ngIf="message.showMenu">
+            <button class="menu-option" (click)="editMessage(message)">Edit</button>
+            <button class="menu-option delete-option" (click)="openDeleteConfirmation(message)">Delete</button>
+          </div>
+        </div>
+
+        <div class="timestamp-hover">{{message.timestamp | date:'shortTime'}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    [class.typing-indicator]="true"
+    [class.active]="getTypingIndicatorText()"
+  >
+    {{ getTypingIndicatorText() }}
+  </div>
+
+
+  <div class="message-input">
+<!--    <button (click)="toggleUser()" style="margin-right: 1%">Switch User (Current: {{senderId}})</button>-->
+    <input
+      [(ngModel)]="newMessage"
+      placeholder="Type your message..."
+      (input)="onTyping()"
+      (keyup.enter)="sendMessage()"
+    />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+
+  <!-- Confirmation Alert -->
+  <div *ngIf="showProfanityConfirm" class="confirmation-alert">
+    <p>
+      {{ profanityFilterEnabled
+      ? 'Are you sure you want to disable the Profanity Filter? Your chat members may send and be exposed to offensive language!'
+      : 'Are you sure you want to enable the Profanity Filter? Some words may be hidden or masked.' }}
+    </p>
+    <div class="alert-actions">
+      <button class="confirm-btn" (click)="confirmProfanityToggle(true)">
+        {{ profanityFilterEnabled ? 'Yes, Disable' : 'Yes, Enable' }}
+      </button>
+      <button class="cancel-btn" (click)="confirmProfanityToggle(false)">Cancel</button>
+    </div>
+  </div>
+
+  <button
+    class="scroll-to-bottom-btn"
+    *ngIf="showScrollToBottom"
+    (click)="scrollToBottom()"
+  >
+    <span class="material-icons">expand_more</span>
+  </button>
+
+  <!-- Report Overlay -->
+  <div *ngIf="selectedMessageForReport" class="report-overlay">
+    <div class="report-modal">
+      <h3>Report Message</h3>
+      <p>Select a reason for reporting this message:</p>
+
+      <!-- Reason Options -->
+      <div class="reason-options">
+        <button (click)="setReportReason('Inappropriate Content')">Inappropriate Content</button>
+        <button (click)="setReportReason('Spam')">Spam</button>
+        <button (click)="setReportReason('Harassment')">Harassment</button>
+        <button (click)="setReportReason('Hate Speech')">Hate Speech</button>
+        <button (click)="setReportReason('Offensive Language')">Offensive Language</button>
+        <button (click)="setReportReason('Other')">Other</button>
+      </div>
+
+      <!-- Cancel Button -->
+      <button class="cancel-btn" (click)="closeReportOverlay()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- In-App Delete Confirmation Modal -->
+  <div class="confirmation-overlay" *ngIf="selectedMessageToDelete">
+    <div class="confirmation-box">
+      <h3>Confirm Delete</h3>
+      <p>Are you sure you want to delete this message?</p>
+
+      <div class="confirmation-actions">
+        <button class="btn confirm" (click)="confirmDelete()">Yes, Delete</button>
+        <button class="btn cancel" (click)="cancelDelete()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
