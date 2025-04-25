@@ -18,26 +18,40 @@
 
     <ul class="group-list">
       <li *ngFor="let group of filteredGroups"
+          class="study-group-item"
           (click)="selectGroup(group)"
           [class.active]="group.id === selectedGroup?.id">
-        <span>{{ group.name }}</span>
-        <button mat-icon-button color="accent" (click)="sendInvitation(group.id)">
-          <mat-icon>person_add</mat-icon>
-        </button>
+        <span class="me-auto">{{ group.name }}</span>
 
-      <!-- Flashcard Cute Card (No Rotation) -->
-<div *ngIf="group.id === selectedGroup?.id" class="flashcard-cute" (click)="openFlashcardModal(); $event.stopPropagation()">
-  <div class="flashcard-content">
-    <img src="https://cdn-icons-png.flaticon.com/512/906/906175.png" alt="Flashcard" class="flashcard-icon" />
-  </div>
-</div>
+        <!-- Dropdown Menu Trigger - Only show for the selected group -->
+        <div class="dropdown-wrapper position-relative" *ngIf="group.id === selectedGroup?.id">
+          <button
+            class="btn-dropdown"
+            type="button"
+            id="groupActionsDropdown{{ group.id }}"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+            <i class="material-icons">more_vert</i>
+          </button>
 
-
-        <button mat-icon-button color="primary" (click)="openGroupDetails(group); $event.stopPropagation()" class="btn-details">
-          <i class="material-icons">visibility</i>
-        </button>
+          <ul
+            class="dropdown-menu"
+            [attr.aria-labelledby]="'groupActionsDropdown' + group.id">
+            <li>
+              <a class="dropdown-item" (click)="sendInvitation(group.id)">Send Invitation</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="openFlashcardModal()">Open Flashcards</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="openGroupDetails(group)">View Details</a>
+            </li>
+          </ul>
+        </div>
       </li>
     </ul>
+
+
   </aside>
 
   <!-- Main content -->

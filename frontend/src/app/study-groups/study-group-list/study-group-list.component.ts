@@ -55,12 +55,16 @@ export class StudyGroupListComponent implements OnInit {
 
       this.studyGroupService.getUserGroups(this.currentUserId).subscribe((data) => {
         this.studyGroups = data;
+
+        // Ensure at least one group is available before selecting the first one
         if (this.studyGroups.length > 0) {
-          this.selectedGroup = this.studyGroups[0];
+          this.selectedGroup = this.studyGroups[0]; // Select the first study group by default
+          this.loadChatIdForSelectedGroup(); // Load the chat ID for the selected group
         }
       });
     }
   }
+
 
   async loadChatIdForSelectedGroup(): Promise<void> {
     if (this.selectedGroup?.id) {
