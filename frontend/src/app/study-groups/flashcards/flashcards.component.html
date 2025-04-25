@@ -1,0 +1,26 @@
+<h3 class="section-title">📚 Flashcards</h3>
+
+<div class="text-end mb-3">
+  <button class="btn btn-primary" (click)="generateFlashcards()" [disabled]="loading">
+    {{ loading ? 'Generating...' : '✨ Generate New Flashcards' }}
+  </button>
+</div>
+
+<div *ngIf="flashcards.length === 0 && !loading" class="text-center text-muted mt-3">
+  <p>No flashcards yet. Generate some to get started!</p>
+</div>
+
+<div class="flashcard-grid">
+  <div *ngFor="let card of flashcards" class="flip-card">
+    <div class="flip-card-inner">
+      <div class="flip-card-front">
+        <h5>❓ Question</h5>
+        <p>{{ card.question }}</p>
+      </div>
+      <div class="flip-card-back">
+        <h5>✅ Answer</h5>
+        <p>{{ card.answer }}</p>
+      </div>
+    </div>
+  </div>
+</div>

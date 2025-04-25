@@ -1,0 +1,15 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Send Invitation</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="sendInvitation()">
+        <mat-form-field appearance="fill">
+          <mat-label>Invitee User ID</mat-label>
+          <input matInput type="number" [(ngModel)]="invitationData.inviteeUserId" name="inviteeUserId" required>
+        </mat-form-field>
+  
+        <button mat-raised-button color="primary" type="submit">Send</button>
+      </form>
+    </mat-card-content>
+  </mat-card>

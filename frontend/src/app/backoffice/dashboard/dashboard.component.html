@@ -21,7 +21,7 @@
     <nav class="sidebar-nav">
       <ul>
         <li class="nav-item" [class.active]="activeLink === 'dashboard'">
-          <a (click)="setActive('dashboard')" routerLink="/dashboard/dashboard-content" routerLinkActive="active">
+          <a (click)="setActive('dashboard')"  routerLink="/dashboard/dashboard-content" routerLinkActive="active">
             <i class="material-icons">dashboard</i>
             <span class="nav-text">Dashboard</span>
           </a>
@@ -47,8 +47,8 @@
           </a>
         </li>
         <li class="nav-item" [class.active]="activeLink === 'users'">
-          <a (click)="setActive('users')" routerLinkActive="active">
-            <i class="material-icons">people</i>
+          <a (click)="setActive('users')"  routerLink="/dashboard/backoffice" routerLinkActive="active">
+            <i class="material-icons">person</i>
             <span class="nav-text">Users</span>
           </a>
         </li>
@@ -62,6 +62,7 @@
     </nav>
     <div class="sidebar-footer">
       <span>© StudyBuddy {{ currentYear }}</span>
+<!--      <small>v1.0.0</small>-->
     </div>
   </aside>
 
@@ -87,7 +88,7 @@
         <div class="profile-dropdown">
           <button class="profile-btn" (click)="toggleProfileDropdown()">
             <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img">
-            <span class="profile-name">John</span>
+            <span class="profile-name">{{ user?.username }}</span>
             <i class="material-icons">arrow_drop_down</i>
           </button>
 
@@ -95,7 +96,7 @@
             <a href="#" class="dropdown-item">
               <i class="material-icons">settings</i> Settings
             </a>
-            <a href="#" class="dropdown-item">
+            <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">
               <i class="material-icons">logout</i> Sign Out
             </a>
           </div>

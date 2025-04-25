@@ -1,4 +1,6 @@
 import { Component, HostListener } from '@angular/core';
+import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -10,6 +12,11 @@ export class DashboardComponent {
   showProfileDropdown = false;
   activeLink = 'dashboard';
   currentYear: number = new Date().getFullYear();
+  user: { username: string; role: string } | null;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.user = this.authService.getCurrentUser();
+  }
 
 
   @HostListener('window:resize', ['$event'])
@@ -52,5 +59,10 @@ export class DashboardComponent {
       case 'settings': return 'Settings';
       default: return 'Dashboard';
     }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
