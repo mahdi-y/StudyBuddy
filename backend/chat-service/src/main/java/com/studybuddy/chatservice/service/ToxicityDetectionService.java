@@ -1,6 +1,7 @@
 package com.studybuddy.chatservice.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -8,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
+@PropertySource("classpath:neutrino.properties")
 public class ToxicityDetectionService {
 
     @Value("${neutrino.user-id}")
