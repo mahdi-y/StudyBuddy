@@ -1,0 +1,103 @@
+<div class="container mt-4">
+  <div class="card shadow rounded-4 p-4">
+    <div class="d-flex align-items-center mb-4">
+      <h2 class="mb-0 text-primary">📝 Edit Task</h2>
+    </div>
+
+    <form (ngSubmit)="updateTask()" #taskForm="ngForm" novalidate>
+      <!-- Title -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="form-control"
+          [(ngModel)]="task.title"
+          required
+          placeholder="Enter task title"
+          #title="ngModel"
+        />
+        <div *ngIf="title.invalid && title.touched" class="form-text text-danger">
+          Title is required.
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          rows="3"
+          placeholder="Enter task description"
+          [(ngModel)]="task.description"
+          required
+          #description="ngModel"
+        ></textarea>
+        <div *ngIf="description.invalid && description.touched" class="form-text text-danger">
+          Description is required.
+        </div>
+      </div>
+
+      <!-- Due Date -->
+      <div class="mb-3">
+        <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+        <input
+          type="date"
+          id="dueDate"
+          name="dueDate"
+          class="form-control"
+          [(ngModel)]="task.dueDate"
+          [min]="today"
+          required
+          #dueDate="ngModel"
+        />
+        <div *ngIf="dueDate.invalid && dueDate.touched" class="form-text text-danger">
+          Due date is required.
+        </div>
+      </div>
+
+      <!-- Progress Dropdown -->
+      <div class="mb-3">
+        <label for="progressName" class="form-label">Progress <span class="text-danger">*</span></label>
+        <select
+          id="progressName"
+          name="progressName"
+          class="form-select"
+          [(ngModel)]="task.progressName"
+          required
+          #progress="ngModel"
+        >
+          <option value="" disabled>Select progress</option>
+          <option *ngFor="let progress of progressList" [value]="progress.name">
+            {{ progress.name }}
+          </option>
+        </select>
+        <div *ngIf="progress.invalid && progress.touched" class="form-text text-danger">
+          Progress is required.
+        </div>
+      </div>
+
+      <!-- Completed Checkbox -->
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="completed"
+          name="completed"
+          [(ngModel)]="task.completed"
+        />
+        <label class="form-check-label" for="completed">
+          Completed
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-success" [disabled]="taskForm.invalid">
+        Update Task
+      </button>
+    </form>
+  </div>
+</div>

@@ -5,6 +5,11 @@ import { LoginComponent } from './login/login.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
 import {GuestGuardService} from "./services/guest-guard.service";
+import { TaskComponent } from './task/task.component';
+import { AddTaskComponent } from './task/add/add.component';
+import { UpdateTaskComponent } from './task/update/update.component';
+import { ProgressComponent } from './progress/progress.component';
+
 import {HomeComponent} from "./frontoffice/home/home.component";
 import {AboutComponent} from "./frontoffice/about/about.component";
 import {WorkComponent} from "./frontoffice/work/work.component";
@@ -37,6 +42,11 @@ const routes: Routes = [
   { path: 'study-group/update-group/:id', component: StudyGroupUpdateComponent, canActivate: [AuthGuard] },
   { path: 'flashcards', component: FlashcardComponent },
   { path: 'unauthorized', component: UnauthorizedComponent},
+  { path: 'study-group-task', component: StudyGroupComponent },
+  { path: 'tasks', component: TaskComponent },
+  { path: 'task/add', component: AddTaskComponent },
+  { path: 'task/update/:id', component: UpdateTaskComponent },
+  { path: 'progress', component: ProgressComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -56,6 +66,7 @@ const routes: Routes = [
   },
   { path: '**', component: NotFoundComponent }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

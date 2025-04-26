@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ToastrModule } from 'ngx-toastr';
+import { TaskComponent } from './task/task.component';
+import { AddTaskComponent } from './task/add/add.component';
+import { UpdateTaskComponent } from './task/update/update.component';
+import { ProgressComponent } from './progress/progress.component'; // Import your new component (if you have one)
+
+
+
 import { HomeComponent } from './frontoffice/home/home.component';
 import { AboutComponent } from './frontoffice/about/about.component';
 import { WorkComponent } from './frontoffice/work/work.component';
@@ -32,10 +39,12 @@ import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
 import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
 import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.component';
+import { AiChatComponent } from './ai-chat/ai-chat.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent, // Declare the AppComponent
+    TaskComponent, AddTaskComponent, UpdateTaskComponent, ProgressComponent,
     HomeComponent,
     AboutComponent,
     WorkComponent,
@@ -43,7 +52,6 @@ import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.c
     NotFoundComponent,
     DashboardComponent,
     DashboardContentComponent,
-    AppComponent,
     RegisterComponent,
     LoginComponent,
     BackofficeComponent,
@@ -52,7 +60,7 @@ import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.c
     StudyGroupUpdateComponent,
     FlashcardComponent,
     StudyGroupComponent,
-    AppComponent,
+    AiChatComponent,
     ChatComponent,
     ReportedMessagesComponent,
     UnauthorizedComponent

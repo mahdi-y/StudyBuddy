@@ -1,0 +1,31 @@
+<div class="container my-5">
+  <div class="card shadow rounded-4">
+    <div class="card-body p-4">
+      <h2 class="card-title text-center mb-4">🤖 StudyBuddy Chat Assistant</h2>
+
+      <div class="mb-3">
+        <textarea
+          class="form-control rounded-3"
+          [(ngModel)]="userPrompt"
+          placeholder="Can you give me a breakdown of my tasks..."
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="text-end">
+        <button
+          class="btn btn-primary btn-lg rounded-pill px-4"
+          (click)="generateResponse()"
+          [disabled]="isLoading || !userPrompt.trim()"
+        >
+          {{ isLoading ? 'Generating...' : 'Ask StudyBuddy' }}
+        </button>
+      </div>
+
+      <div *ngIf="aiResponse" class="mt-4 p-3 bg-light rounded border">
+        <h5 class="fw-bold mb-2">💬 SB Response:</h5>
+        <p class="mb-0">{{ aiResponse }}</p>
+      </div>
+    </div>
+  </div>
+</div>

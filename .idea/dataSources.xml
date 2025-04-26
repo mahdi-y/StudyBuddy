@@ -2,6 +2,7 @@
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
     <data-source source="LOCAL" name="Chat_db" uuid="c43a52f4-c918-4ee4-ac21-2744a460f38f">
+    <data-source source="LOCAL" name="postgres@localhost" uuid="87e01499-1c22-4e4b-8f94-027ef3d701ff">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
@@ -23,10 +24,13 @@
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
+      <jdbc-url>jdbc:postgresql://localhost:5431/postgres</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="sbuddy_db@localhost" uuid="05844ef8-d8ed-4a6f-a2a9-4573b82fc164">
       <driver-ref>mysql.8</driver-ref>
+    <data-source source="LOCAL" name="task-service@localhost" uuid="7706c42f-4149-458b-8253-d38bb20f97c4">
+      <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/backend/study-group-service/src/main/resources/application.properties</remarks>
@@ -46,6 +50,8 @@
       <remarks>$PROJECT_DIR$/backend/user-service/src/main/resources/application.properties</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/user_db?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;createDatabaseIfNotExist=true</jdbc-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5431/task-service</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

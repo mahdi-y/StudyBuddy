@@ -1,2 +1,4 @@
 src/main/resources/neutrino.properties
 backend/chat-service/src/main/resources/neutrino.properties
+
+backend/task-service/src/main/resources/openrouter.properties
