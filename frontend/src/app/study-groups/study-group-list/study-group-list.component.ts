@@ -7,7 +7,8 @@ import { ToastrService } from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
 import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
 import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
-import {AuthService} from "../../services/auth.service"; // Adjust path accordingly
+import { AuthService } from "../../services/auth.service"; // Adjust path accordingly
+import { UserService } from '../../services/user.service'; // Ensure this import
 
 @Component({
   selector: 'app-study-group-list',
@@ -16,18 +17,22 @@ import {AuthService} from "../../services/auth.service"; // Adjust path accordin
 })
 export class StudyGroupListComponent implements OnInit {
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
+  inviteeEmailOrId: string = ''; // add this
 
   studyGroups: StudyGroup[] = [];
   selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;
+  selectedInviteGroup: StudyGroup | null = null; // ➡️ for Invitation Modal
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown: boolean = false;
   showAllGroups: boolean = false;
   currentUserId!: number;
-  selectedInviteeUserId = 4;
+
+  selectedInviteeUserId: number = 4; // Could be dynamic later
 
   modal: bootstrap.Modal | null = null;
+  inviteModal: bootstrap.Modal | null = null; // ➡️ new
   user: { username: string; role: string } | null;
 
   constructor(
@@ -35,7 +40,8 @@ export class StudyGroupListComponent implements OnInit {
     private invitationService: InvitationService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService // Add this line
+    private userService: UserService, 
+    private authService: AuthService
   ) {
     this.user = this.authService.getCurrentUser();
   }
@@ -54,42 +60,125 @@ export class StudyGroupListComponent implements OnInit {
     }
   }
 
-
-
   get safeGroupId(): number | null {
     return this.selectedGroup?.id ?? null;
   }
 
-  sendInvitation(groupId: number): void {
-    const invitation: SendInvitation = {
-      studyGroup: { id: groupId },
-      inviterUserId: this.currentUserId,
-      inviteeUserId: this.selectedInviteeUserId
-    };
-
-    const groupName = this.selectedGroup?.name || 'Unnamed Group';
-
-    this.invitationService.sendInvitation(invitation).subscribe({
-      next: (response) => {
-        console.log('Invitation sent to group ID:', groupId, response);
-        this.toastr.success('Invitation sent successfully!');
-
-        this.invitationService.sendEmail(groupName).subscribe({
-          next: (emailResponse) => {
-            console.log('Email sent successfully:', emailResponse);
-            this.toastr.success('Email notification sent!');
+  openInvitationModal(group: StudyGroup): void {
+    this.selectedGroup = group;
+    const inviteModalEl = document.getElementById('inviteModal');
+    if (inviteModalEl) {
+      const modal = new bootstrap.Modal(inviteModalEl);
+      modal.show();
+    }
+  }
+  sendInvitation(): void {
+    // Validate input: check if group is selected and email is provided
+    if (!this.selectedGroup || !this.inviteeEmailOrId) {
+      this.toastr.error('Please select a group and provide an invitee email.');
+      return;
+    }
+  
+    // Check if the provided email is valid
+    const isEmail = this.isValidEmail(this.inviteeEmailOrId);
+    if (!isEmail) {
+      this.toastr.error('Please provide a valid email.');
+      return;
+    }
+  
+    // Check if email exists
+    this.userService.checkIfEmailExists(this.inviteeEmailOrId).subscribe({
+      next: (emailExists: boolean) => {
+        if (!emailExists) {
+          this.toastr.error('The email does not exist.');
+          return;
+        }
+  
+        // Fetch user ID based on the email if the email exists
+        this.userService.getUserIdByEmail(this.inviteeEmailOrId).subscribe({
+          next: (userId: number) => {
+            if (userId === 0) {
+              this.toastr.error('User not found.');
+              return;
+            }
+  
+            // Set the user ID for the invitee
+            this.selectedInviteeUserId = userId;
+  
+            // Send the invitation email and create invitation entry in parallel
+            this.sendInvitationEmail();
           },
-          error: (emailError) => {
-            console.error('Error sending email:', emailError);
-            this.toastr.error('Failed to send email notification');
+          error: (err: any) => {
+            console.error('Error fetching user ID:', err);
+            this.toastr.error('An error occurred while fetching the user ID.');
           }
         });
       },
-      error: (error) => {
-        console.error('Error sending invitation:', error);
-        this.toastr.error('Failed to send invitation');
+      error: (err: any) => {
+        console.error('Error checking email existence:', err);
+        this.toastr.error('An error occurred while checking the email.');
       }
     });
+  }
+  
+  isValidEmail(email: string): boolean {
+    // Simple email validation regex
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  }
+  
+  sendInvitationEmail(): void {
+    // Validate group and invitee user ID before sending invitation
+    if (!this.selectedGroup) {
+      this.toastr.error('No group selected.');
+      return;
+    }
+  
+    if (!this.selectedInviteeUserId) {
+      this.toastr.error('Invitee user ID is not available.');
+      return;
+    }
+  
+    // Prepare invitation object
+    const inviterUserId = this.currentUserId;
+    const inviteeEmail = this.inviteeEmailOrId;
+    const inviteeUserId = this.selectedInviteeUserId;
+  
+    const invitation: SendInvitation = {
+      studyGroup: { id: this.selectedGroup.id },
+      inviterUserId,
+      inviteeEmail,
+      inviteeUserId
+    };
+  
+    // Send the invitation email and invitation object in parallel
+    this.invitationService.sendEmail(this.selectedGroup?.name || 'Unnamed Group', inviteeEmail).subscribe({
+      next: (response) => {
+        console.log('Email sent successfully', response);
+      },
+      error: (error) => {
+        console.error('Error sending email:', error);
+        this.toastr.error('Failed to send the invitation email.');
+      }
+    });
+  
+    // Send invitation object
+    this.invitationService.sendInvitation(invitation).subscribe({
+      next: (response) => {
+        console.log('Invitation sent successfully', response);
+        this.toastr.success('Invitation sent successfully.');
+      },
+      error: (error) => {
+        console.error('Error sending invitation:', error);
+        this.toastr.error('An error occurred while sending the invitation.');
+      }
+    });
+  }
+  
+  closeInviteModal(): void {
+    if (this.inviteModal) {
+      this.inviteModal.hide();
+    }
   }
 
   goToCreateGroup(): void {
@@ -104,6 +193,7 @@ export class StudyGroupListComponent implements OnInit {
     this.router.navigate([`/study-group/update-group/${groupId}`]);
     this.closeModal();
   }
+
   openFlashcardModal() {
     const modalElement = document.getElementById('flashcardModal');
     if (modalElement) {

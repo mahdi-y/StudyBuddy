@@ -38,8 +38,20 @@ public class UserService {
         }
         return null;
     }
+    // New method to check if an email exists
+    public boolean checkEmailExists(String address) {
+        // Use the updated repository method
+        return loginRepository.existsByAddress(address);
+    }
 
     public void deleteUser(int id) {
         loginRepository.deleteById(id);
     }
+
+    public int getUserIdByEmail(String address) {
+        User user = loginRepository.findByAddress(address).orElse(null);
+        return (user != null) ? user.getId() : 0;  // Return 0 if no user found
+    }
+
+
 }

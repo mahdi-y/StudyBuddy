@@ -21,10 +21,10 @@
           (click)="selectGroup(group)"
           [class.active]="group.id === selectedGroup?.id">
         <span>{{ group.name }}</span>
-        <button mat-icon-button color="accent" (click)="sendInvitation(group.id)">
+        <button mat-icon-button color="accent" (click)="openInvitationModal(group); $event.stopPropagation()">
           <mat-icon>person_add</mat-icon>
         </button>
-
+        
       <!-- Flashcard Cute Card (No Rotation) -->
 <div *ngIf="group.id === selectedGroup?.id" class="flashcard-cute" (click)="openFlashcardModal(); $event.stopPropagation()">
   <div class="flashcard-content">
@@ -39,6 +39,31 @@
       </li>
     </ul>
   </aside>
+<!-- Invite User Modal -->
+<div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inviteModalLabel">Invite User to {{ selectedGroup?.name }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="inviteeEmailOrId" class="form-label">Invitee Email</label>
+          <input type="text" id="inviteeEmailOrId" class="form-control" [(ngModel)]="inviteeEmailOrId" placeholder="Enter user email">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="sendInvitation()">Send Invitation</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
   <!-- Main content -->
   <div class="main-content" [class.expanded]="isSidebarCollapsed">

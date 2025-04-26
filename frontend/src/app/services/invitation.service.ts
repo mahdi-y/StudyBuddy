@@ -24,16 +24,15 @@ export class InvitationService {
   /**
    * Sends an email notification to the invitee.
    * @param groupName The name of the study group.
+   * @param recipientEmail The email of the invitee.
    * @returns An observable of the HTTP POST response.
    */
-  sendEmail(groupName: string): Observable<any> {
-    const subject = 'Study Group Invitation';
-    const body = `You have been invited to join the study group: ${groupName}.`;
-    return this.http.post<any>(this.notificationApiUrl, null, {
-      params: {
-        groupName
-      }
-    });
+  sendEmail(groupName: string, recipientEmail: string): Observable<any> {
+    // Create the request URL with query parameters
+    const url = `${this.notificationApiUrl}?groupName=${groupName}&recipientEmail=${recipientEmail}`;
+    
+    // Use the correct instance of HttpClient
+    return this.http.post(url, {}); // Sending an empty object if needed for POST
   }
 
   /**

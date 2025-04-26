@@ -27,6 +27,7 @@ import { StudyGroupListComponent} from "./study-groups/study-group-list/study-gr
 import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
 import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
+import { UserService } from './services/user.service'; // Adjust the path if needed
 
 @NgModule({
   declarations: [

@@ -10,18 +10,15 @@ public class NotificationService {
 
     private final JavaMailSender javaMailSender;
 
-    @Value("${email.to}")
-    private String toEmail;
-
     public NotificationService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendEmail(String groupName) {
+    public void sendEmail(String groupName, String recipientEmail) {
         try {
             // Create the email message
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(toEmail); // Recipient email
+            message.setTo(recipientEmail);
             message.setSubject("Study Group Invitation");
 
             // Customize the "From" field
@@ -34,7 +31,7 @@ public class NotificationService {
 
             // Send the email
             javaMailSender.send(message);
-            System.out.println("Email sent successfully to: " + toEmail);
+            System.out.println("Email sent successfully to: " +recipientEmail);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to send email: " + e.getMessage(), e);

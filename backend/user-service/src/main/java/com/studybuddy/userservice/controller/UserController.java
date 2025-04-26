@@ -34,6 +34,25 @@ public class UserController {
         }
         return ResponseEntity.ok(updatedUser);
     }
+    @GetMapping("/user-id/{address}")
+    public ResponseEntity<Integer> getUserIdByEmail(@PathVariable String address) {
+        int userId = userService.getUserIdByEmail(address);  // Now using 'int' instead of 'Long'
+        if (userId == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userId);
+    }
+
+
+
+
+    // New endpoint to check if an email exists
+    @GetMapping("/check-address")
+    public ResponseEntity<Boolean> checkAddressExists(@RequestParam String address) {
+        boolean exists = userService.checkEmailExists(address);
+        return ResponseEntity.ok(exists);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable int id) {

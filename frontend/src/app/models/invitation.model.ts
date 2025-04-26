@@ -14,10 +14,12 @@ export interface Invitation {
 
 export interface SendInvitation {
   inviterUserId: number;
-  inviteeUserId: number;
+  inviteeUserId: number;  // Change this to 'string' to accept email
+  inviteeEmail: string;   // Email will be passed here
   studyGroup: {
     id: number;
   };
   status?: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   type?: string;
 }
+
