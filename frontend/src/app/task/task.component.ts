@@ -21,6 +21,10 @@ export class TaskComponent implements OnInit, OnChanges {
   @Input() progressId: number | undefined;
   showProgressModal: boolean = false;
   showTaskModal: boolean = false;
+  showUpdateModal: boolean = false;
+  selectedTaskForUpdate: any = null;
+  showDeleteConfirmation: boolean = false;
+  taskToDelete: number | null = null;
 
   constructor(private taskService: TaskService, private router: Router, private cdr: ChangeDetectorRef, private progressService: ProgressService) {}
 
@@ -180,4 +184,60 @@ export class TaskComponent implements OnInit, OnChanges {
   closeTaskModal(): void {
     this.showTaskModal = false; // Hide the task modal
   }
+
+  openUpdateModal(task: any): void {
+    console.log('Opening update modal with task:', task);
+    this.selectedTaskForUpdate = { ...task };
+    this.showUpdateModal = true;
+  }
+
+  closeUpdateModal(): void {
+    this.showUpdateModal = false; // Hide the modal
+    this.selectedTaskForUpdate = null; // Reset the selected task
+  }
+
+  onTaskUpdated(): void {
+    console.log('Task updated successfully');
+
+    // Close the modal
+    this.closeUpdateModal();
+
+    // Optionally refresh the tasks list if not handled via WebSocket or other mechanisms
+  }
+
+  onTaskAdded(): void {
+    console.log('Task added. Reloading tasks...');
+
+    if (this.progressId) {
+      // Reload tasks for the specific progress
+      this.loadTasksForProgress(this.progressId);
+    } else if (this.studyGroupId) {
+      // Reload tasks for all progresses in the study group
+      this.loadTasksForAllProgresses();
+    } else {
+      // Fallback: Reload all tasks
+      this.getAllTasks();
+    }
+  }
+
+  openDeleteConfirmation(taskId: number): void {
+    this.taskToDelete = taskId; // Store the ID of the task to be deleted
+    this.showDeleteConfirmation = true; // Show the modal
+  }
+
+// Confirm the deletion
+  confirmDelete(): void {
+    if (this.taskToDelete !== null) {
+      this.deleteTask(this.taskToDelete); // Call the deleteTask method
+      this.taskToDelete = null; // Reset the taskToDelete variable
+      this.showDeleteConfirmation = false; // Hide the modal
+    }
+  }
+
+// Cancel the deletion
+  cancelDelete(): void {
+    this.taskToDelete = null; // Reset the taskToDelete variable
+    this.showDeleteConfirmation = false; // Hide the modal
+  }
+
 }

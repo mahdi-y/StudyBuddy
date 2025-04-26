@@ -26,7 +26,7 @@ export class AddTaskComponent implements OnInit {
   newProgressName: string = '';
   createdAt: string = '';
   @Input() studyGroupId!: number | undefined;
-  @Output() taskAdded = new EventEmitter<void>();
+  @Output() taskAdded = new EventEmitter<void>()
 
   constructor(
     private taskService: TaskService,
@@ -81,15 +81,30 @@ export class AddTaskComponent implements OnInit {
       completed: this.newTask.completed,
       progressId: this.newTask.progressId,
       progressName: this.newProgressName.trim() || undefined,
-      studyGroupId: this.studyGroupId // Will be moved to headers
+      studyGroupId: this.studyGroupId
     };
 
     this.taskService.createTask(taskData).subscribe({
       next: () => {
+        console.log('Task added successfully');
+
+        // Emit the taskAdded event to notify the parent
         this.taskAdded.emit();
-        this.router.navigate(['/study-group'])
+
+        // Reset form fields
+        this.newTask = {
+          id: 0,
+          title: '',
+          description: '',
+          dueDate: '',
+          completed: false,
+          progressId: null
+        };
+        this.newProgressName = '';
       },
-      error: (err) => console.error('Error:', err)
+      error: (err) => {
+        console.error('Error adding task:', err);
+      }
     });
   }
   // Validates that at least one of the progress fields is filled

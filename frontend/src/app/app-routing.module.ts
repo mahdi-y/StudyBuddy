@@ -45,7 +45,7 @@ const routes: Routes = [
   { path: 'study-group-task', component: StudyGroupComponent },
   { path: 'tasks', component: TaskComponent },
   { path: 'task/add', component: AddTaskComponent },
-  { path: 'task/update/:id', component: UpdateTaskComponent },
+  { path: 'update/:id', component: UpdateTaskComponent },
   { path: 'progress', component: ProgressComponent },
   {
     path: 'dashboard',

@@ -43,14 +43,14 @@
       <div class="d-flex flex-column gap-2">
         <button
           class="btn btn-outline-primary btn-sm"
-          (click)="editTask(task.id)"
+          (click)="openUpdateModal(task)"
           title="Edit Task"
         >
           📝
         </button>
         <button
           class="btn btn-outline-danger btn-sm"
-          (click)="deleteTask(task.id)"
+          (click)="openDeleteConfirmation(task.id)"
           title="Delete Task"
         >
           🗑️
@@ -91,12 +91,58 @@
 
       <!-- Modal Body -->
       <div class="modal-body">
-        <app-add-task [studyGroupId]="studyGroupId"></app-add-task>
+        <app-add-task [studyGroupId]="studyGroupId"
+                      (taskAdded)="closeTaskModal(); onTaskAdded()">
+        </app-add-task>
       </div>
 
       <!-- Modal Footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary px-4 py-2" (click)="closeTaskModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Modal for Updating Tasks -->
+  <div *ngIf="showUpdateModal" class="modal-overlay">
+    <div class="modal-content shadow-lg rounded-3">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-primary fw-bold">📝 Edit Task</h5>
+        <button type="button" class="btn-close" (click)="closeUpdateModal()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <app-update-task
+          [task]="selectedTaskForUpdate"
+          (taskUpdated)="closeUpdateModal(); onTaskAdded()"
+          [taskIdFromParent]="selectedTaskForUpdate?.id"
+        ></app-update-task>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary px-4 py-2" (click)="closeUpdateModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showDeleteConfirmation" class="modal-overlay">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-danger fw-bold">⚠️ Confirm Deletion</h5>
+        <button type="button" class="btn-close" (click)="cancelDelete()" aria-label="Close"></button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <p>Are you sure you want to delete this task?</p>
+      </div>
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger px-4 py-2" (click)="confirmDelete()">Delete</button>
+        <button type="button" class="btn btn-secondary px-4 py-2" style="margin-left: 1%" (click)="cancelDelete()">Cancel</button>
       </div>
     </div>
   </div>
