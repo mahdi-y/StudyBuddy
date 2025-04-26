@@ -1,0 +1,163 @@
+/* Modal Overlay */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(30px);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInUp 0.4s ease-out;
+  z-index: 1050;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);/* Ensure it's above other content */
+  overflow-y: auto; /* Allow vertical scrolling if content overflows */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  width: 90%; /* Adjust width for responsiveness */
+  max-width: 1200px; /* Increase max-width for larger screens */
+  max-height: 90vh; /* Limit height to 90% of viewport height */
+  border-radius: 12px;
+  overflow-y: auto; /* Enable vertical scrolling inside the modal */
+  padding: 20px; /* Add padding for spacing */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Close Button */
+.btn-close {
+  font-size: 1.5rem; /* Slightly larger close button */
+  opacity: 1;
+  color: #000;
+  cursor: pointer;
+  transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.btn-close:hover {
+  color: #ff4d4d; /* Change color on hover */
+}
+
+/* Modal Body */
+.modal-body {
+  overflow-y: auto; /* Ensure body content is scrollable */
+  max-height: 70vh; /* Limit height to prevent excessive scrolling */
+}
+
+/* Modal Footer */
+.modal-footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%; /* Use more screen width on smaller devices */
+    max-width: none; /* Remove max-width restriction */
+  }
+
+  .btn-close {
+    font-size: 1.25rem; /* Smaller close button on mobile */
+  }
+}
+
+.modern-icon-button {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+  inset 0 1px 1px rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  margin: 0 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 18px;
+  padding: 0;
+}
+
+.modern-icon-button:hover {
+  background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.modern-icon-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.modern-icon-button .icon {
+  transition: transform 0.2s ease;
+}
+
+.modern-icon-button:hover .icon {
+  transform: scale(1.1);
+}
+
+.modern-icon-button .tooltip {
+  position: absolute;
+  bottom: 50px; /* Changed from top to bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.modern-icon-button:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modern-icon-button .tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; /* Changed from bottom to top */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent; /* Arrow now points down */
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end; /* This moves the buttons to the right */
+  width: 100%; /* Ensures the container takes full width */
+}

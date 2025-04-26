@@ -30,8 +30,11 @@ public class TaskController {
 
     // Endpoint to add a Task using TaskDTO
     @PostMapping("/add")
-    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskDTO taskDTO) {
-        // Create a new Task object
+    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Study-Group-ID") Long studyGroupId ) {
+        if (studyGroupId == null || studyGroupId <= 0) {
+            throw new IllegalArgumentException("Invalid Study-Group-ID");
+        }
+
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
@@ -41,34 +44,38 @@ public class TaskController {
 
         Progress progress;
 
-        // If progressId is provided, associate the task with the existing progress
+        // If progressId is provided, verify it belongs to the same study group
         if (taskDTO.getProgressId() != null) {
             progress = progressRepository.findById(taskDTO.getProgressId())
                     .orElseThrow(() -> new IllegalArgumentException("Progress not found"));
-        } else {
-            // If no progressId is provided, check if a Progress with the given name already exists
+
+            // Verify progress belongs to the same study group
+            if (progress.getStudyGroupId() != null && !progress.getStudyGroupId().equals(studyGroupId)) {
+                throw new IllegalArgumentException("Progress does not belong to this study group");
+            }
+        }
+        else {
+            // For new progresses, always set the studyGroupId
             if (taskDTO.getProgressName() != null && !taskDTO.getProgressName().isEmpty()) {
-                progress = progressRepository.findByName(taskDTO.getProgressName())
+                progress = progressRepository.findByNameAndStudyGroupId(
+                                taskDTO.getProgressName(),
+                                studyGroupId)
                         .orElseGet(() -> {
-                            // If no existing Progress is found, create a new Progress
                             Progress newProgress = new Progress();
-                            newProgress.setName(taskDTO.getProgressName());  // Set the name from the request
-                            return progressRepository.save(newProgress);  // Save the new Progress and return it
+                            newProgress.setName(taskDTO.getProgressName());
+                            newProgress.setStudyGroupId(studyGroupId); // Always set for new progress
+                            return progressRepository.save(newProgress);
                         });
             } else {
-                // If no progressName is provided, create a new Progress with a default name
                 progress = new Progress();
                 progress.setName("New Progress");
-                progress = progressRepository.save(progress);  // Save the new Progress
+                progress.setStudyGroupId(studyGroupId); // Always set for new progress
+                progress = progressRepository.save(progress);
             }
         }
 
-        // Associate the task with the found or created progress (now we are sure it's not null)
         task.setProgress(progress);
-
-        // Save the task to the repository
         Task savedTask = taskRepository.save(task);
-// Update progress statistics after adding the new task
         taskService.updateProgressStats(progress.getId());
         // Create and return the TaskDTO response
         TaskDTO taskDTOResponse = new TaskDTO();
@@ -224,6 +231,15 @@ public class TaskController {
         progress.setProgressPercentage(percentage);
 
         return new ResponseEntity<>(progress, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-progress/{progressId}")
+    public ResponseEntity<List<Task>> getTasksByProgressId(@PathVariable Long progressId) {
+        List<Task> tasks = taskService.getTasksByProgressId(progressId);
+        if (tasks.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(tasks);
     }
 
 }

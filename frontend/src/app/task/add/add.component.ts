@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskService } from '../../task.service';
 import { Task } from '../task.model';
 import { ProgressService } from '../../progress.service';
 import { Progress } from '../../progress/progress.model';
 import {map} from "rxjs";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-task',
@@ -24,18 +25,38 @@ export class AddTaskComponent implements OnInit {
   progressList: Progress[] = [];
   newProgressName: string = '';
   createdAt: string = '';
+  @Input() studyGroupId!: number | undefined;
+  @Output() taskAdded = new EventEmitter<void>();
 
   constructor(
     private taskService: TaskService,
     private progressService: ProgressService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    // Check if studyGroupId is already provided as an @Input()
+    if (this.studyGroupId !== undefined) {
+      console.log('Study Group ID (from Input):', this.studyGroupId);
+    } else {
+      // Fallback to query parameters if @Input() is not provided
+      this.route.queryParams.subscribe(params => {
+        const id = params['studyGroupId'];
+        if (id && !isNaN(+id)) {
+          this.studyGroupId = +id; // Convert to number only if valid
+          console.log('Study Group ID (from Query Params):', this.studyGroupId);
+        } else {
+          console.warn('No valid studyGroupId found in query parameters.');
+          this.studyGroupId = undefined; // Explicitly set to undefined if invalid
+        }
+      });
+    }
+
+    // Rest of your existing ngOnInit code...
     this.loadProgressList();
     const todayDate = new Date();
-    this.createdAt = todayDate.toISOString().split('T')[0];  // Format to YYYY-MM-DD
-
+    this.createdAt = todayDate.toISOString().split('T')[0];
   }
 
   loadProgressList(): void {
@@ -53,31 +74,22 @@ export class AddTaskComponent implements OnInit {
   }
 
   addTask(): void {
-    const taskToSend: any = {
+    const taskData = {
       title: this.newTask.title,
       description: this.newTask.description,
       dueDate: this.formatDueDate(this.newTask.dueDate),
       completed: this.newTask.completed,
       progressId: this.newTask.progressId,
+      progressName: this.newProgressName.trim() || undefined,
+      studyGroupId: this.studyGroupId // Will be moved to headers
     };
-    this.newTask.createdAt = this.createdAt;
 
-
-    // Include progressName if user entered a new one
-    if (this.newProgressName.trim() !== '') {
-      taskToSend.progressName = this.newProgressName.trim();
-    }
-
-    console.log('🚀 Sending task:', taskToSend);
-
-    this.taskService.createTask(taskToSend).subscribe({
+    this.taskService.createTask(taskData).subscribe({
       next: () => {
-        console.log('✅ Task successfully added');
-        this.router.navigate(['/study-group']);
+        this.taskAdded.emit();
+        this.router.navigate(['/study-group'])
       },
-      error: (err) => {
-        console.error('❌ Error adding task:', err);
-      }
+      error: (err) => console.error('Error:', err)
     });
   }
   // Validates that at least one of the progress fields is filled

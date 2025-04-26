@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {map, Observable, tap} from 'rxjs';
 import { Progress } from './progress/progress.model';
 import { Task } from './task/task.model';
@@ -40,6 +40,14 @@ export class ProgressService {
   }
   getArchivedProgresses(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/archived`);
+  }
+
+  getProgressesByStudyGroup(studyGroupId: number): Observable<Progress[]> {
+    const headers = new HttpHeaders({
+      'Study-Group-ID': studyGroupId.toString()
+    });
+
+    return this.http.get<Progress[]>(`${this.apiUrl}/by-study-group`, { headers });
   }
 
 }

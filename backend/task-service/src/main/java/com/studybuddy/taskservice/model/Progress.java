@@ -27,6 +27,8 @@ public class Progress {
     @Column(unique = true)
     private String name; // Add this field to represent the name of the progress
 
+    private Long studyGroupId;
+
 
     // Getters and Setters
 
@@ -84,5 +86,13 @@ public class Progress {
 
     public void setTotalCompletedTasks(Integer completedTasks) {
         this.totalCompletedTasks = completedTasks;
+    }
+
+    public Long getStudyGroupId() {
+        return studyGroupId;
+    }
+
+    public void setStudyGroupId(Long studyGroupId) {
+        this.studyGroupId = studyGroupId;
     }
 }

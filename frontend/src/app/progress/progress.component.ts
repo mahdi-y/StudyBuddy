@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { TaskService } from 'src/app/task.service';
 import { ProgressService } from 'src/app/progress.service';
 import { Task } from 'src/app/task/task.model';
 import { Progress } from 'src/app/progress/progress.model';
 import { Chart, CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend, ArcElement, PieController } from 'chart.js';
+import {ActivatedRoute} from "@angular/router";
 
 // Register necessary components including BarController
 Chart.register(CategoryScale, LinearScale, BarElement, BarController, Title, Tooltip, Legend, ArcElement, PieController);
@@ -22,17 +23,44 @@ export class ProgressComponent implements OnInit {
   archivedProgressList: any[] = [];
   showArchivedModal: boolean = false;
   showChart = false;
-
-
+  @Input() studyGroupId!: number | undefined;
 
   constructor(
     private taskService: TaskService,
-    private progressService: ProgressService
+    private progressService: ProgressService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadProgress();
+    if (this.studyGroupId !== undefined) {
+      console.log('Loading progress for study group:', this.studyGroupId);
+      this.loadProgressByStudyGroup(this.studyGroupId);
+    } else {
+      console.warn('No studyGroupId provided. Progress will not be loaded.');
+    }
   }
+
+
+  loadProgressByStudyGroup(studyGroupId: number): void {
+    console.log('Loading progresses for study group:', studyGroupId);
+
+    this.progressService.getProgressesByStudyGroup(studyGroupId).subscribe({
+      next: (progressList: Progress[]) => {
+        console.log('Progresses loaded:', progressList);
+
+        // Filter out archived progress
+        this.progressList = progressList.filter(progress => !progress.archived);
+
+        // Load tasks for each progress
+        this.loadTasksForEachProgress();
+      },
+      error: (err) => {
+        console.error('Failed to load progresses for study group:', studyGroupId, err);
+      }
+    });
+  }
+
+
 
   loadProgress(): void {
     this.progressService.getAllProgress().subscribe((progressList: Progress[]) => {

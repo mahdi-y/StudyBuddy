@@ -1,20 +1,28 @@
 <div class="container">
+
+
   <!-- Icons above the tasks -->
   <div class="text-end mb-3">
-    <a
-      routerLink="/task/add"
-      title="Add New Task"
-      class="icon-link me-3"
-    >
-      ➕
-    </a>
-    <a
-      routerLink="/progress"
-      title="See Progress"
-      class="icon-link"
-    >
-      📊
-    </a>
+    <div class="button-container">
+      <button
+        title="Add New Task"
+        class="modern-icon-button"
+        (click)="openTaskModal()"
+      >
+        <span class="icon">+</span>
+        <span class="tooltip">Add New Task</span>
+      </button>
+
+      <button
+        title="See Progress"
+        class="modern-icon-button"
+        (click)="openProgressModal()"
+      >
+        <span class="icon">📊</span>
+        <span class="tooltip">See Progress</span>
+      </button>
+    </div>
+
   </div>
   <div *ngFor="let task of tasks" class="card shadow-sm mb-4 rounded-4">
     <div class="card-body d-flex justify-content-between align-items-start p-4">
@@ -47,6 +55,48 @@
         >
           🗑️
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Modal -->
+  <div *ngIf="showProgressModal" class="modal-overlay">
+    <div class="modal-content shadow-lg rounded-3">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-primary fw-bold">📊 Progress Overview</h5>
+        <button type="button" class="btn-close" (click)="closeProgressModal()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <app-progress [studyGroupId]="studyGroupId"></app-progress>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary px-4 py-2" (click)="closeProgressModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay Modal for Adding Tasks -->
+  <div *ngIf="showTaskModal" class="modal-overlay">
+    <div class="modal-content shadow-lg rounded-3">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title text-primary fw-bold">➕ Add New Task</h5>
+        <button type="button" class="btn-close" (click)="closeTaskModal()" aria-label="Close"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <app-add-task [studyGroupId]="studyGroupId"></app-add-task>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary px-4 py-2" (click)="closeTaskModal()">Close</button>
       </div>
     </div>
   </div>

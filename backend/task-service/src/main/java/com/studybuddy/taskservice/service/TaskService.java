@@ -42,7 +42,7 @@ public class TaskService {
     }
 
     // ✅ Add Task
-    public Task addTask(TaskDTO taskDTO) {
+    public Task addTask(TaskDTO taskDTO, Long studyGroupId) {
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
@@ -50,11 +50,15 @@ public class TaskService {
         task.setCompleted(taskDTO.isCompleted());
         task.setCreatedAt(LocalDateTime.now());
 
-        // ✅ Find or create Progress by name
-        Progress progress = progressRepository.findByName(taskDTO.getProgressName())
+        // Find or create Progress with studyGroupId
+        Progress progress = progressRepository.findByNameAndStudyGroupId(
+                        taskDTO.getProgressName(),
+                        studyGroupId
+                )
                 .orElseGet(() -> {
                     Progress newProgress = new Progress();
                     newProgress.setName(taskDTO.getProgressName());
+                    newProgress.setStudyGroupId(studyGroupId);  // 👈 Critical for group association
                     newProgress.setTotalTasks(0);
                     newProgress.setTotalCompletedTasks(0);
                     newProgress.setProgressPercentage(0);
@@ -64,10 +68,8 @@ public class TaskService {
         task.setProgress(progress);
         Task savedTask = taskRepository.save(task);
 
-        // ✅ Update progress stats
-        if (task.getProgress() != null) {
-            updateProgressStats(task.getProgress().getId());
-        }
+        // Update progress stats
+        updateProgressStats(progress.getId());
 
         return savedTask;
     }
@@ -199,5 +201,9 @@ public class TaskService {
         }
 
         return taskDTO;
+    }
+
+    public List<Task> getTasksByProgressId(Long progressId) {
+        return taskRepository.findByProgressId(progressId);
     }
 }

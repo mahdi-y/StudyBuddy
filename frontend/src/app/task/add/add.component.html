@@ -1,109 +1,72 @@
-<div class="container mt-5">
-  <div class="card shadow-sm rounded-3 p-4">
-    <h3 class="mb-4 text-primary">➕ Add New Task</h3>
-
-    <form (ngSubmit)="addTask()" #taskForm="ngForm" novalidate>
-
-      <!-- Title Field -->
-      <div class="mb-3">
-        <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          class="form-control"
-          [(ngModel)]="newTask.title"
-          required
-          #title="ngModel"
-        />
-        <div *ngIf="title.invalid && title.touched" class="form-text text-danger">
-          Title is required.
-        </div>
-      </div>
-
-      <!-- Description Field -->
-      <div class="mb-3">
-        <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
-        <textarea
-          id="description"
-          name="description"
-          class="form-control"
-          rows="3"
-          [(ngModel)]="newTask.description"
-          required
-          #description="ngModel"
-        ></textarea>
-        <div *ngIf="description.invalid && description.touched" class="form-text text-danger">
-          Description is required.
-        </div>
-      </div>
-
-      <!-- Due Date Field -->
-      <div class="mb-3">
-        <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
-        <input
-          type="date"
-          id="dueDate"
-          name="dueDate"
-          class="form-control"
-          [min]="createdAt"
-          [(ngModel)]="newTask.dueDate"
-          required
-          #dueDate="ngModel"
-        />
-        <div *ngIf="dueDate.invalid && dueDate.touched" class="form-text text-danger">
-          Due Date is required.
-        </div>
-      </div>
-
-      <!-- Select Existing Progress -->
-      <div class="mb-3">
-        <label for="progressId" class="form-label">Select Existing Progress</label>
-        <select
-          id="progressId"
-          name="progressId"
-          class="form-select"
-          [(ngModel)]="newTask.progressId"
-        >
-          <option [ngValue]="null">-- No Progress --</option>
-          <option *ngFor="let progress of progressList" [ngValue]="progress.id">
-            {{ progress.name }}
-          </option>
-        </select>
-      </div>
-
-
-
-      <!-- Or Enter New Progress -->
-      <div class="mb-3">
-        <label for="newProgressName" class="form-label">Or Enter New Progress</label>
-        <input
-          type="text"
-          id="newProgressName"
-          name="newProgressName"
-          class="form-control"
-          [(ngModel)]="newProgressName"
-          placeholder="e.g. Research, In Progress, Completed"
-          [required]="newTask.progressId === null"
-        />
-        <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="form-text text-danger">
-          New progress name is required if no existing progress is selected.
-        </div>
-      </div>
-
-      <!-- Validation: Both Empty -->
-      <div *ngIf="taskForm.submitted && newTask.progressId === null && !newProgressName" class="text-danger mb-2">
-        Please select or enter a progress.
-      </div>
-
-      <!-- Validation: Both Filled -->
-      <div *ngIf="!isProgressExclusive()" class="text-danger mb-2">
-        You cannot select an existing progress and enter a new one at the same time.
-      </div>
-
-      <button type="submit" class="btn btn-success mt-3" [disabled]="taskForm.invalid">
-         Add Task
-      </button>
-    </form>
+<form (ngSubmit)="addTask()" #taskForm="ngForm" novalidate>
+  <!-- Title Field -->
+  <div class="mb-3">
+    <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
+    <input
+      type="text"
+      id="title"
+      name="title"
+      class="form-control"
+      [(ngModel)]="newTask.title"
+      required
+    />
   </div>
-</div>
+
+  <!-- Description Field -->
+  <div class="mb-3">
+    <label for="description" class="form-label">Description <span class="text-danger">*</span></label>
+    <textarea
+      id="description"
+      name="description"
+      class="form-control"
+      rows="3"
+      [(ngModel)]="newTask.description"
+      required
+    ></textarea>
+  </div>
+
+  <!-- Due Date Field -->
+  <div class="mb-3">
+    <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+    <input
+      type="date"
+      id="dueDate"
+      name="dueDate"
+      class="form-control"
+      [(ngModel)]="newTask.dueDate"
+      required
+    />
+  </div>
+
+  <!-- Select Existing Progress -->
+  <div class="mb-3">
+    <label for="progressId" class="form-label">Select Existing Progress</label>
+    <select
+      id="progressId"
+      name="progressId"
+      class="form-select"
+      [(ngModel)]="newTask.progressId"
+    >
+      <option [ngValue]="null">-- No Progress --</option>
+      <option *ngFor="let progress of progressList" [ngValue]="progress.id">
+        {{ progress.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Or Enter New Progress -->
+  <div class="mb-3">
+    <label for="newProgressName" class="form-label">Or Enter New Progress</label>
+    <input
+      type="text"
+      id="newProgressName"
+      name="newProgressName"
+      class="form-control"
+      [(ngModel)]="newProgressName"
+      placeholder="e.g. Research, In Progress, Completed"
+      [required]="newTask.progressId === null"
+    />
+  </div>
+
+  <button type="submit" class="btn btn-success mt-3">Add Task</button>
+</form>

@@ -79,4 +79,12 @@ public class ProgressController {
         return ResponseEntity.ok(archivedProgresses);
     }
 
+    @GetMapping("/by-study-group")
+    public ResponseEntity<List<Progress>> getProgressesByStudyGroup(
+            @RequestHeader("Study-Group-ID") Long studyGroupId) {
+
+        List<Progress> progresses = progressRepository.findByStudyGroupId(studyGroupId);
+        return ResponseEntity.ok(progresses);
+    }
+
 }

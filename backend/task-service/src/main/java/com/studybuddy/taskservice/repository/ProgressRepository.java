@@ -12,6 +12,7 @@ public interface ProgressRepository extends JpaRepository<Progress, Long> {
     Optional<Progress> findByTasksId(Long taskId);
     Optional<Progress> findByName(String name);
     List<Progress> findByArchived(boolean archived); // 👈 this is what you add
-
+    Optional<Progress> findByNameAndStudyGroupId(String name, Long studyGroupId);
+    List<Progress> findByStudyGroupId(Long studyGroupId);
 }
 
