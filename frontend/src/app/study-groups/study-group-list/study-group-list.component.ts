@@ -17,12 +17,13 @@ import { UserService } from '../../services/user.service'; // Ensure this import
 })
 export class StudyGroupListComponent implements OnInit {
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
-  inviteeEmailOrId: string = ''; // add this
-
+  inviteeEmailOrId: string = ''; // Add this
+  errorMessage: string = ''; // Add this to hold error messages
+  successMessage: string = '';
   studyGroups: StudyGroup[] = [];
   selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;
-  selectedInviteGroup: StudyGroup | null = null; // ➡️ for Invitation Modal
+  selectedInviteGroup: StudyGroup | null = null; // ➡️ For Invitation Modal
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown: boolean = false;
@@ -32,7 +33,7 @@ export class StudyGroupListComponent implements OnInit {
   selectedInviteeUserId: number = 4; // Could be dynamic later
 
   modal: bootstrap.Modal | null = null;
-  inviteModal: bootstrap.Modal | null = null; // ➡️ new
+  inviteModal: bootstrap.Modal | null = null; // ➡️ New
   user: { username: string; role: string } | null;
 
   constructor(
@@ -72,17 +73,22 @@ export class StudyGroupListComponent implements OnInit {
       modal.show();
     }
   }
+
   sendInvitation(): void {
+    // Clear any previous messages
+    this.errorMessage = '';  // Reset the error message
+    this.successMessage = '';  // Reset the success message
+  
     // Validate input: check if group is selected and email is provided
     if (!this.selectedGroup || !this.inviteeEmailOrId) {
-      this.toastr.error('Please select a group and provide an invitee email.');
+      this.errorMessage = 'Please select a group and provide an invitee email.'; // Set error message
       return;
     }
   
     // Check if the provided email is valid
     const isEmail = this.isValidEmail(this.inviteeEmailOrId);
     if (!isEmail) {
-      this.toastr.error('Please provide a valid email.');
+      this.errorMessage = 'Please provide a valid email.'; // Set error message
       return;
     }
   
@@ -90,7 +96,7 @@ export class StudyGroupListComponent implements OnInit {
     this.userService.checkIfEmailExists(this.inviteeEmailOrId).subscribe({
       next: (emailExists: boolean) => {
         if (!emailExists) {
-          this.toastr.error('The email does not exist.');
+          this.errorMessage = 'The email does not exist.'; // Set error message
           return;
         }
   
@@ -98,7 +104,13 @@ export class StudyGroupListComponent implements OnInit {
         this.userService.getUserIdByEmail(this.inviteeEmailOrId).subscribe({
           next: (userId: number) => {
             if (userId === 0) {
-              this.toastr.error('User not found.');
+              this.errorMessage = 'User not found.'; // Set error message
+              return;
+            }
+  
+            // Check if the inviter and invitee are the same
+            if (userId === this.currentUserId) {
+              this.errorMessage = 'You are already a member of this group.'; // Set error message
               return;
             }
   
@@ -110,21 +122,15 @@ export class StudyGroupListComponent implements OnInit {
           },
           error: (err: any) => {
             console.error('Error fetching user ID:', err);
-            this.toastr.error('An error occurred while fetching the user ID.');
+            this.errorMessage = 'An error occurred while fetching the user ID.'; // Set error message
           }
         });
       },
       error: (err: any) => {
         console.error('Error checking email existence:', err);
-        this.toastr.error('An error occurred while checking the email.');
+        this.errorMessage = 'An error occurred while checking the email.'; // Set error message
       }
     });
-  }
-  
-  isValidEmail(email: string): boolean {
-    // Simple email validation regex
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return emailRegex.test(email);
   }
   
   sendInvitationEmail(): void {
@@ -155,6 +161,7 @@ export class StudyGroupListComponent implements OnInit {
     this.invitationService.sendEmail(this.selectedGroup?.name || 'Unnamed Group', inviteeEmail).subscribe({
       next: (response) => {
         console.log('Email sent successfully', response);
+        this.successMessage = 'Invitation sent successfully!'; // Set success message
       },
       error: (error) => {
         console.error('Error sending email:', error);
@@ -166,6 +173,7 @@ export class StudyGroupListComponent implements OnInit {
     this.invitationService.sendInvitation(invitation).subscribe({
       next: (response) => {
         console.log('Invitation sent successfully', response);
+        this.successMessage = 'Invitation sent successfully!'; // Set success message
         this.toastr.success('Invitation sent successfully.');
       },
       error: (error) => {
@@ -193,7 +201,12 @@ export class StudyGroupListComponent implements OnInit {
     this.router.navigate([`/study-group/update-group/${groupId}`]);
     this.closeModal();
   }
-
+ isValidEmail(email: string): boolean {
+    // Simple email validation regex
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  }
+  
   openFlashcardModal() {
     const modalElement = document.getElementById('flashcardModal');
     if (modalElement) {

@@ -53,6 +53,14 @@
           <label for="inviteeEmailOrId" class="form-label">Invitee Email</label>
           <input type="text" id="inviteeEmailOrId" class="form-control" [(ngModel)]="inviteeEmailOrId" placeholder="Enter user email">
         </div>
+<!-- Display success message -->
+<div *ngIf="successMessage" class="alert alert-success">
+  {{ successMessage }}
+</div>
+        <!-- Display error message here -->
+        <div *ngIf="errorMessage" class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
       </div>
 
       <div class="modal-footer">
