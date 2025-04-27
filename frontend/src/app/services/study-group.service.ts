@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StudyGroup, CreateStudyGroup } from '../models/study-group.model';
+import {Invitation} from "../models/invitation.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StudyGroupService {
   private apiUrl = 'http://localhost:8081/api/groups';
+  private apiUrlInvites = 'http://localhost:8081/api/invitations';
 
   constructor(private http: HttpClient) {}
 
@@ -45,5 +47,9 @@ getGroupById(id: number): Observable<StudyGroup> {
       responseType: 'text'
     });
   }
-  
+
+  getInviteesByStudyGroupId(studyGroupId: number): Observable<Invitation[]> {
+    return this.http.get<Invitation[]>(`${this.apiUrlInvites}/study-group/${studyGroupId}`);
+  }
+
 }

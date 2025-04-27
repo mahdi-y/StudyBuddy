@@ -5,7 +5,7 @@ import { Task } from './task.model';
 import {Progress} from "../progress/progress.model";
 import {ProgressService} from "../progress.service";
 import {forkJoin} from "rxjs";
-
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-task',
@@ -25,8 +25,16 @@ export class TaskComponent implements OnInit, OnChanges {
   selectedTaskForUpdate: any = null;
   showDeleteConfirmation: boolean = false;
   taskToDelete: number | null = null;
+  @Input() invitees: any[] = [];
+  filteredTasks: Task[] = [];
 
-  constructor(private taskService: TaskService, private router: Router, private cdr: ChangeDetectorRef, private progressService: ProgressService) {}
+  currentUserId: number | undefined;
+
+  constructor(private taskService: TaskService, private router: Router, private cdr: ChangeDetectorRef, private progressService: ProgressService,
+  private authService: AuthService) {
+    const currentUser = this.authService.getCurrentUser();
+    this.currentUserId = currentUser?.id;
+  }
 
   ngOnInit(): void {
     // Fetch all tasks (if needed)
@@ -45,6 +53,14 @@ export class TaskComponent implements OnInit, OnChanges {
       this.loadTasksForProgress(this.progressId);
     } else {
       console.log('No progress detected!');
+    }
+  }
+
+  filterTasksForCurrentUser(): void {
+    if (this.currentUserId) {
+      this.filteredTasks = this.tasks.filter(task => task.assignedTo === this.currentUserId);
+    } else {
+      this.filteredTasks = []; // No tasks if no current user is detected
     }
   }
 
@@ -69,8 +85,7 @@ export class TaskComponent implements OnInit, OnChanges {
   getAllTasks(): void {
     this.taskService.getAllTasks().subscribe(tasks => {
       this.tasks = tasks;
-      //this.checkDueDates();
-
+      this.filterTasksForCurrentUser(); // Filter tasks after loading
     });
   }
 
@@ -118,25 +133,15 @@ export class TaskComponent implements OnInit, OnChanges {
   loadTasksForAllProgresses(): void {
     this.isLoading = true;
 
-    // Use an array to store all task observables
     const taskObservables = this.progresses.map(progress =>
       this.taskService.getTasksByProgressId(progress.id)
     );
 
-    // Combine all task observables into a single observable
     forkJoin(taskObservables).subscribe({
       next: (allTasksArrays) => {
-        console.log('All tasks loaded successfully:', allTasksArrays);
-
-        // Flatten the array of arrays into a single array of tasks
         this.tasks = allTasksArrays.flat();
-
+        this.filterTasksForCurrentUser(); // Filter tasks after loading
         this.isLoading = false;
-
-        // Optionally log individual task details
-        this.tasks.forEach(task => {
-          console.log(`Task ID: ${task.id}, Title: ${task.title}, Due Date: ${task.dueDate}`);
-        });
       },
       error: (err) => {
         console.error('Failed to load tasks for one or more progresses:', err);
@@ -148,19 +153,12 @@ export class TaskComponent implements OnInit, OnChanges {
 
   loadTasksForProgress(progressId: number): void {
     this.isLoading = true;
-    console.log('Fetching tasks for progress ID:', progressId);
 
     this.taskService.getTasksByProgressId(progressId).subscribe({
       next: (tasks) => {
-        console.log('Tasks loaded successfully for progress ID:', progressId);
-        console.log('Loaded tasks:', tasks); // Log the full list of tasks
         this.tasks = tasks;
+        this.filterTasksForCurrentUser(); // Filter tasks after loading
         this.isLoading = false;
-
-        // Optionally log individual task details
-        tasks.forEach(task => {
-          console.log(`Task ID: ${task.id}, Title: ${task.title}, Due Date: ${task.dueDate}`);
-        });
       },
       error: (err) => {
         console.error('Failed to load tasks for progress ID:', progressId, err);
@@ -239,5 +237,7 @@ export class TaskComponent implements OnInit, OnChanges {
     this.taskToDelete = null; // Reset the taskToDelete variable
     this.showDeleteConfirmation = false; // Hide the modal
   }
+
+
 
 }

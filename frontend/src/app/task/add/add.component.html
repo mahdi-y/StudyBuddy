@@ -54,6 +54,21 @@
     </select>
   </div>
 
+  <div class="mb-3">
+    <label for="assignedTo" class="form-label">Assign To <span class="text-danger">*</span></label>
+    <select id="assignedTo" name="assignedTo" class="form-select" [(ngModel)]="selectedAssignedTo" required>
+      <option value="" disabled>Select a user</option>
+      <ng-container *ngFor="let invitee of invitees; let i = index">
+        <option
+          *ngIf="i === 0 || invitee.username !== invitees[i - 1].username"
+          [value]="invitee.inviteeUserId">
+          {{ invitee.username }}
+        </option>
+      </ng-container>
+    </select>
+  </div>
+
+
   <!-- Or Enter New Progress -->
   <div class="mb-3">
     <label for="newProgressName" class="form-label">Or Enter New Progress</label>

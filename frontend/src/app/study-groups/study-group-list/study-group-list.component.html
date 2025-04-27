@@ -51,6 +51,14 @@
       </li>
     </ul>
 
+<!--    <div class="invitees-container">-->
+<!--      <h4>Invitees</h4>-->
+<!--      <ul>-->
+<!--        <li *ngFor="let invitee of invitees">-->
+<!--          {{ invitee.username }} (ID: {{ invitee.inviteeUserId }})-->
+<!--        </li>-->
+<!--      </ul>-->
+<!--    </div>-->
 
   </aside>
 
@@ -104,8 +112,10 @@
         <div class="col-md-4 h-100">
           <div class="side-section d-flex flex-column gap-3 h-100">
             <div class="tasks-container border rounded p-3 flex-grow-1">
-              <h3>🗂️ Tasks</h3>
-              <app-task [studyGroupId]="selectedGroup?.id"></app-task>
+<!--              <h3>🗂️ Tasks</h3>-->
+              <app-task [studyGroupId]="selectedGroup?.id"
+                        [invitees]="invitees">
+              </app-task>
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
               <h3>Resources</h3>

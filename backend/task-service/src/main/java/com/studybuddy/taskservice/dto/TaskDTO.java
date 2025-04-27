@@ -14,6 +14,10 @@ public class TaskDTO {
     private Long progressId; // This will link the task to a specific progress
     private String ProgressName;
 
+    // Fields for user associations
+    private Long createdBy; // ID of the user who created the task
+    private Long assignedTo;
+
     // Getters and Setters
 
     public Long getId() {
@@ -71,5 +75,21 @@ public class TaskDTO {
 
     public void setProgressId(Long progressId) {
         this.progressId = progressId;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(Long assignedTo) {
+        this.assignedTo = assignedTo;
     }
 }

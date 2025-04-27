@@ -10,6 +10,7 @@ export interface Invitation {
     id: number;
     name?: string; // optional, in case you want to display the name in the UI
   };
+  username?: string;
 }
 
 export interface SendInvitation {

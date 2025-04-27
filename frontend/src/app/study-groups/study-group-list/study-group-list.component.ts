@@ -2,13 +2,17 @@ import {StudyGroupService} from '../../services/study-group.service';
 import {InvitationService} from '../../services/invitation.service';
 import {Router} from '@angular/router';
 import {StudyGroup} from '../../models/study-group.model';
-import {SendInvitation} from '../../models/invitation.model';
+import {Invitation, SendInvitation} from '../../models/invitation.model';
 import {ToastrService} from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
 import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
 import {ChatService} from "../../services/chat.service"; // Adjust path accordingly
 import {firstValueFrom} from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+import { UserService } from '../../services/user.service';
+
+
 
 
 @Component({
@@ -30,6 +34,7 @@ export class StudyGroupListComponent implements OnInit {
   selectedInviteeUserId = 9;
   chatId: number | null = null;
   loadingChatId: boolean = false;
+  invitees: Invitation[] = [];
 
 
   modal: bootstrap.Modal | null = null;
@@ -41,30 +46,67 @@ export class StudyGroupListComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private authService: AuthService,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private cdr: ChangeDetectorRef,
+    private userService: UserService
   ) {
     this.user = this.authService.getCurrentUser();
   }
 
   ngOnInit(): void {
-    this.loadChatIdForSelectedGroup();
-    console.log('Fetched chatId:', this.chatId);
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
 
-      this.studyGroupService.getUserGroups(this.currentUserId).subscribe((data) => {
-        this.studyGroups = data;
+      // Fetch the user's study groups
+      this.studyGroupService.getUserGroups(this.currentUserId).subscribe({
+        next: (data) => {
+          this.studyGroups = data;
 
-        // Ensure at least one group is available before selecting the first one
-        if (this.studyGroups.length > 0) {
-          this.selectedGroup = this.studyGroups[0]; // Select the first study group by default
-          this.loadChatIdForSelectedGroup(); // Load the chat ID for the selected group
+          // Ensure at least one group is available before selecting the first one
+          if (this.studyGroups.length > 0) {
+            this.selectedGroup = this.studyGroups[0]; // Select the first study group by default
+
+            // Load invitees for the selected study group
+            if (this.selectedGroup && this.selectedGroup.id) {
+              this.loadInvitees(this.selectedGroup.id);
+            }
+
+            // Load the chat ID for the selected study group
+            this.loadChatIdForSelectedGroup();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load study groups:', err);
         }
       });
     }
   }
 
+  loadInvitees(studyGroupId: number): void {
+    this.studyGroupService.getInviteesByStudyGroupId(studyGroupId).subscribe({
+      next: async (invitees) => {
+        console.log('Invitees loaded:', invitees);
+
+        // Fetch usernames for each invitee
+        for (const invitee of invitees) {
+          try {
+            const user = await firstValueFrom(this.userService.getUserById(invitee.inviteeUserId));
+            invitee.username = user?.username || 'Unknown'; // Add username to the invitee object
+          } catch (err) {
+            console.error(`Failed to fetch user for inviteeUserId ${invitee.inviteeUserId}`, err);
+            invitee.username = 'Unknown'; // Default value if user fetch fails
+          }
+        }
+
+        this.invitees = invitees; // Update the invitees array
+        this.cdr.detectChanges(); // Trigger change detection
+      },
+      error: (err) => {
+        console.error('Failed to load invitees:', err);
+      }
+    });
+  }
 
   async loadChatIdForSelectedGroup(): Promise<void> {
     if (this.selectedGroup?.id) {
@@ -80,7 +122,23 @@ export class StudyGroupListComponent implements OnInit {
     }
   }
 
-
+  loadStudyGroups(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      this.studyGroupService.getUserGroups(currentUser.id).subscribe({
+        next: (data) => {
+          this.studyGroups = data;
+          if (this.studyGroups.length > 0) {
+            this.selectedGroup = this.studyGroups[0]; // Select the first group by default
+            this.loadInvitees(this.selectedGroup.id); // Load invitees for the selected group
+          }
+        },
+        error: (err) => {
+          console.error('Failed to load study groups:', err);
+        }
+      });
+    }
+  }
 
   get safeGroupId(): number | null {
     return this.selectedGroup?.id ?? null;
@@ -165,7 +223,15 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   selectGroup(group: StudyGroup): void {
+    // Set the selected group
     this.selectedGroup = group;
+
+    // Load invitees for the selected study group
+    if (this.selectedGroup && this.selectedGroup.id) {
+      this.loadInvitees(this.selectedGroup.id);
+    }
+
+    // Load the chat ID for the selected study group
     this.loadChatIdForSelectedGroup();
   }
 

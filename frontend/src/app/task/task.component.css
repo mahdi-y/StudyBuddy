@@ -135,8 +135,8 @@
 
 .modern-icon-button .tooltip {
   position: absolute;
-  bottom: 50px; /* Changed from top to bottom */
-  left: 50%;
+  bottom: 40px; /* Changed from top to bottom */
+  left: 40%;
   transform: translateX(-50%);
   background-color: #333;
   color: white;

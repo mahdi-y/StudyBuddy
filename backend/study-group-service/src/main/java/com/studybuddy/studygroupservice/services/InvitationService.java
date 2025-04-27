@@ -79,4 +79,8 @@ public class InvitationService {
 
         return dto;
     }
+
+    public List<Invitation> getInviteesByStudyGroupId(Long studyGroupId) {
+        return invitationRepository.findByStudyGroupId(studyGroupId);
+    }
 }

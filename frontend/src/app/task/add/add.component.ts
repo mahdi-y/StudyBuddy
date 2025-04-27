@@ -1,11 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TaskService } from '../../task.service';
 import { Task } from '../task.model';
 import { ProgressService } from '../../progress.service';
 import { Progress } from '../../progress/progress.model';
-import {map} from "rxjs";
+import { map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { StudyGroupService} from "../../services/study-group.service";
 
 @Component({
   selector: 'app-add-task',
@@ -13,7 +15,6 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./add.component.css']
 })
 export class AddTaskComponent implements OnInit {
-
   newTask: Task = {
     title: '',
     description: '',
@@ -26,13 +27,18 @@ export class AddTaskComponent implements OnInit {
   newProgressName: string = '';
   createdAt: string = '';
   @Input() studyGroupId!: number | undefined;
-  @Output() taskAdded = new EventEmitter<void>()
+  @Output() taskAdded = new EventEmitter<void>();
+  @Input() invitees: any[] = [];
+
+  usersInStudyGroup: any[] = []; // Array to store users in the study group
+  selectedAssignedTo: number | null = null; // ID of the user selected for assignment
 
   constructor(
     private taskService: TaskService,
     private progressService: ProgressService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService // Inject AuthService
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +59,7 @@ export class AddTaskComponent implements OnInit {
       });
     }
 
-    // Rest of your existing ngOnInit code...
+    // Load progress list
     this.loadProgressList();
     const todayDate = new Date();
     this.createdAt = todayDate.toISOString().split('T')[0];
@@ -74,6 +80,13 @@ export class AddTaskComponent implements OnInit {
   }
 
   addTask(): void {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      console.error('User not logged in');
+      alert('You must be logged in to create a task.');
+      return;
+    }
+
     const taskData = {
       title: this.newTask.title,
       description: this.newTask.description,
@@ -81,7 +94,9 @@ export class AddTaskComponent implements OnInit {
       completed: this.newTask.completed,
       progressId: this.newTask.progressId,
       progressName: this.newProgressName.trim() || undefined,
-      studyGroupId: this.studyGroupId
+      studyGroupId: this.studyGroupId,
+      createdBy: currentUser.id, // Include the current user's ID
+      assignedTo: this.selectedAssignedTo // Optional: You can add logic to assign tasks here
     };
 
     this.taskService.createTask(taskData).subscribe({
@@ -104,9 +119,11 @@ export class AddTaskComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error adding task:', err);
+        alert('Failed to add task. Please try again.');
       }
     });
   }
+
   // Validates that at least one of the progress fields is filled
   isProgressValid() {
     return this.newTask.progressId !== null || this.newProgressName.trim() !== '';

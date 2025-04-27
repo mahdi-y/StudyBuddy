@@ -56,4 +56,12 @@ public class InvitationController {
 
         return dto;
     }
+
+    @GetMapping("/study-group/{studyGroupId}")
+    public List<InvitationDTO> getInviteesByStudyGroupId(@PathVariable Long studyGroupId) {
+        List<Invitation> invitations = invitationService.getInviteesByStudyGroupId(studyGroupId);
+        return invitations.stream()
+                .map(this::mapToInvitationDTO)
+                .toList();
+    }
 }

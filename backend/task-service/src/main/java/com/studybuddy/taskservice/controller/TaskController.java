@@ -30,11 +30,18 @@ public class TaskController {
 
     // Endpoint to add a Task using TaskDTO
     @PostMapping("/add")
-    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Study-Group-ID") Long studyGroupId ) {
+    public ResponseEntity<TaskDTO> addTask(@RequestBody TaskDTO taskDTO, @RequestHeader("Study-Group-ID") Long studyGroupId) {
+        // Validate Study Group ID
         if (studyGroupId == null || studyGroupId <= 0) {
             throw new IllegalArgumentException("Invalid Study-Group-ID");
         }
 
+        // Validate createdBy field
+        if (taskDTO.getCreatedBy() == null || taskDTO.getCreatedBy() <= 0) {
+            throw new IllegalArgumentException("Invalid Created-By ID");
+        }
+
+        // Create a new Task entity
         Task task = new Task();
         task.setTitle(taskDTO.getTitle());
         task.setDescription(taskDTO.getDescription());
@@ -42,6 +49,11 @@ public class TaskController {
         task.setCompleted(taskDTO.isCompleted());
         task.setCreatedAt(LocalDateTime.now());
 
+        // Set user associations
+        task.setCreatedBy(taskDTO.getCreatedBy()); // Extract createdBy from the DTO
+        task.setAssignedTo(taskDTO.getAssignedTo()); // Extract assignedTo from the DTO (nullable)
+
+        // Handle Progress logic
         Progress progress;
 
         // If progressId is provided, verify it belongs to the same study group
@@ -53,8 +65,7 @@ public class TaskController {
             if (progress.getStudyGroupId() != null && !progress.getStudyGroupId().equals(studyGroupId)) {
                 throw new IllegalArgumentException("Progress does not belong to this study group");
             }
-        }
-        else {
+        } else {
             // For new progresses, always set the studyGroupId
             if (taskDTO.getProgressName() != null && !taskDTO.getProgressName().isEmpty()) {
                 progress = progressRepository.findByNameAndStudyGroupId(
@@ -74,10 +85,16 @@ public class TaskController {
             }
         }
 
+        // Associate the task with the progress
         task.setProgress(progress);
+
+        // Save the task
         Task savedTask = taskRepository.save(task);
+
+        // Update progress stats
         taskService.updateProgressStats(progress.getId());
-        // Create and return the TaskDTO response
+
+        // Map the saved task to a DTO for the response
         TaskDTO taskDTOResponse = new TaskDTO();
         taskDTOResponse.setId(savedTask.getId());
         taskDTOResponse.setTitle(savedTask.getTitle());
@@ -86,8 +103,10 @@ public class TaskController {
         taskDTOResponse.setCreatedAt(savedTask.getCreatedAt());
         taskDTOResponse.setCompleted(savedTask.isCompleted());
         taskDTOResponse.setProgressId(savedTask.getProgress() != null ? savedTask.getProgress().getId() : null);
+        taskDTOResponse.setCreatedBy(savedTask.getCreatedBy()); // Include createdBy in the response
+        taskDTOResponse.setAssignedTo(savedTask.getAssignedTo()); // Include assignedTo in the response
 
-        // Set progressName based on the associated Progress (if exists)
+        // Set progress name in the response
         if (savedTask.getProgress() != null) {
             taskDTOResponse.setProgressName(savedTask.getProgress().getName());
         } else {
@@ -187,6 +206,11 @@ public class TaskController {
             existingTask.setProgress(progress);  // Set task's progress to the existing progress ID
         }
 
+        // Update the assignedTo field if provided in the DTO
+        if (taskDTO.getAssignedTo() != null) {
+            existingTask.setAssignedTo(taskDTO.getAssignedTo()); // Update the assignedTo field
+        }
+
         // Save the updated task
         Task updatedTask = taskRepository.save(existingTask);
 
@@ -199,6 +223,8 @@ public class TaskController {
         taskDTOResponse.setCreatedAt(updatedTask.getCreatedAt());  // Keep the original createdAt
         taskDTOResponse.setCompleted(updatedTask.isCompleted());
         taskDTOResponse.setProgressId(updatedTask.getProgress() != null ? updatedTask.getProgress().getId() : null);
+        taskDTOResponse.setCreatedBy(updatedTask.getCreatedBy()); // Include createdBy in the response (immutable)
+        taskDTOResponse.setAssignedTo(updatedTask.getAssignedTo()); // Include assignedTo in the response
 
         // Set the progress name in the response
         if (updatedTask.getProgress() != null) {

@@ -20,6 +20,14 @@ public class Task {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    // Foreign key for the user who created the task
+    @Column(name = "created_by", nullable = false)
+    private Long createdBy; // ID of the user who created the task
+
+    // Foreign key for the user to whom the task is assigned
+    @Column(name = "assigned_to", nullable = true)
+    private Long assignedTo; // ID of the user to whom the task is assigned (nullable)
+
     // Many-to-One relationship with Progress
     @ManyToOne
     @JoinColumn(name = "progress_id", nullable = false)
@@ -87,5 +95,22 @@ public class Task {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(Long assignedTo) {
+        this.assignedTo = assignedTo;
     }
 }
