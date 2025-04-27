@@ -1,27 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>SB Backoffice</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-  <!-- Add Material Icons -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
-<body>
+<!-- src/app/dashboard/dashboard.component.html -->
 <div class="dashboard-container">
   <!-- Sidebar -->
   <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header">
       <h2>SB Backoffice</h2>
     </div>
-
     <nav class="sidebar-nav">
       <ul>
         <li class="nav-item" [class.active]="activeLink === 'dashboard'">
-          <a (click)="setActive('dashboard')"  routerLink="/dashboard/dashboard-content" routerLinkActive="active">
+          <a (click)="setActive('dashboard')" routerLink="/dashboard/dashboard-content" routerLinkActive="active">
             <i class="material-icons">dashboard</i>
             <span class="nav-text">Dashboard</span>
           </a>
@@ -45,7 +32,7 @@
           </a>
         </li>
         <li class="nav-item" [class.active]="activeLink === 'users'">
-          <a (click)="setActive('users')"  routerLink="/dashboard/backoffice" routerLinkActive="active">
+          <a (click)="setActive('users')" routerLink="/dashboard/backoffice" routerLinkActive="active">
             <i class="material-icons">person</i>
             <span class="nav-text">Users</span>
           </a>
@@ -60,7 +47,6 @@
     </nav>
     <div class="sidebar-footer">
       <span>© StudyBuddy {{ currentYear }}</span>
-<!--      <small>v1.0.0</small>-->
     </div>
   </aside>
 
@@ -74,7 +60,6 @@
         </button>
         <h3 class="page-title">{{ getPageTitle() }}</h3>
       </div>
-
       <div class="nav-right">
         <div class="notifications">
           <button class="notification-btn">
@@ -82,14 +67,12 @@
             <span class="badge">3</span>
           </button>
         </div>
-
         <div class="profile-dropdown">
           <button class="profile-btn" (click)="toggleProfileDropdown()">
-            <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img">
+            <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
             <span class="profile-name">{{ user?.username }}</span>
-            <i class="material-icons">arrow_drop_down</i>
+            <i class="material-icons"></i>
           </button>
-
           <div class="dropdown-menu" [class.show]="showProfileDropdown">
             <a href="#" class="dropdown-item">
               <i class="material-icons">settings</i> Settings
@@ -100,7 +83,6 @@
           </div>
         </div>
       </div>
-
     </header>
 
     <!-- Content Area -->
@@ -109,5 +91,3 @@
     </div>
   </div>
 </div>
-</body>
-</html>

@@ -5,4 +5,5 @@ export class SignupRequest {
     address?: string
     mobileno?: string
     age?: string
+    profilePicture?: File;
 }

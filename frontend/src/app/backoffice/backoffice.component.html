@@ -1,16 +1,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-
 <h2>User Management</h2>
 
 <!-- Create User Form -->
-<!-- Add your form for creating users here -->
 
 <!-- Users Table -->
 <table *ngIf="users.length > 0">
   <thead>
   <tr>
-<!--    <th>ID</th>-->
+    <th>Profile Picture</th>
     <th>Name</th>
     <th>Username</th>
     <th>Address</th>
@@ -21,8 +19,12 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let user of users">
-<!--    <td>{{ user.id }}</td>-->
+    <tr *ngFor="let user of getNonAdminUsers()">
+
+
+    <td>
+      <img [src]="user.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img" style="width: 50px; height: 50px;">
+    </td>
     <td>
       <span *ngIf="!user.editing">{{ user.name }}</span>
       <input *ngIf="user.editing" [(ngModel)]="user.name" name="name">
@@ -59,3 +61,23 @@
   </tr>
   </tbody>
 </table>
+
+<!-- Statistics Section -->
+<div class="statistics-section">
+  <h2>User Statistics</h2>
+  <div *ngIf="statistics; else loading">
+    <p><strong>Total Accounts:</strong> {{ statistics.totalAccounts }}</p>
+    <h3>Age Distribution</h3>
+    <div class="chart-container">
+      <canvas baseChart
+              [data]="pieChartData"
+              [type]="pieChartType"
+              [options]="pieChartOptions"
+              [legend]="pieChartLegend">
+      </canvas>
+    </div>
+  </div>
+  <ng-template #loading>
+    <p>Loading statistics...</p>
+  </ng-template>
+</div>

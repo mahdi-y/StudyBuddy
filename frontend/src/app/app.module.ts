@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './frontoffice/home/home.component';
 import { AboutComponent } from './frontoffice/about/about.component';
@@ -17,6 +18,9 @@ import { LoginComponent } from './login/login.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
 import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
+import { RequestResetComponent } from './request-reset/request-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +36,10 @@ import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
     AppComponent,
     RegisterComponent,
     LoginComponent,
-    BackofficeComponent
+    BackofficeComponent,
+    RequestResetComponent,
+    ResetPasswordComponent,
+  
   ],
   imports: [
     BrowserModule,
@@ -40,6 +47,7 @@ import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

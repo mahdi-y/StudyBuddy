@@ -1,0 +1,11 @@
+<div class="container">
+    <h2>Request Password Reset</h2>
+    <form (ngSubmit)="requestReset()">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" [(ngModel)]="username" name="username" required>
+      </div>
+      <button type="submit">Send Reset Code</button>
+    </form>
+    <p *ngIf="message">{{ message }}</p>
+  </div>

@@ -13,9 +13,15 @@ import {NotFoundComponent} from "./frontoffice/not-found/not-found.component";
 import {DashboardContentComponent} from "./backoffice/dashboard-content/dashboard-content.component";
 import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
 import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
+import { RequestResetComponent } from './request-reset/request-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+
 
 const routes: Routes = [
+  
   { path: '', component: HomeComponent },
+  { path: 'request-reset', component: RequestResetComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'register', component: RegisterComponent , canActivate: [GuestGuardService]},
   { path: 'login', component: LoginComponent , canActivate: [GuestGuardService] },
   { path: 'about', component: AboutComponent },

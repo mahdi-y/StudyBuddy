@@ -1,3 +1,4 @@
+// com.studybuddy.userservice.controller.LoginController
 package com.studybuddy.userservice.controller;
 
 import com.studybuddy.userservice.config.JWTService;
@@ -10,14 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
@@ -38,18 +33,15 @@ public class LoginController {
 	@PostMapping("/doLogin")
 	public ResponseEntity<LoginResponse> doLogin(@RequestBody LoginRequest request) {
 		LoginResponse response = new LoginResponse();
-
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
 		if (authentication.isAuthenticated()) {
 			User user = loginRepository.findByUsername(request.getUsername())
 					.orElseThrow(() -> new RuntimeException("User not found"));
-			response.setToken(jwtService.generateToken(request.getUsername(),  user.getId(), user.getRole()));
+			response.setToken(jwtService.generateToken(request.getUsername(), user.getId(), user.getRole()));
 		} else {
 			throw new RuntimeException("Invalid credentials");
 		}
-
 		return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 
@@ -57,14 +49,14 @@ public class LoginController {
 	public ResponseEntity<DashboardResponse> dashboard() {
 		DashboardResponse response = new DashboardResponse();
 		response.setResponse("Success");
-
 		System.out.println("Dashboard Response");
-
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping("/doRegister")
-	public ResponseEntity<SignupResponse> doRegister(@RequestBody SignupRequest request) {
-		return new ResponseEntity<>(loginService.doRegister(request), HttpStatus.CREATED);
+	@PostMapping(value = "/doRegister", consumes = {"multipart/form-data"})
+	public ResponseEntity<SignupResponse> doRegister(
+			@RequestPart("request") SignupRequest request,
+			@RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture) {
+		return new ResponseEntity<>(loginService.doRegister(request, profilePicture), HttpStatus.CREATED);
 	}
 }

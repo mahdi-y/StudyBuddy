@@ -5,26 +5,58 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input type="text" id="name" class="form-control custom-input" formControlName="name" required>
+        <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-danger">
+          Name is required.
+        </div>
       </div>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
         <input type="text" id="username" class="form-control custom-input" formControlName="username" required>
+        <div *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched" class="text-danger">
+          Username is required.
+        </div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" class="form-control custom-input" formControlName="password" required>
+        <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">
+          Password is required.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" id="confirmPassword" class="form-control custom-input" formControlName="confirmPassword" required>
+        <div *ngIf="signupForm.get('confirmPassword')?.errors?.['mismatch'] && signupForm.get('confirmPassword')?.touched" class="text-danger">
+          Passwords do not match.
+        </div>
+        <div *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched && !signupForm.get('confirmPassword')?.errors?.['mismatch']" class="text-danger">
+          Confirm Password is required.
+        </div>
       </div>
       <div class="mb-3">
         <label for="address" class="form-label">Address</label>
         <input type="text" id="address" class="form-control custom-input" formControlName="address" required>
+        <div *ngIf="signupForm.get('address')?.invalid && signupForm.get('address')?.touched" class="text-danger">
+          Address is required.
+        </div>
       </div>
       <div class="mb-3">
         <label for="mobileno" class="form-label">Mobile No</label>
         <input type="text" id="mobileno" class="form-control custom-input" formControlName="mobileno" required>
+        <div *ngIf="signupForm.get('mobileno')?.invalid && signupForm.get('mobileno')?.touched" class="text-danger">
+          Mobile No is required.
+        </div>
       </div>
       <div class="mb-3">
         <label for="age" class="form-label">Age</label>
-        <input type="text" id="age" class="form-control custom-input" formControlName="age" required>
+        <input type="number" id="age" class="form-control custom-input" formControlName="age" required>
+        <div *ngIf="signupForm.get('age')?.invalid && signupForm.get('age')?.touched" class="text-danger">
+          Age is required.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="profilePicture" class="form-label">Profile Picture (Optional)</label>
+        <input type="file" id="profilePicture" class="form-control custom-input" (change)="onFileChange($event)" accept="image/*">
       </div>
       <div class="d-grid gap-2 mt-4">
         <button type="submit" class="btn btn-gradient" [disabled]="!signupForm.valid">Register</button>
@@ -37,4 +69,3 @@
     </p>
   </div>
 </div>
-
