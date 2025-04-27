@@ -1,55 +1,52 @@
-<div class="container mt-5 p-4 shadow rounded-4 bg-white" style="max-width: 600px;">
-  <h2 class="text-center mb-4 text-primary fw-bold">🎓 Create a Study Group</h2>
+<!-- Just the Form itself, no container, no header -->
+<div *ngIf="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
+<div *ngIf="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
 
-  <div *ngIf="errorMessage" class="alert alert-danger text-center">{{ errorMessage }}</div>
-  <div *ngIf="successMessage" class="alert alert-success text-center">{{ successMessage }}</div>
+<form (ngSubmit)="createGroup()" #groupForm="ngForm" novalidate>
+  <!-- Group Name -->
+  <div class="mb-3">
+    <label for="name" class="form-label fw-semibold">Group Name</label>
+    <input
+      type="text"
+      id="name"
+      class="form-control rounded-3"
+      [(ngModel)]="groupData.name"
+      (ngModelChange)="onNameChange($event)"
+      name="name"
+      required
+      #name="ngModel"
+      placeholder="e.g., Angular Enthusiasts"
+    />
+    <small *ngIf="name.invalid && name.touched" class="text-danger">Group name is required.</small>
+  </div>
 
-  <form (ngSubmit)="createGroup()" #groupForm="ngForm" novalidate>
-    <!-- Group Name -->
-    <div class="mb-3">
-      <label for="name" class="form-label fw-semibold">Group Name</label>
-      <input
-        type="text"
-        id="name"
-        class="form-control rounded-3"
-        [(ngModel)]="groupData.name"
-        (ngModelChange)="onNameChange($event)"
-        name="name"
-        required
-        #name="ngModel"
-        placeholder="e.g., Angular Enthusiasts"
-      />
-      <small *ngIf="name.invalid && name.touched" class="text-danger">Group name is required.</small>
+  <!-- Description -->
+  <div class="mb-3">
+    <label for="description" class="form-label fw-semibold">Description</label>
+    <textarea
+      id="description"
+      class="form-control rounded-3"
+      [(ngModel)]="groupData.description"
+      name="description"
+      required
+      #description="ngModel"
+      rows="4"
+      placeholder="What is this group about?"
+    ></textarea>
+    <small *ngIf="description.invalid && description.touched" class="text-danger">Description is required.</small>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="d-grid gap-2">
+    <button type="submit" class="btn btn-primary btn-lg rounded-pill" [disabled]="isSubmitting || groupForm.invalid">
+      💾 Create Group
+    </button>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="isSubmitting" class="d-flex justify-content-center mt-3">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Submitting...</span>
     </div>
-
-    <!-- Description -->
-    <div class="mb-3">
-      <label for="description" class="form-label fw-semibold">Description</label>
-      <textarea
-        id="description"
-        class="form-control rounded-3"
-        [(ngModel)]="groupData.description"
-        name="description"
-        required
-        #description="ngModel"
-        rows="4"
-        placeholder="What is this group about?"
-      ></textarea>
-      <small *ngIf="description.invalid && description.touched" class="text-danger">Description is required.</small>
-    </div>
-
-    <!-- Submit Button -->
-    <div class="d-grid gap-2">
-      <button type="submit" class="btn btn-primary btn-lg rounded-pill" [disabled]="isSubmitting || groupForm.invalid">
-        💾 Create Group
-      </button>
-    </div>
-
-    <!-- Spinner -->
-    <div *ngIf="isSubmitting" class="d-flex justify-content-center mt-3">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Submitting...</span>
-      </div>
-    </div>
-  </form>
-</div>
+  </div>
+</form>

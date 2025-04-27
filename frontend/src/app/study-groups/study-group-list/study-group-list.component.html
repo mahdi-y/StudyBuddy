@@ -9,7 +9,10 @@
   <aside class="group-sidebar" [class.collapsed]="isSidebarCollapsed">
     <div class="sidebar-header mb-3">
       <h2 *ngIf="!isSidebarCollapsed">Study Groups</h2>
-      <button mat-raised-button color="primary" (click)="goToCreateGroup()">Create New Group</button>
+      <button mat-raised-button color="primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+        Create New Group
+      </button>
+
     </div>
 
     <div class="px-3 pb-2">
@@ -158,6 +161,25 @@
       <div class="modal-body">
         <app-flashcard *ngIf="safeGroupId" [groupId]="safeGroupId"></app-flashcard>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Create Group Modal -->
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-3">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-primary fw-bold" id="createGroupModalLabel">🎓 Create a Study Group</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 🛑 Call your reusable component here -->
+        <app-study-group-create></app-study-group-create>
+      </div>
+
     </div>
   </div>
 </div>

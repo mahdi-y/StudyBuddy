@@ -37,6 +37,7 @@ export class StudyGroupListComponent implements OnInit {
   invitees: Invitation[] = [];
 
 
+
   modal: bootstrap.Modal | null = null;
   user: { username: string; role: string } | null;
 
@@ -282,4 +283,5 @@ export class StudyGroupListComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
 }
