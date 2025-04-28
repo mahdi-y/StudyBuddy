@@ -20,6 +20,9 @@ import { AuthGuard } from './services/auth.guard.service';
 import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 import { RequestResetComponent } from './request-reset/request-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { UpdateAdminComponent } from './update-admin/update-admin.component';
+
 
 
 @NgModule({
@@ -39,6 +42,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     BackofficeComponent,
     RequestResetComponent,
     ResetPasswordComponent,
+    UpdateProfileComponent,
+    UpdateAdminComponent,
   
   ],
   imports: [

@@ -1,4 +1,8 @@
-<!-- src/app/dashboard/dashboard.component.html -->
+<head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
 <div class="dashboard-container">
   <!-- Sidebar -->
   <aside class="sidebar" [class.collapsed]="isSidebarCollapsed">
@@ -7,36 +11,47 @@
     </div>
     <nav class="sidebar-nav">
       <ul>
+        <!-- Dashboard -->
         <li class="nav-item" [class.active]="activeLink === 'dashboard'">
           <a (click)="setActive('dashboard')" routerLink="/dashboard/dashboard-content" routerLinkActive="active">
             <i class="material-icons">dashboard</i>
             <span class="nav-text">Dashboard</span>
           </a>
         </li>
+
+        <!-- Study Groups -->
         <li class="nav-item" [class.active]="activeLink === 'study-groups'">
           <a (click)="setActive('study-groups')" routerLinkActive="active">
             <i class="material-icons">group</i>
             <span class="nav-text">Study Groups</span>
           </a>
         </li>
+
+        <!-- Resources -->
         <li class="nav-item" [class.active]="activeLink === 'resources'">
           <a (click)="setActive('resources')" routerLinkActive="active">
             <i class="material-icons">library_books</i>
             <span class="nav-text">Resources</span>
           </a>
         </li>
+
+        <!-- Tasks -->
         <li class="nav-item" [class.active]="activeLink === 'tasks'">
           <a (click)="setActive('tasks')" routerLinkActive="active">
             <i class="material-icons">list</i>
             <span class="nav-text">Tasks</span>
           </a>
         </li>
+
+        <!-- Users -->
         <li class="nav-item" [class.active]="activeLink === 'users'">
           <a (click)="setActive('users')" routerLink="/dashboard/backoffice" routerLinkActive="active">
             <i class="material-icons">person</i>
             <span class="nav-text">Users</span>
           </a>
         </li>
+
+        <!-- Settings -->
         <li class="nav-item" [class.active]="activeLink === 'settings'">
           <a (click)="setActive('settings')" routerLinkActive="active">
             <i class="material-icons">settings</i>
@@ -61,20 +76,23 @@
         <h3 class="page-title">{{ getPageTitle() }}</h3>
       </div>
       <div class="nav-right">
+        <!-- Notifications -->
         <div class="notifications">
           <button class="notification-btn">
             <i class="material-icons">notifications</i>
             <span class="badge">3</span>
           </button>
         </div>
+
+        <!-- Profile Dropdown -->
         <div class="profile-dropdown">
           <button class="profile-btn" (click)="toggleProfileDropdown()">
             <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
             <span class="profile-name">{{ user?.username }}</span>
-            <i class="material-icons"></i>
+            <i class="material-icons">arrow_drop_down</i>
           </button>
           <div class="dropdown-menu" [class.show]="showProfileDropdown">
-            <a href="#" class="dropdown-item">
+            <a href="#" class="dropdown-item" routerLink="/update-admin" routerLinkActive="active">
               <i class="material-icons">settings</i> Settings
             </a>
             <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">

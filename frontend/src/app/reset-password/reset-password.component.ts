@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -10,26 +11,33 @@ export class ResetPasswordComponent {
   resetCode: string = '';
   newPassword: string = '';
   message: string = '';
-
-  constructor(private http: HttpClient) {}
+  isSuccess: boolean = false;
+  confirmPassword: string = '';
+  isPasswordMatch: boolean = true;
+error: any;
+  constructor(private http: HttpClient, private router: Router) {}
 
   resetPassword() {
-    const request = {
+    const resetData = {
       username: this.username,
       resetCode: this.resetCode,
       newPassword: this.newPassword
     };
 
-    console.log('Sending request to http://localhost:8083/api/auth/reset-password with payload:', request);
-    this.http.post('http://localhost:8083/api/auth/reset-password', request)
+    this.http.post('http://localhost:8083/api/auth/reset-password', resetData)
       .subscribe({
         next: (response: any) => {
-          this.message = response;
-          console.log('Response:', response);
+          this.isSuccess = true;
+          this.message = 'Password reset successful! Redirecting...';
+          
+          // Navigate after 2 seconds
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
         },
         error: (error) => {
-          console.error('Request failed:', error);
-          this.message = `Error: ${error.status} - ${error.statusText} - ${error.error || 'No error details'}`;
+          this.isSuccess = false;
+          this.message = `Error: ${error.status} - ${error.error || 'Failed to reset password'}`;
         }
       });
   }

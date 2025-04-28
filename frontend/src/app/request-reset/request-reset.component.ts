@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 export class RequestResetComponent {
   username: string = '';
   message: string = '';
+msg: any;
+error: any;
 
   constructor(private http: HttpClient) {}
 

@@ -1,6 +1,7 @@
 package com.studybuddy.userservice.service;
 
 import com.studybuddy.userservice.dto.User;
+import com.studybuddy.userservice.dto.UserUpdateRequest;
 import com.studybuddy.userservice.repo.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,15 @@ public class UserService {
     public User createUser(User user) {
         return loginRepository.save(user);
     }
-
+    public User updateUserByUsername(String username, UserUpdateRequest updateRequest) {
+        User user = loginRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username " + username));
+        if (updateRequest.getName() != null) user.setName(updateRequest.getName());
+        if (updateRequest.getAddress() != null) user.setAddress(updateRequest.getAddress());
+        if (updateRequest.getMobileNo() != null) user.setMobileNo(updateRequest.getMobileNo());
+        if (updateRequest.getAge() != null) user.setAge(updateRequest.getAge());
+        return loginRepository.save(user);
+    }
     public User updateUser(Integer id, User userDetails) {
         User user = loginRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));

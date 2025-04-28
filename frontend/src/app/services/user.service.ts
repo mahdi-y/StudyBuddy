@@ -53,4 +53,5 @@ import { Injectable } from '@angular/core';
      resetPassword(token: string, newPassword: string): Observable<any> {
        return this.http.post<any>(`${this.apiUrl}/reset-password`, { token, newPassword });
      }
+     
    }

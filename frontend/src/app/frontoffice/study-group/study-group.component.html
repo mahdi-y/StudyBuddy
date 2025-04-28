@@ -33,19 +33,17 @@
       <!-- Profile Dropdown -->
       <div class="profile-dropdown">
         <button class="profile-btn" (click)="toggleProfileDropdown()">
-          <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img">
+          <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
           <span class="profile-name">{{ user?.username }}</span>
           <i class="material-icons">arrow_drop_down</i>
         </button>
-
         <div class="dropdown-menu" [class.show]="showProfileDropdown">
-          <a href="#" class="dropdown-item">
+          <a routerLink="/update-profile" class="dropdown-item">
             <i class="material-icons">settings</i> Settings
           </a>
           <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">
             <i class="material-icons">logout</i> Sign Out
           </a>
-
         </div>
       </div>
     </div>

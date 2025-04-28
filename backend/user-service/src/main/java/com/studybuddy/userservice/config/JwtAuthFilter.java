@@ -51,7 +51,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 			if (jwtService.validateToken(token, userDetails)) {
 				String role = jwtService.extractRole(token);
-				int userId = jwtService.extractUserId(token); // 👈 Extract ID here
+				Integer userId = jwtService.extractUserId(token); // 👈 Extract ID here
 				logger.info("Extracted role: {}, userId: {}", role, userId);
 
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

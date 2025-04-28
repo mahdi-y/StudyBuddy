@@ -1,11 +1,52 @@
-<div class="container">
-    <h2>Request Password Reset</h2>
+<div class="parent d-flex align-items-center justify-content-center min-vh-100" style="background: linear-gradient(135deg, #43cea2, #185a9d);">
+  <div class="card shadow-lg p-4" style="max-width: 420px; width: 100%; border-radius: 20px; background: #f9fafe;">
+    
+    <!-- Header -->
+    <div class="text-center mb-4">
+      <h3 class="card-title text-primary fw-bold" style="font-size: 26px;">🔒 Forgot Your Password?</h3>
+      <p class="text-muted" style="font-size: 15px;">Enter your username to receive a reset code.</p>
+    </div>
+
+    <!-- Form -->
     <form (ngSubmit)="requestReset()">
-      <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" [(ngModel)]="username" name="username" required>
+      
+      <!-- Username Input -->
+      <div class="mb-3">
+        <label for="username" class="form-label text-secondary">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control rounded-4 border-2"
+          [(ngModel)]="username"
+          name="username"
+          placeholder="Enter your username"
+          required
+        />
       </div>
-      <button type="submit">Send Reset Code</button>
+
+      <!-- Submit Button -->
+      <div class="d-grid">
+        <button
+          type="submit"
+          class="btn btn-success rounded-4 fw-bold py-2"
+          [routerLink]="message ? '/reset-password' : null"
+          [disabled]="!username"
+          style="background: linear-gradient(135deg, #43cea2, #185a9d); border: none;"
+        >
+          Send Reset Code
+        </button>
+      </div>
     </form>
-    <p *ngIf="message">{{ message }}</p>
+
+    <!-- Success/Error Messages (if needed) -->
+
+    <!-- Login Link -->
+    <div class="text-center mt-4">
+      <p class="text-muted" style="font-size: 14px;">
+        Remember your password? 
+        <a routerLink="/login" class="text-primary fw-bold" style="text-decoration: none;">Login here</a>
+      </p>
+    </div>
+
   </div>
+</div>

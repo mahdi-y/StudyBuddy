@@ -15,11 +15,14 @@ import {StudyGroupComponent} from "./frontoffice/study-group/study-group.compone
 import {DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 import { RequestResetComponent } from './request-reset/request-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { UpdateAdminComponent } from './update-admin/update-admin.component';
 
 
 const routes: Routes = [
   
   { path: '', component: HomeComponent },
+  { path: 'update-admin', component: UpdateAdminComponent },
   { path: 'request-reset', component: RequestResetComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'register', component: RegisterComponent , canActivate: [GuestGuardService]},
@@ -28,6 +31,7 @@ const routes: Routes = [
   { path: 'work', component: WorkComponent},
   { path: 'category', component: CategoryComponent},
   { path: 'study-group', component: StudyGroupComponent , canActivate: [AuthGuard]},
+  { path: 'update-profile', component: UpdateProfileComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -36,6 +40,7 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full'  },
       { path: 'dashboard-content', component: DashboardContentComponent },
       { path: 'backoffice', component: BackofficeComponent },
+      
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },
