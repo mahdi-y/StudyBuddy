@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { RessourceService } from 'src/app/services/ressource.service';
 
 @Component({
@@ -16,6 +16,8 @@ export class StudyGroupComponent implements OnInit {
   showModal: boolean = false;
   newResource: any = { title: '', fileUrl: '', description: '' };
   selectedFile: File | null = null;
+  @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
+
 
   resources: any[] = [];
 
@@ -115,11 +117,19 @@ export class StudyGroupComponent implements OnInit {
 
 
   saveResource(resourceToAdd: any): void {
-    this.ressourceService.addResource(resourceToAdd).subscribe({
+    // Ensure studyGroupId is available
+    if (!this.studyGroupId) {
+      console.error('Study Group ID is required to save the resource.');
+      alert('Please select a valid study group.');
+      return;
+    }
+
+    // Pass both resourceToAdd and studyGroupId to addResource
+    this.ressourceService.addResource(resourceToAdd, this.studyGroupId).subscribe({
       next: (res) => {
         console.log('Resource successfully added:', res);
         this.loadResources(); // 🔁 Refresh the list after adding
-        this.closeModal();    // Hide modal and reset form
+        this.closeModal();   // Hide modal and reset form
       },
       error: (err) => {
         console.error('Error adding resource:', err);

@@ -9,6 +9,7 @@ export class Ressource {
   category: any = {};  // If you expect an object, you can initialize it like this
   user: any = {};  // If you expect an object, you can initialize it like this
   group: any = {};  // If you expect an object, you can initialize it like this
+  studyGroupId: number | undefined;
 
   constructor() {}
 }

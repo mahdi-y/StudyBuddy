@@ -1,11 +1,11 @@
 package com.studybuddy.resourceservice.Controller;
 
 import com.studybuddy.resourceservice.Entity.Ressource;
-import com.studybuddy.resourceservice.Entity.StudyGroup;
-import com.studybuddy.resourceservice.Entity.User;
+import com.studybuddy.resourceservice.Repository.RessourceRepository;
 import com.studybuddy.resourceservice.Service.OCRService;
 import com.studybuddy.resourceservice.Service.RessourceService;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -28,6 +28,8 @@ public class RessourceController {
 
     @Autowired
     private OCRService ocrService;
+    @Autowired
+    private RessourceRepository ressourceRepository;
 
     @GetMapping
     public List<Ressource> getAll() {
@@ -42,20 +44,19 @@ public class RessourceController {
     }
 
     @PostMapping
-    public Ressource create(@Valid @RequestBody Ressource ressource) {
+    public ResponseEntity<?> create(
+            @Valid @RequestBody Ressource ressource,
+            @RequestHeader(value = "Study-Group-ID", required = false) Long studyGroupId) {
+        if (studyGroupId == null) {
+            return ResponseEntity.badRequest().body("Missing required header: Study-Group-ID");
+        }
+
         Timestamp now = new Timestamp(System.currentTimeMillis());
         ressource.setUploadedAt(now);
         ressource.setUpdatedAt(now);
+        ressource.setStudyGroupId(studyGroupId);
 
-        User user = new User();
-        user.setIdUser(1L); // Dummy
-        ressource.setUser(user);
-
-        StudyGroup group = new StudyGroup();
-        group.setIdGroup(1L); // Dummy
-        ressource.setGroup(group);
-
-        return ressourceService.save(ressource);
+        return ResponseEntity.ok(ressourceService.save(ressource));
     }
 
     @PutMapping("/{id}")
@@ -97,13 +98,6 @@ public class RessourceController {
             ressource.setUploadedAt(now);
             ressource.setUpdatedAt(now);
 
-            User user = new User();
-            user.setIdUser(1L); // Dummy user
-            ressource.setUser(user);
-
-            StudyGroup group = new StudyGroup();
-            group.setIdGroup(1L); // Dummy group
-            ressource.setGroup(group);
 
             Ressource saved = ressourceService.save(ressource);  // Save the ressource
             return ResponseEntity.ok(saved);
@@ -111,5 +105,13 @@ public class RessourceController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();  // Handle error
         }
+    }
+    @GetMapping("/by-study-group")
+    @Transactional
+    public ResponseEntity<List<Ressource>> getResourcesByStudyGroupId(
+            @RequestHeader("Study-Group-ID") Long studyGroupId) {
+
+        List<Ressource> progresses = ressourceRepository.findByStudyGroupId(studyGroupId);
+        return ResponseEntity.ok(progresses);
     }
 }

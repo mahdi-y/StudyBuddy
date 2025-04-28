@@ -10,6 +10,7 @@ public class Ressource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idResource;
+    private Long studyGroupId;
 
     private String title;
 
@@ -27,13 +28,6 @@ public class Ressource {
     @JsonIgnore  // This prevents serializing the full category object
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "groupId")
-    private StudyGroup group;
 
     // Getters and setters
     public Long getIdResource() {
@@ -100,19 +94,11 @@ public class Ressource {
         this.category = category;
     }
 
-    public User getUser() {
-        return user;
+    public Long getStudyGroupId() {
+        return studyGroupId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public StudyGroup getGroup() {
-        return group;
-    }
-
-    public void setGroup(StudyGroup group) {
-        this.group = group;
+    public void setStudyGroupId(Long studyGroupId) {
+        this.studyGroupId = studyGroupId;
     }
 }

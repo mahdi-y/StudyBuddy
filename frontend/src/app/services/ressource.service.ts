@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Ressource } from '../models/resource.model';
 import { tap } from 'rxjs';
@@ -7,7 +7,7 @@ import { tap } from 'rxjs';
   providedIn: 'root'
 })
 export class RessourceService {
-  private apiUrl = 'http://localhost:8081/api/ressources';  // Replace this with your correct backend API URL
+  private apiUrl = 'http://localhost:8069/api/ressources';  // Replace this with your correct backend API URL
 
   constructor(private http: HttpClient) {}
 
@@ -19,9 +19,14 @@ export class RessourceService {
   }
 
    // Add a new resource
-   addResource(resource: Ressource): Observable<Ressource> {
-    return this.http.post<Ressource>(this.apiUrl, resource);
+  addResource(resource: Ressource, studyGroupId: number): Observable<Ressource> {
+    const headers = new HttpHeaders({
+      'Study-Group-ID': studyGroupId.toString() // Convert to string explicitly
+    });
+
+    return this.http.post<Ressource>(this.apiUrl, resource, { headers });
   }
+
   uploadFile(formData: FormData): Observable<any> {
     return this.http.post<any>('http://localhost:8081/api/upload', formData);
   }
@@ -37,7 +42,15 @@ export class RessourceService {
     return this.http.delete<void>(`${this.apiUrl}/${resourceId}`);
   }
   uploadImageForOCR(formData: FormData): Observable<any> {
-    return this.http.post<any>('http://localhost:8081/api/ocr/upload-ocr', formData);  // Updated URL
+    return this.http.post<any>('http://localhost:8069/api/ocr/upload-ocr', formData);  // Updated URL
+  }
+
+  getResourcesByStudyGroupId(studyGroupId: number): Observable<Ressource[]> {
+    const headers = new HttpHeaders({
+      'Study-Group-ID': studyGroupId.toString() // Convert to string explicitly
+    });
+
+    return this.http.get<Ressource[]>(`${this.apiUrl}/by-study-group`, { headers });
   }
 
 

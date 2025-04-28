@@ -1,11 +1,12 @@
 import { StudyGroupService } from '../../services/study-group.service';
 import { InvitationService } from '../../services/invitation.service';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 import { StudyGroup } from '../../models/study-group.model';
 import { SendInvitation } from '../../models/invitation.model';
 import { ToastrService } from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewContainerRef, ComponentRef, Input, ElementRef} from '@angular/core';
 import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
 import {AuthService} from "../../services/auth.service"; // Adjust path accordingly
 import {RessourceComponent} from "../../pages/ressource/ressource.component";
@@ -18,6 +19,8 @@ import {RessourceService} from "../../services/ressource.service";
   styleUrls: ['./study-group-list.component.scss']
 })
 export class StudyGroupListComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef; // Reference to the hidden file input
+
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
   showModal: boolean = false;
   newResource: any = { title: '', fileUrl: '', description: '' };
@@ -32,12 +35,15 @@ export class StudyGroupListComponent implements OnInit {
   currentUserId!: number;
   selectedInviteeUserId = 4;
   resources: any[] = [];
+  @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
+
 
   modal: bootstrap.Modal | null = null;
   user: { username: string; role: string } | null;
 
   constructor(
     private studyGroupService: StudyGroupService,
+    private cdr: ChangeDetectorRef,
     private invitationService: InvitationService,
     private router: Router,
     private toastr: ToastrService,
@@ -224,22 +230,26 @@ export class StudyGroupListComponent implements OnInit {
     if (this.newResource.title && this.newResource.fileUrl && this.newResource.description && this.selectedFile) {
       const formData = new FormData();
       formData.append('file', this.selectedFile);
-      console.log('FormData being sent:', formData);  // Log FormData
+      console.log('FormData being sent:', formData); // Log FormData
 
       // Send the file for OCR processing
       this.ressourceService.uploadImageForOCR(formData).subscribe({
         next: (response) => {
-          console.log('OCR processing response:', response);  // Log the backend response
+          console.log('OCR processing response:', response); // Log the backend response
           if (response.base64File) {
             this.newResource.fileUrl = response.base64File;
-
             // Save the resource with the OCR PDF
             const resourceToAdd = {
               ...this.newResource,
               category: this.selectedGroup ? { id: this.selectedGroup.id } : null,
             };
 
-            this.saveResource(resourceToAdd);
+            // Pass the selectedGroup.id as the studyGroupId
+            if (this.selectedGroup?.id) {
+              this.saveResource(resourceToAdd, this.selectedGroup.id);
+            } else {
+              alert('Please select a valid study group.');
+            }
           } else {
             alert('OCR processing failed: No Base64 file returned.');
           }
@@ -256,12 +266,13 @@ export class StudyGroupListComponent implements OnInit {
 
 
 
-  saveResource(resourceToAdd: any): void {
-    this.ressourceService.addResource(resourceToAdd).subscribe({
+  saveResource(resourceToAdd: any, studyGroupId: number): void {
+    // Pass both resourceToAdd and studyGroupId to addResource
+    this.ressourceService.addResource(resourceToAdd, studyGroupId).subscribe({
       next: (res) => {
         console.log('Resource successfully added:', res);
         this.loadResources(); // 🔁 Refresh the list after adding
-        this.closeModalRessource();    // Hide modal and reset form
+        this.closeModalRessource(); // Hide modal and reset form
       },
       error: (err) => {
         console.error('Error adding resource:', err);
@@ -285,5 +296,45 @@ export class StudyGroupListComponent implements OnInit {
         console.error('Error loading resources:', err);
       }
     });
+  }
+  onDragOver(event: DragEvent): void {
+    console.log('Drag over event detected');
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onFileDrop(event: DragEvent): void {
+    console.log('Drop event detected');
+    event.preventDefault();
+    event.stopPropagation();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFile(files[0]);
+    } else {
+      console.error('No files detected in drop event');
+    }
+  }
+
+  handleFile(file: File): void {
+    console.log('File selected:', file); // Log the file for debugging
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = (reader.result as string).split(',')[1];
+      this.newResource.fileUrl = base64Data;
+      console.log('File loaded successfully:', this.newResource.fileUrl);
+
+      // Trigger change detection if needed
+      this.cdr.detectChanges();
+    };
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click(); // Programmatically trigger the file input dialog
   }
 }
