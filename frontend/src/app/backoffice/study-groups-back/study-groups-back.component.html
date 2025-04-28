@@ -1,0 +1,40 @@
+<div class="study-groups-container">
+  <!-- Section Title -->
+  <h3 class="section-title">Study Groups</h3>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <span class="spinner-text">Loading study groups...</span>
+    <div class="spinner"></div> <!-- Optional: Add a spinner graphic here -->
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-message">
+    <span class="error-icon">⚠️</span> {{ errorMessage }}
+  </div>
+
+  <!-- Study Groups List -->
+  <ul *ngIf="!isLoading && studyGroups.length > 0; else noGroups" class="study-groups-list">
+    <li *ngFor="let group of studyGroups" class="study-group-item">
+      <!-- Group Name -->
+      <button (click)="goToStudyGroup(group.id)" class="group-name-btn">
+        <i class="material-icons">group</i> <!-- Optional icon for better UX -->
+        {{ group.name }}
+      </button>
+
+      <!-- Action Buttons -->
+      <div class="group-actions">
+        <button (click)="deleteStudyGroup(group.id)" class="delete-btn">
+          <i class="material-icons">delete</i> Delete
+        </button>
+      </div>
+    </li>
+  </ul>
+
+  <!-- No Groups Available -->
+  <ng-template #noGroups>
+    <p *ngIf="!isLoading" class="no-groups-message">
+      <span class="emoji">🙁</span> No study groups available.
+    </p>
+  </ng-template>
+</div>

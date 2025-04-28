@@ -1,23 +1,16 @@
-import {StudyGroupService} from '../../services/study-group.service';
-import {InvitationService} from '../../services/invitation.service';
-import {Router} from '@angular/router';
-import {StudyGroup} from '../../models/study-group.model';
-import {Invitation, SendInvitation} from '../../models/invitation.model';
-import {ToastrService} from 'ngx-toastr';
+import { StudyGroupService } from '../../services/study-group.service';
+import { InvitationService } from '../../services/invitation.service';
+import { Router } from '@angular/router';
+import { StudyGroup } from '../../models/study-group.model';
+import { Invitation, SendInvitation } from '../../models/invitation.model';
+import { ToastrService } from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
-import {Component, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {AuthService} from "../../services/auth.service";
-import {ChatService} from "../../services/chat.service"; // Adjust path accordingly
-import {firstValueFrom} from 'rxjs';
+import { ChatService } from "../../services/chat.service"; // Adjust path accordingly
+import { firstValueFrom } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
-
-
-
 import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
-import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
 import { AuthService } from "../../services/auth.service"; // Adjust path accordingly
-import { UserService } from '../../services/user.service'; // Ensure this import
 
 @Component({
   selector: 'app-study-group-list',
@@ -37,15 +30,10 @@ export class StudyGroupListComponent implements OnInit {
   showProfileDropdown: boolean = false;
   showAllGroups: boolean = false;
   currentUserId!: number;
-
   selectedInviteeUserId: number = 4; // Could be dynamic later
-  selectedInviteeUserId = 9;
   chatId: number | null = null;
   loadingChatId: boolean = false;
   invitees: Invitation[] = [];
-
-
-
   modal: bootstrap.Modal | null = null;
   inviteModal: bootstrap.Modal | null = null; // ➡️ New
   user: { username: string; role: string } | null;
@@ -55,10 +43,8 @@ export class StudyGroupListComponent implements OnInit {
     private invitationService: InvitationService,
     private router: Router,
     private toastr: ToastrService,
-    private authService: AuthService,
     private chatService: ChatService,
     private cdr: ChangeDetectorRef,
-    private userService: UserService
     private userService: UserService,
     private authService: AuthService
   ) {
@@ -69,21 +55,17 @@ export class StudyGroupListComponent implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
-
       // Fetch the user's study groups
       this.studyGroupService.getUserGroups(this.currentUserId).subscribe({
         next: (data) => {
           this.studyGroups = data;
-
           // Ensure at least one group is available before selecting the first one
           if (this.studyGroups.length > 0) {
             this.selectedGroup = this.studyGroups[0]; // Select the first study group by default
-
             // Load invitees for the selected study group
             if (this.selectedGroup && this.selectedGroup.id) {
               this.loadInvitees(this.selectedGroup.id);
             }
-
             // Load the chat ID for the selected study group
             this.loadChatIdForSelectedGroup();
           }
@@ -93,13 +75,27 @@ export class StudyGroupListComponent implements OnInit {
         }
       });
     }
+
+    // Listen for modal close events to refresh study groups
+    const inviteModalEl = document.getElementById('inviteModal');
+    if (inviteModalEl) {
+      inviteModalEl.addEventListener('hidden.bs.modal', () => {
+        this.refreshStudyGroups();
+      });
+    }
+
+    const groupDetailsModalEl = document.getElementById('groupDetailsModal');
+    if (groupDetailsModalEl) {
+      groupDetailsModalEl.addEventListener('hidden.bs.modal', () => {
+        this.refreshStudyGroups();
+      });
+    }
   }
 
   loadInvitees(studyGroupId: number): void {
     this.studyGroupService.getInviteesByStudyGroupId(studyGroupId).subscribe({
       next: async (invitees) => {
         console.log('Invitees loaded:', invitees);
-
         // Fetch usernames for each invitee
         for (const invitee of invitees) {
           try {
@@ -110,7 +106,6 @@ export class StudyGroupListComponent implements OnInit {
             invitee.username = 'Unknown'; // Default value if user fetch fails
           }
         }
-
         this.invitees = invitees; // Update the invitees array
         this.cdr.detectChanges(); // Trigger change detection
       },
@@ -160,8 +155,8 @@ export class StudyGroupListComponent implements OnInit {
     this.selectedGroup = group;
     const inviteModalEl = document.getElementById('inviteModal');
     if (inviteModalEl) {
-      const modal = new bootstrap.Modal(inviteModalEl);
-      modal.show();
+      this.inviteModal = new bootstrap.Modal(inviteModalEl); // Save the modal instance
+      this.inviteModal.show();
     }
   }
 
@@ -169,20 +164,17 @@ export class StudyGroupListComponent implements OnInit {
     // Clear any previous messages
     this.errorMessage = '';  // Reset the error message
     this.successMessage = '';  // Reset the success message
-
     // Validate input: check if group is selected and email is provided
     if (!this.selectedGroup || !this.inviteeEmailOrId) {
       this.errorMessage = 'Please select a group and provide an invitee email.'; // Set error message
       return;
     }
-
     // Check if the provided email is valid
     const isEmail = this.isValidEmail(this.inviteeEmailOrId);
     if (!isEmail) {
       this.errorMessage = 'Please provide a valid email.'; // Set error message
       return;
     }
-
     // Check if email exists
     this.userService.checkIfEmailExists(this.inviteeEmailOrId).subscribe({
       next: (emailExists: boolean) => {
@@ -190,7 +182,6 @@ export class StudyGroupListComponent implements OnInit {
           this.errorMessage = 'The email does not exist.'; // Set error message
           return;
         }
-
         // Fetch user ID based on the email if the email exists
         this.userService.getUserIdByEmail(this.inviteeEmailOrId).subscribe({
           next: (userId: number) => {
@@ -198,16 +189,13 @@ export class StudyGroupListComponent implements OnInit {
               this.errorMessage = 'User not found.'; // Set error message
               return;
             }
-
             // Check if the inviter and invitee are the same
             if (userId === this.currentUserId) {
               this.errorMessage = 'You are already a member of this group.'; // Set error message
               return;
             }
-
             // Set the user ID for the invitee
             this.selectedInviteeUserId = userId;
-
             // Send the invitation email and create invitation entry in parallel
             this.sendInvitationEmail();
           },
@@ -224,30 +212,44 @@ export class StudyGroupListComponent implements OnInit {
     });
   }
 
+  refreshStudyGroups(): void {
+    if (this.currentUserId) {
+      this.studyGroupService.getUserGroups(this.currentUserId).subscribe({
+        next: (data) => {
+          this.studyGroups = data;
+          if (this.studyGroups.length > 0) {
+            this.selectedGroup = this.studyGroups[0];
+            this.loadInvitees(this.selectedGroup.id);
+          }
+          this.cdr.detectChanges(); // Force Angular to update UI
+        },
+        error: (err) => {
+          console.error('Failed to refresh study groups:', err);
+        }
+      });
+    }
+  }
+
   sendInvitationEmail(): void {
     // Validate group and invitee user ID before sending invitation
     if (!this.selectedGroup) {
       this.toastr.error('No group selected.');
       return;
     }
-
     if (!this.selectedInviteeUserId) {
       this.toastr.error('Invitee user ID is not available.');
       return;
     }
-
     // Prepare invitation object
     const inviterUserId = this.currentUserId;
     const inviteeEmail = this.inviteeEmailOrId;
     const inviteeUserId = this.selectedInviteeUserId;
-
     const invitation: SendInvitation = {
       studyGroup: { id: this.selectedGroup.id },
       inviterUserId,
       inviteeEmail,
       inviteeUserId
     };
-
     // Send the invitation email and invitation object in parallel
     this.invitationService.sendEmail(this.selectedGroup?.name || 'Unnamed Group', inviteeEmail).subscribe({
       next: (response) => {
@@ -259,7 +261,6 @@ export class StudyGroupListComponent implements OnInit {
         this.toastr.error('Failed to send the invitation email.');
       }
     });
-
     // Send invitation object
     this.invitationService.sendInvitation(invitation).subscribe({
       next: (response) => {
@@ -278,6 +279,7 @@ export class StudyGroupListComponent implements OnInit {
     if (this.inviteModal) {
       this.inviteModal.hide();
     }
+    this.refreshStudyGroups(); // ➡️ Refresh the study groups when modal is closed
   }
 
   goToCreateGroup(): void {
@@ -292,7 +294,8 @@ export class StudyGroupListComponent implements OnInit {
     this.router.navigate([`/study-group/update-group/${groupId}`]);
     this.closeModal();
   }
- isValidEmail(email: string): boolean {
+
+  isValidEmail(email: string): boolean {
     // Simple email validation regex
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
@@ -334,12 +337,10 @@ export class StudyGroupListComponent implements OnInit {
 
   selectGroup(group: StudyGroup): void {
     this.selectedGroup = group;
-
     // Load invitees for the selected study group
     if (this.selectedGroup && this.selectedGroup.id) {
       this.loadInvitees(this.selectedGroup.id);
     }
-
     // Load the chat ID for the selected study group
     this.loadChatIdForSelectedGroup();
   }
@@ -353,18 +354,14 @@ export class StudyGroupListComponent implements OnInit {
       this.toastr.error('Invalid group selected');
       return;
     }
-
     // Hide modal if it's already open
     if (this.modal) {
       this.modal.hide();
     }
-
     // Reset the selected detail group to force re-render
     this.selectedDetailGroup = null;
-
     setTimeout(() => {
       this.selectedDetailGroup = group;
-
       const modalEl = document.getElementById('groupDetailsModal');
       if (modalEl) {
         this.modal = new bootstrap.Modal(modalEl);
@@ -385,11 +382,11 @@ export class StudyGroupListComponent implements OnInit {
         }
       }
     }
+    this.refreshStudyGroups(); // ➡️ Refresh the study groups when modal is closed
   }
 
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 }

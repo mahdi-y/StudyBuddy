@@ -9,6 +9,7 @@ import { TaskComponent } from './task/task.component';
 import { AddTaskComponent } from './task/add/add.component';
 import { UpdateTaskComponent } from './task/update/update.component';
 import { ProgressComponent } from './progress/progress.component';
+import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-groups-back.component'; // Adjust the path as needed
 
 import {HomeComponent} from "./frontoffice/home/home.component";
 import {AboutComponent} from "./frontoffice/about/about.component";
@@ -50,13 +51,14 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
-    data: { role: 'admin' },
+    //canActivate: [AuthGuard],
+    //data: { role: 'ADMIN' },
     children: [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full'  },
       { path: 'dashboard-content', component: DashboardContentComponent },
       { path: 'message-reports', component: ReportedMessagesComponent},
       { path: 'backoffice', component: BackofficeComponent },
+      {path: 'study-groups-back', component: StudyGroupsBackComponent}
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },

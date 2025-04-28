@@ -12,7 +12,6 @@
       <button mat-raised-button color="primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
         Create New Group
       </button>
-
     </div>
 
     <div class="px-3 pb-2">
@@ -25,39 +24,21 @@
           (click)="selectGroup(group)"
           [class.active]="group.id === selectedGroup?.id">
         <span>{{ group.name }}</span>
-        <button mat-icon-button color="accent" (click)="openInvitationModal(group); $event.stopPropagation()">
-          <mat-icon>person_add</mat-icon>
-        </button>
 
-      <!-- Flashcard Cute Card (No Rotation) -->
-<div *ngIf="group.id === selectedGroup?.id" class="flashcard-cute" (click)="openFlashcardModal(); $event.stopPropagation()">
-  <div class="flashcard-content">
-    <img src="https://cdn-icons-png.flaticon.com/512/906/906175.png" alt="Flashcard" class="flashcard-icon" />
-  </div>
-</div>
+        <!-- Flashcard Cute Card (No Rotation) -->
+        <div *ngIf="group.id === selectedGroup?.id" class="flashcard-cute" (click)="openFlashcardModal(); $event.stopPropagation()">
+          <div class="flashcard-content"></div>
+        </div>
 
-
-        <button mat-icon-button color="primary" (click)="openGroupDetails(group); $event.stopPropagation()" class="btn-details">
-          <i class="material-icons">visibility</i>
-        </button>
-        <span class="me-auto">{{ group.name }}</span>
-
-        <!-- Dropdown Menu Trigger - Only show for the selected group -->
+        <!-- Dropdown Menu Trigger -->
         <div class="dropdown-wrapper position-relative" *ngIf="group.id === selectedGroup?.id">
-          <button
-            class="btn-dropdown"
-            type="button"
-            id="groupActionsDropdown{{ group.id }}"
-            data-bs-toggle="dropdown"
-            aria-expanded="false">
+          <button class="btn-dropdown" type="button" id="groupActionsDropdown{{ group.id }}" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="material-icons">more_vert</i>
           </button>
 
-          <ul
-            class="dropdown-menu"
-            [attr.aria-labelledby]="'groupActionsDropdown' + group.id">
+          <ul class="dropdown-menu" [attr.aria-labelledby]="'groupActionsDropdown' + group.id">
             <li>
-              <a class="dropdown-item" (click)="sendInvitation(group.id)">Send Invitation</a>
+              <a class="dropdown-item" (click)="openInvitationModal(group); $event.stopPropagation()">Send Invitation</a>
             </li>
             <li>
               <a class="dropdown-item" (click)="openFlashcardModal()">Open Flashcards</a>
@@ -70,49 +51,34 @@
       </li>
     </ul>
 
-<!--    <div class="invitees-container">-->
-<!--      <h4>Invitees</h4>-->
-<!--      <ul>-->
-<!--        <li *ngFor="let invitee of invitees">-->
-<!--          {{ invitee.username }} (ID: {{ invitee.inviteeUserId }})-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </div>-->
-
   </aside>
-<!-- Invite User Modal -->
-<div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="inviteModalLabel">Invite User to {{ selectedGroup?.name }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
 
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="inviteeEmailOrId" class="form-label">Invitee Email</label>
-          <input type="text" id="inviteeEmailOrId" class="form-control" [(ngModel)]="inviteeEmailOrId" placeholder="Enter user email">
+  <!-- Invite User Modal -->
+  <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="inviteModalLabel">Invite User to {{ selectedGroup?.name }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-<!-- Display success message -->
-<div *ngIf="successMessage" class="alert alert-success">
-  {{ successMessage }}
-</div>
-        <!-- Display error message here -->
-        <div *ngIf="errorMessage" class="alert alert-danger">
-          {{ errorMessage }}
-        </div>
-      </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="sendInvitation()">Send Invitation</button>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="inviteeEmailOrId" class="form-label">Invitee Email</label>
+            <input type="text" id="inviteeEmailOrId" class="form-control" [(ngModel)]="inviteeEmailOrId" placeholder="Enter user email">
+          </div>
+
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="sendInvitation()">Send Invitation</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-
 
   <!-- Main content -->
   <div class="main-content" [class.expanded]="isSidebarCollapsed">
@@ -131,7 +97,6 @@
           <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img rounded-circle me-2">
           <span class="profile-name">{{ user?.username }}</span>
           <i class="material-icons">arrow_drop_down</i>
-
         </button>
 
         <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="showProfileDropdown">
@@ -145,33 +110,24 @@
       </div>
     </div>
 
-     <!-- Content Grid -->
-     <div class="content-grid container-fluid p-3">
+    <!-- Content Grid -->
+    <div class="content-grid container-fluid p-3">
       <div class="row h-100">
-        <!-- Chat Section -->
         <div class="col-md-8 h-100">
           <div class="chat-container border rounded p-3 h-100">
             <div *ngIf="loadingChatId">Loading chat...</div>
-            <app-chat
-              *ngIf="!loadingChatId && chatId !== null"
-              [chatId]="chatId"
-              [senderId]="currentUserId">
-            </app-chat>
+            <app-chat *ngIf="!loadingChatId && chatId !== null" [chatId]="chatId" [senderId]="currentUserId"></app-chat>
           </div>
         </div>
 
-        <!-- Tasks and Resources Section -->
         <div class="col-md-4 h-100">
           <div class="side-section d-flex flex-column gap-3 h-100">
             <div class="tasks-container border rounded p-3 flex-grow-1">
-<!--              <h3>🗂️ Tasks</h3>-->
-              <app-task [studyGroupId]="selectedGroup?.id"
-                        [invitees]="invitees">
-              </app-task>
+              <app-task [studyGroupId]="selectedGroup?.id" [invitees]="invitees"></app-task>
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
               <h3>Resources</h3>
-              <!-- <app-resources [group]="selectedGroup"></app-resources> -->
+              <!-- Future: <app-resources [group]="selectedGroup"></app-resources> -->
             </div>
           </div>
         </div>
@@ -188,12 +144,35 @@
         <h5 class="modal-title" id="groupDetailsModalLabel">{{ selectedDetailGroup?.name }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+
       <div class="modal-body">
         <p><strong>Description:</strong> {{ selectedDetailGroup?.description }}</p>
       </div>
+
       <div class="modal-footer">
-        <button *ngIf="selectedDetailGroup && selectedDetailGroup.id" class="btn btn-primary" (click)="goToUpdateGroup(selectedDetailGroup.id)">Update Group</button>
-        <button *ngIf="selectedDetailGroup && selectedDetailGroup.id" class="btn btn-danger" (click)="deleteStudyGroup(selectedDetailGroup.id)">Delete Group</button>
+        <button *ngIf="selectedDetailGroup && selectedDetailGroup.id" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateGroupModal" data-bs-dismiss="modal">
+          Update Group
+        </button>
+        <button *ngIf="selectedDetailGroup && selectedDetailGroup.id" class="btn btn-danger" (click)="deleteStudyGroup(selectedDetailGroup.id)">
+          Delete Group
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Group Modal -->
+<div class="modal fade" id="updateGroupModal" tabindex="-1" aria-labelledby="updateGroupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content p-3">
+      <div class="modal-header border-0">
+        <h5 class="modal-title text-primary fw-bold" id="updateGroupModalLabel">🛠️ Update Study Group</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 🛑 Call your reusable Update component here -->
+        <app-study-group-update [group]="selectedDetailGroup"></app-study-group-update>
       </div>
     </div>
   </div>
@@ -218,17 +197,14 @@
 <div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content p-3">
-
       <div class="modal-header border-0">
         <h5 class="modal-title text-primary fw-bold" id="createGroupModalLabel">🎓 Create a Study Group</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <!-- 🛑 Call your reusable component here -->
         <app-study-group-create></app-study-group-create>
       </div>
-
     </div>
   </div>
 </div>

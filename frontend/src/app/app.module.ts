@@ -41,7 +41,9 @@ import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component
 import { UserService } from './services/user.service'; // Adjust the path if needed
 import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.component';
 import { AiChatComponent } from './ai-chat/ai-chat.component';
-
+import { StudyGroupsComponent } from './backoffice/backoffice/study-groups/study-groups.component';
+import { CommonModule } from '@angular/common';
+import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-groups-back.component';
 @NgModule({
   declarations: [
     AppComponent, // Declare the AppComponent
@@ -65,9 +67,12 @@ import { AiChatComponent } from './ai-chat/ai-chat.component';
     AiChatComponent,
     ChatComponent,
     ReportedMessagesComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    StudyGroupsBackComponent,
+    StudyGroupComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     ToastrModule.forRoot(),
     HttpClientModule,
