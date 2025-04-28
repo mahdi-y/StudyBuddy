@@ -31,11 +31,13 @@
           </a>
         </li>
         <li class="nav-item" [class.active]="activeLink === 'resources'">
-          <a (click)="setActive('resources')" routerLinkActive="active">
+          <!-- Corrected routerLink -->
+          <a (click)="setActive('resources')" routerLink="/dashboard/resources" routerLinkActive="active">
             <i class="material-icons">library_books</i>
             <span class="nav-text">Resources</span>
           </a>
         </li>
+
         <li class="nav-item" [class.active]="activeLink === 'tasks'">
           <a (click)="setActive('tasks')" routerLinkActive="active">
             <i class="material-icons">list</i>

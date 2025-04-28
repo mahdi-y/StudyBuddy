@@ -127,15 +127,85 @@
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
               <h3>Resources</h3>
+              <app-ressource [resources]="resources" (refreshRequested)="loadResources()"
+                             [studyGroupId]="selectedGroup?.id"
+              ></app-ressource>
+              <button class="btn btn-primary" (click)="openAddResourceModal()">Add Resource</button>
               <!-- Future: <app-resources [group]="selectedGroup"></app-resources> -->
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- Modal for adding new resource -->
+<div *ngIf="showModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Add New Resource</h3>
+    <form (ngSubmit)="createResource()">
+      <!-- Title Field -->
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input
+          type="text"
+          id="title"
+          class="form-control"
+          [(ngModel)]="newResource.title"
+          name="title"
+          required
+        />
+      </div>
 
+      <!-- Drag-and-Drop Area -->
+      <div
+        class="drag-and-drop-area"
+        (dragover)="onDragOver($event)"
+        (drop)="onFileDrop($event)"
+        (click)="triggerFileInput()"
+      >
+        <p>Drag and drop a file here or click to select a file</p>
+        <input
+          type="file"
+          id="fileUpload"
+          class="hidden-file-input"
+          (change)="onFileSelected($event)"
+          #fileInput
+        />
+      </div>
+
+      <!-- Display Selected File Name -->
+      <div *ngIf="selectedFile">
+        <p><strong>Selected File:</strong> {{ selectedFile.name }}</p>
+      </div>
+
+      <!-- Display File Preview -->
+      <div *ngIf="newResource.fileUrl">
+
+        <div *ngIf="newResource.fileUrl" class="file-status-icon">
+          <i class="material-icons" style="color: green;">check_circle</i>
+        </div>
+      </div>
+
+      <!-- Description Field -->
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          class="form-control"
+          [(ngModel)]="newResource.description"
+          name="description"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <button type="submit" class="btn btn-primary">Create Resource</button>
+      <button type="button" class="btn btn-secondary" (click)="closeModalRessource()">Cancel</button>
+    </form>
+  </div>
+</div>
 <!-- Group Details Modal -->
 <div class="modal fade" id="groupDetailsModal" tabindex="-1" aria-labelledby="groupDetailsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">

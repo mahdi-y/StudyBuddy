@@ -52,4 +52,5 @@ getGroupById(id: number): Observable<StudyGroup> {
     return this.http.get<Invitation[]>(`${this.apiUrlInvites}/study-group/${studyGroupId}`);
   }
 
+
 }

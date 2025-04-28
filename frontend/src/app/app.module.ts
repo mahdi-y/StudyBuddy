@@ -4,6 +4,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './frontoffice/home/home.component';
+import { AboutComponent } from './frontoffice/about/about.component';
+import { WorkComponent } from './frontoffice/work/work.component';
+import { CategoryComponent } from './frontoffice/category/category.component';
+import { NotFoundComponent } from './frontoffice/not-found/not-found.component';
+import { DashboardComponent } from './backoffice/dashboard/dashboard.component';
+import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
+import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
+import { RessourceComponent } from './pages/ressource/ressource.component';
+import { RessourceService } from './services/ressource.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router'; // Add Routes import
 import { MatCardModule } from '@angular/material/card';
@@ -17,15 +27,6 @@ import { AddTaskComponent } from './task/add/add.component';
 import { UpdateTaskComponent } from './task/update/update.component';
 import { ProgressComponent } from './progress/progress.component'; // Import your new component (if you have one)
 
-
-
-import { HomeComponent } from './frontoffice/home/home.component';
-import { AboutComponent } from './frontoffice/about/about.component';
-import { WorkComponent } from './frontoffice/work/work.component';
-import { CategoryComponent } from './frontoffice/category/category.component';
-import { NotFoundComponent } from './frontoffice/not-found/not-found.component';
-import { DashboardContentComponent } from './backoffice/dashboard-content/dashboard-content.component';
-import { StudyGroupComponent } from './frontoffice/study-group/study-group.component';
 import {ChatComponent} from "./components/chat/chat.component";
 import { ReportedMessagesComponent } from './backoffice/reported-messages/reported-messages.component';
 
@@ -33,7 +34,6 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { BackofficeComponent } from './backoffice/backoffice.component';
 import { AuthGuard } from './services/auth.guard.service';
-import { DashboardComponent} from "./backoffice/dashboard/dashboard.component";
 import { StudyGroupListComponent} from "./study-groups/study-group-list/study-group-list.component";
 import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
@@ -48,6 +48,16 @@ import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-g
   declarations: [
     AppComponent, // Declare the AppComponent
     TaskComponent, AddTaskComponent, UpdateTaskComponent, ProgressComponent,
+    HomeComponent,
+    AboutComponent,
+    WorkComponent,
+    CategoryComponent,
+    NotFoundComponent,
+    DashboardComponent,
+    DashboardContentComponent,
+    StudyGroupComponent,
+    RessourceComponent,
+    AppComponent,
     HomeComponent,
     AboutComponent,
     WorkComponent,
@@ -86,6 +96,9 @@ import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-g
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    AppRoutingModule,
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

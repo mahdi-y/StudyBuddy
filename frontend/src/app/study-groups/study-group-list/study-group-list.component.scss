@@ -1,5 +1,7 @@
 // Import Angular Material's prebuilt theme
 @import '@angular/material/prebuilt-themes/indigo-pink.css'; // Use the theme of your choice
+$primary-color: #007bff; // Example: Bootstrap primary blue
+$secondary-color: #6c757d; // Example: Bootstrap secondary gray
 $text-color: #333333;
 
 body, html {
@@ -327,3 +329,69 @@ body, html {
 
 
 
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+/* Drag-and-Drop Area */
+.drag-and-drop-area {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  margin: 10px 0;
+
+  &:hover {
+    border-color: $primary-color;
+    background-color: #e9f4ff;
+    transform: scale(1.02);
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+    color: $secondary-color;
+    line-height: 1.5;
+  }
+
+  &.success {
+    border-color: #28a745;
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &.error {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+/* Hidden file input */
+.hidden-file-input {
+  display: none; /* Keep this as is */
+}
+button {
+  margin-top: 10px;
+}

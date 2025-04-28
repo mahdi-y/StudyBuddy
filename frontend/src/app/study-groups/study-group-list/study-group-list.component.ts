@@ -1,16 +1,20 @@
 import { StudyGroupService } from '../../services/study-group.service';
 import { InvitationService } from '../../services/invitation.service';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 import { StudyGroup } from '../../models/study-group.model';
 import { Invitation, SendInvitation } from '../../models/invitation.model';
 import { ToastrService } from 'ngx-toastr';
 import * as bootstrap from 'bootstrap';
 import { ChatService } from "../../services/chat.service"; // Adjust path accordingly
 import { firstValueFrom } from 'rxjs';
-import { ChangeDetectorRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
-import { AuthService } from "../../services/auth.service"; // Adjust path accordingly
+import {Component, OnInit, ViewChild, ViewContainerRef, ComponentRef, Input, ElementRef} from '@angular/core';
+import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
+import {AuthService} from "../../services/auth.service"; // Adjust path accordingly
+import {RessourceComponent} from "../../pages/ressource/ressource.component";
+import {Ressource} from "../../models/resource.model";
+import {RessourceService} from "../../services/ressource.service";
 
 @Component({
   selector: 'app-study-group-list',
@@ -18,10 +22,15 @@ import { AuthService } from "../../services/auth.service"; // Adjust path accord
   styleUrls: ['./study-group-list.component.scss']
 })
 export class StudyGroupListComponent implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef; // Reference to the hidden file input
+
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
   inviteeEmailOrId: string = ''; // Add this
   errorMessage: string = ''; // Add this to hold error messages
   successMessage: string = '';
+  showModal: boolean = false;
+  newResource: any = { title: '', fileUrl: '', description: '' };
+  selectedFile: File | null = null;
   studyGroups: StudyGroup[] = [];
   selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;
@@ -34,6 +43,10 @@ export class StudyGroupListComponent implements OnInit {
   chatId: number | null = null;
   loadingChatId: boolean = false;
   invitees: Invitation[] = [];
+  resources: any[] = [];
+  @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
+
+
   modal: bootstrap.Modal | null = null;
   inviteModal: bootstrap.Modal | null = null; // ➡️ New
   user: { username: string; role: string } | null;
@@ -46,7 +59,8 @@ export class StudyGroupListComponent implements OnInit {
     private chatService: ChatService,
     private cdr: ChangeDetectorRef,
     private userService: UserService,
-    private authService: AuthService
+    private ressourceService: RessourceService,
+    private authService: AuthService // Add this line
   ) {
     this.user = this.authService.getCurrentUser();
   }
@@ -388,5 +402,140 @@ export class StudyGroupListComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+  openAddResourceModal(): void {
+    this.showModal = true;
+  }
+
+  closeModalRessource(): void {
+    this.showModal = false;
+    this.resetNewResource();
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('Selected file:', file);  // Log the file to check if it's correct
+      this.selectedFile = file;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Data = (reader.result as string).split(',')[1];
+        this.newResource.fileUrl = base64Data;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  createResource(): void {
+    if (this.newResource.title && this.newResource.fileUrl && this.newResource.description && this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);
+      console.log('FormData being sent:', formData); // Log FormData
+
+      // Send the file for OCR processing
+      this.ressourceService.uploadImageForOCR(formData).subscribe({
+        next: (response) => {
+          console.log('OCR processing response:', response); // Log the backend response
+          if (response.base64File) {
+            this.newResource.fileUrl = response.base64File;
+            // Save the resource with the OCR PDF
+            const resourceToAdd = {
+              ...this.newResource,
+              category: this.selectedGroup ? { id: this.selectedGroup.id } : null,
+            };
+
+            // Pass the selectedGroup.id as the studyGroupId
+            if (this.selectedGroup?.id) {
+              this.saveResource(resourceToAdd, this.selectedGroup.id);
+            } else {
+              alert('Please select a valid study group.');
+            }
+          } else {
+            alert('OCR processing failed: No Base64 file returned.');
+          }
+        },
+        error: (err) => {
+          console.error('Error during OCR processing:', err);
+          alert('An error occurred during OCR processing.');
+        }
+      });
+    } else {
+      alert('Please fill out all fields and select a file.');
+    }
+  }
+
+
+
+  saveResource(resourceToAdd: any, studyGroupId: number): void {
+    // Pass both resourceToAdd and studyGroupId to addResource
+    this.ressourceService.addResource(resourceToAdd, studyGroupId).subscribe({
+      next: (res) => {
+        console.log('Resource successfully added:', res);
+        this.loadResources(); // 🔁 Refresh the list after adding
+        this.closeModalRessource(); // Hide modal and reset form
+      },
+      error: (err) => {
+        console.error('Error adding resource:', err);
+        alert('An error occurred while saving the resource.');
+      }
+    });
+  }
+
+  resetNewResource(): void {
+    this.newResource = { title: '', fileUrl: '', description: '' };
+    this.selectedFile = null;
+  }
+
+  loadResources(): void {
+    this.ressourceService.getResources().subscribe({
+      next: (data) => {
+        this.resources = data;
+        console.log('Resources loaded:', this.resources);
+      },
+      error: (err) => {
+        console.error('Error loading resources:', err);
+      }
+    });
+  }
+  onDragOver(event: DragEvent): void {
+    console.log('Drag over event detected');
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onFileDrop(event: DragEvent): void {
+    console.log('Drop event detected');
+    event.preventDefault();
+    event.stopPropagation();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleFile(files[0]);
+    } else {
+      console.error('No files detected in drop event');
+    }
+  }
+
+  handleFile(file: File): void {
+    console.log('File selected:', file); // Log the file for debugging
+    this.selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data = (reader.result as string).split(',')[1];
+      this.newResource.fileUrl = base64Data;
+      console.log('File loaded successfully:', this.newResource.fileUrl);
+
+      // Trigger change detection if needed
+      this.cdr.detectChanges();
+    };
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click(); // Programmatically trigger the file input dialog
   }
 }

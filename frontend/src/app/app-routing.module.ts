@@ -25,6 +25,7 @@ import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component
 import {StudyGroupComponent} from "./frontoffice/study-group/study-group.component";
 import {ReportedMessagesComponent} from "./backoffice/reported-messages/reported-messages.component";
 import {UnauthorizedComponent} from "./frontoffice/unauthorized/unauthorized.component";
+import {RessourceComponent} from "./pages/ressource/ressource.component";
 
 const routes: Routes = [
 
@@ -48,6 +49,7 @@ const routes: Routes = [
   { path: 'task/add', component: AddTaskComponent },
   { path: 'update/:id', component: UpdateTaskComponent },
   { path: 'progress', component: ProgressComponent },
+
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -58,7 +60,9 @@ const routes: Routes = [
       { path: 'dashboard-content', component: DashboardContentComponent },
       { path: 'message-reports', component: ReportedMessagesComponent},
       { path: 'backoffice', component: BackofficeComponent },
-      {path: 'study-groups-back', component: StudyGroupsBackComponent}
+      {path: 'study-groups-back', component: StudyGroupsBackComponent},
+      { path: 'resources', component: RessourceComponent }, // Resources route (This will render RessourceComponent)
+
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },
@@ -71,7 +75,7 @@ const routes: Routes = [
 
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)], // Import the routes
+  exports: [RouterModule] // Export RouterModule to make routing available in the app
 })
 export class AppRoutingModule { }
