@@ -1,5 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
-import { RessourceService } from 'src/app/services/ressource.service';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-study-group',
@@ -13,145 +12,50 @@ export class StudyGroupComponent implements OnInit {
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown = false;
-  showModal: boolean = false;
-  newResource: any = { title: '', fileUrl: '', description: '' };
-  selectedFile: File | null = null;
-  @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
 
 
-  resources: any[] = [];
-
-  constructor(private ressourceService: RessourceService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    this.loadResources();
-
-    // Example groups
     this.studyGroups = [
       { id: 1, name: 'Group 1' },
       { id: 2, name: 'Group 2' },
       { id: 3, name: 'Group 3' },
-      { id: 4, name: 'Group 4' }
+      { id: 4, name: 'Group 4' },
+      { id: 5, name: 'Group 5' },
+      { id: 6, name: 'Group 6' },
+      { id: 7, name: 'Group 7' },
+      { id: 8, name: 'Group 8' },
+      { id: 9, name: 'Group 9' },
+      { id: 10, name: 'Group 10' },
+      { id: 11, name: 'Group 11' },
+      { id: 12, name: 'Group 12' },
+      { id: 13, name: 'Group 13' }
     ];
 
-    // Optional: default to the first group
+    // Set the first group as the selected group by default
     if (this.studyGroups.length > 0) {
-      this.selectedGroup = this.studyGroups[0];
+      this.selectedGroup = this.studyGroups[0]; // Select the first group
     }
   }
 
+  // Filter groups based on the search term
   get filteredGroups() {
     return this.studyGroups.filter(group => group.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
+  // Toggle sidebar visibility
   toggleSidebar(): void {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
+  // Select a study group
   selectGroup(group: any): void {
     this.selectedGroup = group;
   }
 
+  // Toggle profile dropdown visibility
   toggleProfileDropdown() {
     this.showProfileDropdown = !this.showProfileDropdown;
-  }
-
-  openAddResourceModal(): void {
-    this.showModal = true;
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-    this.resetNewResource();
-  }
-
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      console.log('Selected file:', file);  // Log the file to check if it's correct
-      this.selectedFile = file;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64Data = (reader.result as string).split(',')[1];
-        this.newResource.fileUrl = base64Data;
-      };
-      reader.readAsDataURL(file);
-    }
-  }
-
-  createResource(): void {
-    if (this.newResource.title && this.newResource.fileUrl && this.newResource.description && this.selectedFile) {
-      const formData = new FormData();
-      formData.append('file', this.selectedFile);
-      console.log('FormData being sent:', formData);  // Log FormData
-
-      // Send the file for OCR processing
-      this.ressourceService.uploadImageForOCR(formData).subscribe({
-        next: (response) => {
-          console.log('OCR processing response:', response);  // Log the backend response
-          if (response.base64File) {
-            this.newResource.fileUrl = response.base64File;
-
-            // Save the resource with the OCR PDF
-            const resourceToAdd = {
-              ...this.newResource,
-              category: this.selectedGroup ? { id: this.selectedGroup.id } : null,
-            };
-
-            this.saveResource(resourceToAdd);
-          } else {
-            alert('OCR processing failed: No Base64 file returned.');
-          }
-        },
-        error: (err) => {
-          console.error('Error during OCR processing:', err);
-          alert('An error occurred during OCR processing.');
-        }
-      });
-    } else {
-      alert('Please fill out all fields and select a file.');
-    }
-  }
-
-
-
-  saveResource(resourceToAdd: any): void {
-    // Ensure studyGroupId is available
-    if (!this.studyGroupId) {
-      console.error('Study Group ID is required to save the resource.');
-      alert('Please select a valid study group.');
-      return;
-    }
-
-    // Pass both resourceToAdd and studyGroupId to addResource
-    this.ressourceService.addResource(resourceToAdd, this.studyGroupId).subscribe({
-      next: (res) => {
-        console.log('Resource successfully added:', res);
-        this.loadResources(); // 🔁 Refresh the list after adding
-        this.closeModal();   // Hide modal and reset form
-      },
-      error: (err) => {
-        console.error('Error adding resource:', err);
-        alert('An error occurred while saving the resource.');
-      }
-    });
-  }
-
-  resetNewResource(): void {
-    this.newResource = { title: '', fileUrl: '', description: '' };
-    this.selectedFile = null;
-  }
-
-  loadResources(): void {
-    this.ressourceService.getResources().subscribe({
-      next: (data) => {
-        this.resources = data;
-        console.log('Resources loaded:', this.resources);
-      },
-      error: (err) => {
-        console.error('Error loading resources:', err);
-      }
-    });
   }
 }
