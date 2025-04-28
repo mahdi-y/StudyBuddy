@@ -1,11 +1,7 @@
+// com.studybuddy.userservice.dto.User
 package com.studybuddy.userservice.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +27,12 @@ public class User {
 	private String username;
 
 	private String password;
-	private Integer age; // Added age field
 
-	private String role; // Added role field (e.g., USER, ADMIN)
+	private Integer age;
+
+	private String role;
+
+	private String profilePicture; // New field for profile picture URL or path
+	private String resetCode;
+	private Long resetCodeExpiry;
 }

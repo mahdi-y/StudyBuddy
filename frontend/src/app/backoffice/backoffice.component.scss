@@ -1,0 +1,73 @@
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f6f9;
+  font-weight: 600;
+}
+
+.profile-img {
+  border-radius: 50%;
+}
+
+input, select {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  padding: 8px 12px;
+  margin-right: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Statistics Section */
+.statistics-section {
+  margin-top: 20px;
+}
+
+.statistics-section h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.chart-container {
+  max-width: 250px; /* Reduced from 400px to make pie chart smaller */
+  margin: 20px auto;
+}

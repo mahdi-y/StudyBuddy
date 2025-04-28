@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './frontoffice/home/home.component';
 import { AboutComponent } from './frontoffice/about/about.component';
@@ -44,6 +46,13 @@ import { AiChatComponent } from './ai-chat/ai-chat.component';
 import { StudyGroupsComponent } from './backoffice/backoffice/study-groups/study-groups.component';
 import { CommonModule } from '@angular/common';
 import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-groups-back.component';
+import { RequestResetComponent } from './request-reset/request-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { UpdateAdminComponent } from './update-admin/update-admin.component';
+
+
+
 @NgModule({
   declarations: [
     AppComponent, // Declare the AppComponent
@@ -68,6 +77,12 @@ import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-g
     AppComponent,
     RegisterComponent,
     LoginComponent,
+    BackofficeComponent,
+    RequestResetComponent,
+    ResetPasswordComponent,
+    UpdateProfileComponent,
+    UpdateAdminComponent,
+
     BackofficeComponent,
     StudyGroupListComponent,
     StudyGroupCreateComponent,
@@ -96,6 +111,7 @@ import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-g
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
+    NgChartsModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule

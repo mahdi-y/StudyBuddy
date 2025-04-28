@@ -29,6 +29,8 @@
     "ngx-toastr": "^19.0.0",
     "file-saver": "^2.0.5",
     "chart.js": "^4.4.9",
+    "jdenticon": "^3.3.0",
+    "ng2-charts": "^5.0.4",
     "rxjs": "~7.8.0",
     "sockjs-client": "^1.6.1",
     "tinymce": "^7.8.0",
@@ -50,6 +52,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "sass": "^1.87.0",
+    "sass-loader": "^16.0.5",
     "typescript": "~5.1.3"
   }
 }

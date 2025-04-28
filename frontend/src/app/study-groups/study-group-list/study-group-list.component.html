@@ -100,8 +100,8 @@
         </button>
 
         <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="showProfileDropdown">
-          <a href="#" class="dropdown-item">
-            <i class="material-icons me-1">settings</i> Settings
+          <a routerLink="/update-profile" class="dropdown-item">
+            <i class="material-icons">settings</i> Profile
           </a>
           <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">
             <i class="material-icons">logout</i> Sign Out

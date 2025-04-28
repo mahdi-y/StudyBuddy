@@ -27,7 +27,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const request: LoginRequest = this.loginForm.value;
-      this.authService.login(request).subscribe({
+      this.authService.login(request.username || '', request.password || '', request).subscribe({
         next: (res: LoginResponse) => {
           if (res.token) {
             this.storage.set('auth-token', res.token);

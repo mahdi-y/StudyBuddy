@@ -26,6 +26,11 @@ import {StudyGroupComponent} from "./frontoffice/study-group/study-group.compone
 import {ReportedMessagesComponent} from "./backoffice/reported-messages/reported-messages.component";
 import {UnauthorizedComponent} from "./frontoffice/unauthorized/unauthorized.component";
 import {RessourceComponent} from "./pages/ressource/ressource.component";
+import { RequestResetComponent } from './request-reset/request-reset.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { UpdateAdminComponent } from './update-admin/update-admin.component';
+
 
 const routes: Routes = [
 
@@ -33,7 +38,11 @@ const routes: Routes = [
     path: 'invitations',
     loadChildren: () => import('./invitations/invitations.module').then(m => m.InvitationsModule)
   },
+
   { path: '', component: HomeComponent },
+  { path: 'update-admin', component: UpdateAdminComponent },
+  { path: 'request-reset', component: RequestResetComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'register', component: RegisterComponent , canActivate: [GuestGuardService]},
   { path: 'login', component: LoginComponent , canActivate: [GuestGuardService] },
   { path: 'about', component: AboutComponent },
@@ -50,6 +59,8 @@ const routes: Routes = [
   { path: 'update/:id', component: UpdateTaskComponent },
   { path: 'progress', component: ProgressComponent },
 
+  { path: 'study-group', component: StudyGroupComponent , canActivate: [AuthGuard]},
+  { path: 'update-profile', component: UpdateProfileComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
@@ -60,6 +71,7 @@ const routes: Routes = [
       { path: 'dashboard-content', component: DashboardContentComponent },
       { path: 'message-reports', component: ReportedMessagesComponent},
       { path: 'backoffice', component: BackofficeComponent },
+
       {path: 'study-groups-back', component: StudyGroupsBackComponent},
       { path: 'resources', component: RessourceComponent }, // Resources route (This will render RessourceComponent)
 

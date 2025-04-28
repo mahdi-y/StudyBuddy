@@ -1,8 +1,6 @@
+// com.studybuddy.userservice.service.LoginService
 package com.studybuddy.userservice.service;
 
-import java.util.Optional;
-
-import com.studybuddy.userservice.dto.LoginRequest;
 import com.studybuddy.userservice.dto.SignupRequest;
 import com.studybuddy.userservice.dto.SignupResponse;
 import com.studybuddy.userservice.dto.User;
@@ -10,8 +8,9 @@ import com.studybuddy.userservice.repo.LoginRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -22,19 +21,11 @@ public class LoginService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-	public String doLogin(LoginRequest request) {
+	@Autowired
+	private FileStorageService fileStorageService;
+
+	public SignupResponse doRegister(SignupRequest request, MultipartFile profilePicture) {
 		Optional<User> users = loginRepository.findByUsername(request.getUsername());
-
-		if (users.isPresent()) {
-			return "User details found";
-		}
-
-		return "User details not found";
-	}
-
-	public SignupResponse doRegister(SignupRequest request) {
-		Optional<User> users = loginRepository.findByUsername(request.getUsername());
-
 		SignupResponse response = new SignupResponse();
 
 		if (users.isPresent()) {
@@ -48,13 +39,27 @@ public class LoginService {
 		user.setName(request.getName());
 		user.setUsername(request.getUsername());
 		user.setPassword(passwordEncoder.encode(request.getPassword()));
-		user.setAge(request.getAge() != null ? Integer.parseInt(request.getAge()) : null); // Handle string to integer
-		user.setRole("USER"); // Default to USER role
+		user.setAge(request.getAge() != null ? Integer.parseInt(request.getAge()) : null);
+		user.setRole("USER");
+
+		// Handle profile picture
+		try {
+			if (profilePicture != null && !profilePicture.isEmpty()) {
+				// Store uploaded file
+				String filePath = fileStorageService.storeFile(profilePicture);
+				user.setProfilePicture(filePath);
+			} else {
+				// Use DiceBear API for AI-generated avatar
+				String avatarUrl = "https://api.dicebear.com/9.x/avataaars/svg?seed=" + request.getUsername();
+				user.setProfilePicture(avatarUrl);
+			}
+		} catch (Exception e) {
+			response.setResponse("Error processing profile picture: " + e.getMessage());
+			return response;
+		}
 
 		loginRepository.save(user);
-
 		response.setResponse("User created with id " + user.getId());
-
 		return response;
 	}
 }
