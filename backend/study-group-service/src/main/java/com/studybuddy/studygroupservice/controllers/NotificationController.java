@@ -18,19 +18,22 @@ public class NotificationController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Map<String, String>> sendNotification(@RequestParam String groupName) {
+    public ResponseEntity<Map<String, String>> sendNotification(
+            @RequestParam String groupName,
+            @RequestParam String recipientEmail) {
         try {
-            // Call the service to send the email
-            notificationService.sendEmail(groupName);
+            // Call the service to send the email dynamically
+            notificationService.sendEmail(groupName, recipientEmail);
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Email sent successfully!");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            // Log the error and return an error response
             e.printStackTrace();
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Failed to send email: " + e.getMessage());
             return ResponseEntity.status(500).body(errorResponse);
         }
     }
+
 }

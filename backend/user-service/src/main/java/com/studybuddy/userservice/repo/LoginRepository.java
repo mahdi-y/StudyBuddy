@@ -11,5 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LoginRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);   // Assuming 'username' exists in User entity
+    boolean existsByAddress(String address);          // Check if address exists
+    Optional<User> findByAddress(String address);
 }

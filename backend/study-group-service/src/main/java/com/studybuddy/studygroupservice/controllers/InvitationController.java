@@ -5,7 +5,9 @@ import com.studybuddy.studygroupservice.dto.StudyGroupDTO;
 import com.studybuddy.studygroupservice.entities.Invitation;
 import com.studybuddy.studygroupservice.services.InvitationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -24,6 +26,11 @@ public class InvitationController {
     }
     @PostMapping("/send")  // Use '/send' endpoint for sending invitations
     public InvitationDTO sendInvitation(@RequestBody InvitationDTO invitationDTO) {
+        if (invitationDTO.getInviteeUserId() == null && invitationDTO.getInviteeEmail() == null) {
+            // Return a 400 Bad Request error with a clear message
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invitee information is missing. Please provide either inviteeUserId or inviteeEmail.");
+        }
+
         return invitationService.sendInvitation(invitationDTO);
     }
     @GetMapping
@@ -46,13 +53,17 @@ public class InvitationController {
         dto.setInviteeUserId(invitation.getInviteeUserId());
         dto.setCreatedAt(invitation.getCreatedAt());
 
-        // Minimal StudyGroupDTO
-        StudyGroupDTO groupDTO = new StudyGroupDTO();
-        groupDTO.setId(invitation.getStudyGroup().getId());
-        groupDTO.setName(invitation.getStudyGroup().getName());
-        groupDTO.setDescription(invitation.getStudyGroup().getDescription());
-
-        dto.setStudyGroup(groupDTO);
+        // Check if studyGroup is null before mapping
+        if (invitation.getStudyGroup() != null) {
+            StudyGroupDTO groupDTO = new StudyGroupDTO();
+            groupDTO.setId(invitation.getStudyGroup().getId());
+            groupDTO.setName(invitation.getStudyGroup().getName());
+            groupDTO.setDescription(invitation.getStudyGroup().getDescription());
+            dto.setStudyGroup(groupDTO);
+        } else {
+            // Handle case where studyGroup is null, if needed
+            dto.setStudyGroup(null);
+        }
 
         return dto;
     }
@@ -64,4 +75,5 @@ public class InvitationController {
                 .map(this::mapToInvitationDTO)
                 .toList();
     }
+
 }

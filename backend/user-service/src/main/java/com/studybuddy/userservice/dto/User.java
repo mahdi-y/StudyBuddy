@@ -22,6 +22,7 @@ public class User {
 	@Column(nullable = false)
 	private String name;
 
+	@Column(unique = true)
 	private String address;
 
 	private String mobileNo;

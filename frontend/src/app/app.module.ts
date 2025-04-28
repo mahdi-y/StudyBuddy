@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { AppRoutingModule } from './app-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,6 +38,7 @@ import { StudyGroupListComponent} from "./study-groups/study-group-list/study-gr
 import {StudyGroupCreateComponent} from "./study-groups/study-group-create/study-group-create.component";
 import {StudyGroupUpdateComponent} from "./study-groups/study-group-update/study-group-update.component";
 import {FlashcardComponent} from "./study-groups/flashcards/flashcards.component";
+import { UserService } from './services/user.service'; // Adjust the path if needed
 import { UnauthorizedComponent } from './frontoffice/unauthorized/unauthorized.component';
 import { AiChatComponent } from './ai-chat/ai-chat.component';
 
@@ -52,6 +53,7 @@ import { AiChatComponent } from './ai-chat/ai-chat.component';
     NotFoundComponent,
     DashboardComponent,
     DashboardContentComponent,
+    AppComponent,
     RegisterComponent,
     LoginComponent,
     BackofficeComponent,
@@ -76,8 +78,9 @@ import { AiChatComponent } from './ai-chat/ai-chat.component';
     MatFormFieldModule,
     MatInputModule,
     AppRoutingModule,
-    FormsModule,
+    HttpClientModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

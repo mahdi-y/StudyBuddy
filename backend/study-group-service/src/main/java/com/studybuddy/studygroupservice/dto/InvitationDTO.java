@@ -10,7 +10,11 @@ public class InvitationDTO {
     private String status;
     private String type;
     private Long inviterUserId;
-    private Long inviteeUserId;
+    private Long inviteeUserId; // This field should be included
+    private String inviteeEmail; // This field should be included, if used
     private LocalDateTime createdAt;
     private StudyGroupDTO studyGroup;
+
+    // Getters and setters
 }
+

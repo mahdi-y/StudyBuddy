@@ -14,6 +14,10 @@ import { UserService } from '../../services/user.service';
 
 
 
+import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import { StudyGroupCreateComponent } from '../study-group-create/study-group-create.component';
+import { AuthService } from "../../services/auth.service"; // Adjust path accordingly
+import { UserService } from '../../services/user.service'; // Ensure this import
 
 @Component({
   selector: 'app-study-group-list',
@@ -22,15 +26,19 @@ import { UserService } from '../../services/user.service';
 })
 export class StudyGroupListComponent implements OnInit {
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
-
+  inviteeEmailOrId: string = ''; // Add this
+  errorMessage: string = ''; // Add this to hold error messages
+  successMessage: string = '';
   studyGroups: StudyGroup[] = [];
-  selectedGroup: any | null = null;
+  selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;
   searchTerm: string = '';
   isSidebarCollapsed: boolean = false;
   showProfileDropdown: boolean = false;
   showAllGroups: boolean = false;
   currentUserId!: number;
+
+  selectedInviteeUserId: number = 4; // Could be dynamic later
   selectedInviteeUserId = 9;
   chatId: number | null = null;
   loadingChatId: boolean = false;
@@ -39,6 +47,7 @@ export class StudyGroupListComponent implements OnInit {
 
 
   modal: bootstrap.Modal | null = null;
+  inviteModal: bootstrap.Modal | null = null; // ➡️ New
   user: { username: string; role: string } | null;
 
   constructor(
@@ -50,6 +59,8 @@ export class StudyGroupListComponent implements OnInit {
     private chatService: ChatService,
     private cdr: ChangeDetectorRef,
     private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {
     this.user = this.authService.getCurrentUser();
   }
@@ -145,36 +156,128 @@ export class StudyGroupListComponent implements OnInit {
     return this.selectedGroup?.id ?? null;
   }
 
-  sendInvitation(groupId: number): void {
-    const invitation: SendInvitation = {
-      studyGroup: { id: groupId },
-      inviterUserId: this.currentUserId,
-      inviteeUserId: this.selectedInviteeUserId
-    };
+  openInvitationModal(group: StudyGroup): void {
+    this.selectedGroup = group;
+    const inviteModalEl = document.getElementById('inviteModal');
+    if (inviteModalEl) {
+      const modal = new bootstrap.Modal(inviteModalEl);
+      modal.show();
+    }
+  }
 
-    const groupName = this.selectedGroup?.name || 'Unnamed Group';
+  sendInvitation(): void {
+    // Clear any previous messages
+    this.errorMessage = '';  // Reset the error message
+    this.successMessage = '';  // Reset the success message
 
-    this.invitationService.sendInvitation(invitation).subscribe({
-      next: (response) => {
-        console.log('Invitation sent to group ID:', groupId, response);
-        this.toastr.success('Invitation sent successfully!');
+    // Validate input: check if group is selected and email is provided
+    if (!this.selectedGroup || !this.inviteeEmailOrId) {
+      this.errorMessage = 'Please select a group and provide an invitee email.'; // Set error message
+      return;
+    }
 
-        this.invitationService.sendEmail(groupName).subscribe({
-          next: (emailResponse) => {
-            console.log('Email sent successfully:', emailResponse);
-            this.toastr.success('Email notification sent!');
+    // Check if the provided email is valid
+    const isEmail = this.isValidEmail(this.inviteeEmailOrId);
+    if (!isEmail) {
+      this.errorMessage = 'Please provide a valid email.'; // Set error message
+      return;
+    }
+
+    // Check if email exists
+    this.userService.checkIfEmailExists(this.inviteeEmailOrId).subscribe({
+      next: (emailExists: boolean) => {
+        if (!emailExists) {
+          this.errorMessage = 'The email does not exist.'; // Set error message
+          return;
+        }
+
+        // Fetch user ID based on the email if the email exists
+        this.userService.getUserIdByEmail(this.inviteeEmailOrId).subscribe({
+          next: (userId: number) => {
+            if (userId === 0) {
+              this.errorMessage = 'User not found.'; // Set error message
+              return;
+            }
+
+            // Check if the inviter and invitee are the same
+            if (userId === this.currentUserId) {
+              this.errorMessage = 'You are already a member of this group.'; // Set error message
+              return;
+            }
+
+            // Set the user ID for the invitee
+            this.selectedInviteeUserId = userId;
+
+            // Send the invitation email and create invitation entry in parallel
+            this.sendInvitationEmail();
           },
-          error: (emailError) => {
-            console.error('Error sending email:', emailError);
-            this.toastr.error('Failed to send email notification');
+          error: (err: any) => {
+            console.error('Error fetching user ID:', err);
+            this.errorMessage = 'An error occurred while fetching the user ID.'; // Set error message
           }
         });
       },
-      error: (error) => {
-        console.error('Error sending invitation:', error);
-        this.toastr.error('Failed to send invitation');
+      error: (err: any) => {
+        console.error('Error checking email existence:', err);
+        this.errorMessage = 'An error occurred while checking the email.'; // Set error message
       }
     });
+  }
+
+  sendInvitationEmail(): void {
+    // Validate group and invitee user ID before sending invitation
+    if (!this.selectedGroup) {
+      this.toastr.error('No group selected.');
+      return;
+    }
+
+    if (!this.selectedInviteeUserId) {
+      this.toastr.error('Invitee user ID is not available.');
+      return;
+    }
+
+    // Prepare invitation object
+    const inviterUserId = this.currentUserId;
+    const inviteeEmail = this.inviteeEmailOrId;
+    const inviteeUserId = this.selectedInviteeUserId;
+
+    const invitation: SendInvitation = {
+      studyGroup: { id: this.selectedGroup.id },
+      inviterUserId,
+      inviteeEmail,
+      inviteeUserId
+    };
+
+    // Send the invitation email and invitation object in parallel
+    this.invitationService.sendEmail(this.selectedGroup?.name || 'Unnamed Group', inviteeEmail).subscribe({
+      next: (response) => {
+        console.log('Email sent successfully', response);
+        this.successMessage = 'Invitation sent successfully!'; // Set success message
+      },
+      error: (error) => {
+        console.error('Error sending email:', error);
+        this.toastr.error('Failed to send the invitation email.');
+      }
+    });
+
+    // Send invitation object
+    this.invitationService.sendInvitation(invitation).subscribe({
+      next: (response) => {
+        console.log('Invitation sent successfully', response);
+        this.successMessage = 'Invitation sent successfully!'; // Set success message
+        this.toastr.success('Invitation sent successfully.');
+      },
+      error: (error) => {
+        console.error('Error sending invitation:', error);
+        this.toastr.error('An error occurred while sending the invitation.');
+      }
+    });
+  }
+
+  closeInviteModal(): void {
+    if (this.inviteModal) {
+      this.inviteModal.hide();
+    }
   }
 
   goToCreateGroup(): void {
@@ -189,6 +292,12 @@ export class StudyGroupListComponent implements OnInit {
     this.router.navigate([`/study-group/update-group/${groupId}`]);
     this.closeModal();
   }
+ isValidEmail(email: string): boolean {
+    // Simple email validation regex
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  }
+
   openFlashcardModal() {
     const modalElement = document.getElementById('flashcardModal');
     if (modalElement) {
@@ -224,7 +333,6 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   selectGroup(group: StudyGroup): void {
-    // Set the selected group
     this.selectedGroup = group;
 
     // Load invitees for the selected study group
