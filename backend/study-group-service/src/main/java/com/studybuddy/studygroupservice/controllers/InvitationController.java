@@ -24,6 +24,7 @@ public class InvitationController {
         Invitation createdInvitation = invitationService.createInvitation(invitationDTO);
         return mapToInvitationDTO(createdInvitation);
     }
+
     @PostMapping("/send")  // Use '/send' endpoint for sending invitations
     public InvitationDTO sendInvitation(@RequestBody InvitationDTO invitationDTO) {
         if (invitationDTO.getInviteeUserId() == null && invitationDTO.getInviteeEmail() == null) {
@@ -32,6 +33,19 @@ public class InvitationController {
         }
 
         return invitationService.sendInvitation(invitationDTO);
+    }
+
+    @PutMapping("/{id}/reject")
+    public InvitationDTO rejectInvitation(@PathVariable Long id) {
+        return invitationService.handleInvitationResponse(id, "REJECTED");
+    }
+    @GetMapping("/pending")
+    public List<InvitationDTO> getPendingInvitations(@RequestParam Long userId) {
+        return invitationService.getPendingInvitations(userId);
+    }
+    @PutMapping("/{id}/accept")
+    public InvitationDTO acceptInvitation(@PathVariable Long id) {
+        return invitationService.handleInvitationResponse(id, "ACCEPTED");
     }
     @GetMapping
     public List<InvitationDTO> getAllInvitations() {

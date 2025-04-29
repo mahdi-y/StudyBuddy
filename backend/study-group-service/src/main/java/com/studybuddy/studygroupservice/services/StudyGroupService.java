@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -58,11 +59,45 @@ public class StudyGroupService {
     }
 
     // Add this method to your StudyGroupService.java
-    public List<StudyGroup> getUserGroups(Long userId) {
-        return studyGroupRepository.findByOwnerUserId(userId);
+// Renamed from getUserGroups to getAcceptedGroupDTOs
+    public List<StudyGroupDTO> getAcceptedGroupDTOs(Long userId) {
+        List<StudyGroup> ownedGroups = studyGroupRepository.findByOwnerUserId(userId);
+        List<StudyGroup> acceptedGroups = invitationRepository.findByInviteeUserIdAndStatus(userId, "ACCEPTED")
+                .stream()
+                .map(Invitation::getStudyGroup)
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<StudyGroup> combinedGroups = Stream.concat(ownedGroups.stream(), acceptedGroups.stream())
+                .distinct()
+                .toList();
+
+        return combinedGroups.stream()
+                .map(this::mapToStudyGroupDTO)
+                .collect(Collectors.toList());
     }
+    // Returns raw entities — used by controller logic
+    public List<StudyGroup> getUserGroupsAsEntities(Long userId) {
+        List<StudyGroup> ownedGroups = studyGroupRepository.findByOwnerUserId(userId);
 
+        List<StudyGroup> acceptedGroups = invitationRepository.findByInviteeUserIdAndStatus(userId, "ACCEPTED")
+                .stream()
+                .map(Invitation::getStudyGroup)
+                .distinct()
+                .toList();
 
+        return Stream.concat(ownedGroups.stream(), acceptedGroups.stream())
+                .distinct()
+                .toList();
+    }
+    private StudyGroupDTO mapToStudyGroupDTO(StudyGroup studyGroup) {
+        StudyGroupDTO dto = new StudyGroupDTO();
+        dto.setId(studyGroup.getId());
+        dto.setName(studyGroup.getName());
+        dto.setDescription(studyGroup.getDescription());
+        dto.setOwnerUserId(studyGroup.getOwnerUserId());
+        return dto;
+    }
     // Update an existing study group
     public StudyGroup updateGroup(Long id, StudyGroupDTO studyGroupDTO) {
         StudyGroup studyGroup = studyGroupRepository.findById(id)
@@ -80,13 +115,12 @@ public class StudyGroupService {
         studyGroupRepository.deleteById(id);
     }
 
-    @Transactional
     public List<StudyGroup> getGroupsWhereUserIsInvited(Long userId) {
-        List<Invitation> invitations = invitationRepository.findByInviteeUserId(userId);
-        return invitations.stream()
+        List<Invitation> acceptedInvitations = invitationRepository.findByInviteeUserIdAndStatus(userId, "ACCEPTED");
+        return acceptedInvitations.stream()
                 .map(Invitation::getStudyGroup)
-                .distinct()
                 .collect(Collectors.toList());
     }
+
 
 }

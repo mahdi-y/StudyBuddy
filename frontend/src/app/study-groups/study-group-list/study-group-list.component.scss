@@ -48,6 +48,43 @@ body, html {
 
 
 }
+.notification-dropdown {
+  position: relative;
+
+  .notification-btn {
+    background: none;
+    border: none;
+    color: $text-color;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: -2000px; 
+  
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .material-icons {
+      font-size: 24px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 4px 6px;
+    }
+  }
+
+  .dropdown-menu {
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}
+
 
 .group-sidebar {
   width: 350px;
