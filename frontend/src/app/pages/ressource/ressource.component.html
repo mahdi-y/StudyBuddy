@@ -1,16 +1,15 @@
-<!-- Include Material Icons if not already -->
+<!-- Ensure Material Icons is included -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
 <div class="container">
-  <!-- Icons above the resources -->
-
-
   <!-- Card-style resource list -->
   <div *ngFor="let resource of resources" class="card shadow-sm mb-4 rounded-4">
-
     <div class="card-body d-flex justify-content-between align-items-start p-4">
       <div>
-        <h5 class="card-title mb-1">{{ resource.title }}</h5>
+        <h5 class="card-title mb-1">
+          <span class="material-icons text-danger align-middle me-1" title="PDF file">picture_as_pdf</span>
+          {{ resource.title }}
+        </h5>
         <p class="mb-2 text-muted small">Uploaded: {{ resource.uploadedAt | date: 'short' }}</p>
       </div>
 
