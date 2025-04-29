@@ -16,6 +16,13 @@ body {
   text-align: center;
   padding: 20px;
   gap: 10px;
+  overflow: hidden; /* Prevent scrollbars during animation */
+}
+
+h1, h2, h3, .btn {
+  opacity: 0; /* Start invisible */
+  transform: translateY(20px); /* Start slightly below the final position */
+  animation: fadeInUp 1s ease forwards; /* Apply the fadeInUp animation */
 }
 
 h1 {
@@ -24,13 +31,14 @@ h1 {
   background: linear-gradient(135deg, #ffec99, #ffab91);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: glow 2s infinite alternate;
+  animation-delay: 0.2s; /* Delay appearance */
 }
 
 h2 {
   font-size: 2.5rem;
   font-weight: 600;
   margin-bottom: 10px;
+  animation-delay: 0.4s; /* Delay appearance */
 }
 
 h3 {
@@ -41,6 +49,7 @@ h3 {
   max-width: 600px;
   line-height: 1.5;
   opacity: 0.9;
+  animation-delay: 0.6s; /* Delay appearance */
 }
 
 .btn {
@@ -54,11 +63,23 @@ h3 {
   cursor: pointer;
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation-delay: 0.8s; /* Delay appearance */
 }
 
 .btn:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes glow {

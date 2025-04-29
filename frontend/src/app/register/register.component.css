@@ -1,0 +1,22 @@
+/* Base styles for error messages */
+.error-message {
+  font-size: 0.875rem;
+  color: #e74c3c; /* Red color for errors */
+  opacity: 0; /* Start hidden */
+  max-height: 0; /* Collapse height */
+  overflow: hidden;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+}
+
+/* Show error message when active */
+.error-message.show {
+  opacity: 1;
+  max-height: 50px; /* Adjust based on content */
+}
+
+/* Highlight invalid fields */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border-color: #e74c3c; /* Red border for invalid fields */
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.5); /* Subtle glow */
+}

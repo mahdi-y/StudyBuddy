@@ -30,6 +30,7 @@ import { RequestResetComponent } from './request-reset/request-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { UpdateAdminComponent } from './update-admin/update-admin.component';
+import { adminGuard} from './services/admin.guard';
 
 
 const routes: Routes = [
@@ -64,8 +65,7 @@ const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    //canActivate: [AuthGuard],
-    //data: { role: 'ADMIN' },
+    canActivate: [adminGuard],
     children: [
       { path: '', redirectTo: 'dashboard-content', pathMatch: 'full'  },
       { path: 'dashboard-content', component: DashboardContentComponent },

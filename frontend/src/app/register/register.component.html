@@ -8,16 +8,37 @@
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div class="row">
         <div class="col-md-6">
+          <!-- Name Field -->
           <div class="mb-3">
             <label for="name" class="form-label text-secondary">Name</label>
             <input type="text" id="name" class="form-control rounded-4 border-2" formControlName="name" placeholder="Enter your name" required />
+            <div
+              *ngIf="signupForm.get('name')?.invalid && (signupForm.get('name')?.touched || signupForm.get('name')?.dirty)"
+              class="error-message"
+              [class.show]="signupForm.get('name')?.invalid && (signupForm.get('name')?.touched || signupForm.get('name')?.dirty)">
+              <span *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</span>
+              <span *ngIf="signupForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</span>
+              <span *ngIf="signupForm.get('name')?.errors?.['maxlength']">Name cannot exceed 50 characters.</span>
+              <span *ngIf="signupForm.get('name')?.errors?.['pattern']">Name can only contain letters and spaces.</span>
+            </div>
           </div>
 
+          <!-- Username Field -->
           <div class="mb-3">
             <label for="username" class="form-label text-secondary">Username</label>
             <input type="text" id="username" class="form-control rounded-4 border-2" formControlName="username" placeholder="Choose a username" required />
+            <div
+              *ngIf="signupForm.get('username')?.invalid && (signupForm.get('username')?.touched || signupForm.get('username')?.dirty)"
+              class="error-message"
+              [class.show]="signupForm.get('username')?.invalid && (signupForm.get('username')?.touched || signupForm.get('username')?.dirty)">
+              <span *ngIf="signupForm.get('username')?.errors?.['required']">Username is required.</span>
+              <span *ngIf="signupForm.get('username')?.errors?.['minlength']">Username must be at least 4 characters long.</span>
+              <span *ngIf="signupForm.get('username')?.errors?.['maxlength']">Username cannot exceed 20 characters.</span>
+              <span *ngIf="signupForm.get('username')?.errors?.['pattern']">Username can only contain letters, numbers, and underscores.</span>
+            </div>
           </div>
 
+          <!-- Profile Picture Field -->
           <div class="mb-3">
             <label for="profilePicture" class="form-label text-secondary">Profile Picture (Optional)</label>
             <input type="file" id="profilePicture" class="form-control rounded-4 border-2" (change)="onFileChange($event)" accept="image/*" />
@@ -25,14 +46,32 @@
         </div>
 
         <div class="col-md-6">
+          <!-- Password Field -->
           <div class="mb-3">
             <label for="password" class="form-label text-secondary">Password</label>
             <input type="password" id="password" class="form-control rounded-4 border-2" formControlName="password" placeholder="Enter your password" required />
+            <div
+              *ngIf="signupForm.get('password')?.invalid && (signupForm.get('password')?.touched || signupForm.get('password')?.dirty)"
+              class="error-message"
+              [class.show]="signupForm.get('password')?.invalid && (signupForm.get('password')?.touched || signupForm.get('password')?.dirty)">
+              <span *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</span>
+              <span *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</span>
+              <span *ngIf="signupForm.get('password')?.errors?.['pattern']">
+                Password must include uppercase, lowercase, numbers, and special characters.
+              </span>
+            </div>
           </div>
 
+          <!-- Confirm Password Field -->
           <div class="mb-3">
             <label for="confirmPassword" class="form-label text-secondary">Confirm Password</label>
             <input type="password" id="confirmPassword" class="form-control rounded-4 border-2" formControlName="confirmPassword" placeholder="Confirm your password" required />
+            <div
+              *ngIf="signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched"
+              class="error-message"
+              [class.show]="signupForm.hasError('passwordMismatch') && signupForm.get('confirmPassword')?.touched">
+              Passwords do not match.
+            </div>
           </div>
 
           <!-- Hidden Fields -->
@@ -42,11 +81,12 @@
         </div>
       </div>
 
+      <!-- Submit Button -->
       <div class="d-grid mt-3">
         <button
           type="submit"
           class="btn btn-success rounded-4 fw-bold py-2"
-          [disabled]="!signupForm.valid"
+          [disabled]="signupForm.invalid"
           style="background: linear-gradient(135deg, #43cea2, #185a9d); border: none;"
         >
           Register
@@ -54,10 +94,12 @@
       </div>
     </form>
 
+    <!-- Global Feedback Message -->
     <div class="text-center mt-3" *ngIf="msg">
       <div class="alert alert-info">{{ msg }}</div>
     </div>
 
+    <!-- Login Link -->
     <div class="text-center mt-3">
       <p class="text-muted" style="font-size: 14px;">
         Already have an account?

@@ -51,7 +51,7 @@ export class StudyGroupListComponent implements OnInit {
 
   modal: bootstrap.Modal | null = null;
   inviteModal: bootstrap.Modal | null = null; // ➡️ New
-  user: { username: string; role: string } | null;
+  user: { username: string; role: string; profilePicture?: string } | null;
 
   constructor(
     private studyGroupService: StudyGroupService,
@@ -71,6 +71,7 @@ export class StudyGroupListComponent implements OnInit {
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
+      this.loadUserProfile();
       // Fetch the user's study groups
       this.studyGroupService.getUserGroups(this.currentUserId).subscribe({
         next: (data) => {
@@ -539,5 +540,42 @@ export class StudyGroupListComponent implements OnInit {
 
   triggerFileInput(): void {
     this.fileInput.nativeElement.click(); // Programmatically trigger the file input dialog
+  }
+
+  private loadUserProfile(): void {
+    console.log('Fetching profile for user:', this.user?.username);
+    this.userService.getAllUsers().subscribe({
+      next: (users) => {
+        const currentUser = users.find(u => u.username === this.user!.username);
+        if (currentUser && this.user) {
+          console.log('Fetched profile picture URL:', currentUser.profilePicture);
+          this.user.profilePicture = currentUser.profilePicture;
+          const img = new Image();
+          img.src = this.user.profilePicture || 'assets/backoffice/images/profile.jpg';
+          img.onload = () => {
+            if (this.user) {
+              console.log('Profile picture loaded successfully:', this.user.profilePicture);
+            }
+          };
+          img.onerror = () => {
+            if (this.user) {
+              console.error('Failed to load profile picture:', this.user.profilePicture);
+              this.user.profilePicture = 'assets/backoffice/images/profile.jpg';
+            }
+          };
+        } else {
+          console.warn('User not found in API response:', this.user?.username);
+          if (this.user) {
+            this.user.profilePicture = 'assets/backoffice/images/profile.jpg';
+          }
+        }
+      },
+      error: (err) => {
+        console.error('Error fetching users:', err);
+        if (this.user) {
+          this.user.profilePicture = 'assets/backoffice/images/profile.jpg';
+        }
+      }
+    });
   }
 }

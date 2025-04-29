@@ -1,34 +1,63 @@
-<!-- Ensure Material Icons is included -->
+<!-- PDF Resource Card Design (No fileSize version) -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
-<div class="container">
-  <!-- Card-style resource list -->
-  <div *ngFor="let resource of resources" class="card shadow-sm mb-4 rounded-4">
-    <div class="card-body d-flex justify-content-between align-items-start p-4">
-      <div>
-        <h5 class="card-title mb-1">
-          <span class="material-icons text-danger align-middle me-1" title="PDF file">picture_as_pdf</span>
-          {{ resource.title }}
-        </h5>
-        <p class="mb-2 text-muted small">Uploaded: {{ resource.uploadedAt | date: 'short' }}</p>
+<div class="container py-4" style="font-family: 'Roboto', sans-serif; max-width: 800px;">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+    <h2 class="m-0" style="color: #333; font-weight: 500; font-size: 1.5rem;">
+
+    </h2>
+  </div>
+
+  <!-- PDF Document Cards -->
+  <div *ngFor="let resource of resources" class="card mb-3 border-0 shadow-sm"
+       style="border-left: 4px solid #e74c3c; border-radius: 0 8px 8px 0;">
+    <div class="card-body p-3 d-flex justify-content-between">
+      <div class="d-flex align-items-start" style="width: 80%;">
+        <!-- PDF Icon -->
+        <div class="position-relative me-3">
+          <span class="material-icons" style="font-size: 2.5rem; color: #e74c3c;">picture_as_pdf</span>
+          <div class="position-absolute top-0 end-0"
+               style="width: 0; height: 0; border-style: solid; border-width: 0 12px 12px 0; border-color: transparent #f1f1f1 transparent transparent;"></div>
+        </div>
+
+        <!-- Document Info -->
+        <div>
+          <h5 class="mb-1" style="font-weight: 500; color: #2c3e50;">{{ resource.title }}</h5>
+          <div class="d-flex flex-wrap gap-3 small text-muted">
+            <span>
+              <span class="material-icons align-text-bottom" style="font-size: 1rem;">today</span>
+              {{ resource.uploadedAt | date: 'mediumDate' }}
+            </span>
+            <span>
+              <span class="material-icons align-text-bottom" style="font-size: 1rem;">description</span>
+              PDF Document
+            </span>
+          </div>
+        </div>
       </div>
 
-      <div class="d-flex flex-column gap-2">
-        <button
-          class="btn btn-outline-success btn-sm"
-          (click)="downloadFile(resource)"
-          title="Download File"
-        >
-          ⬇️
+      <!-- Action Buttons -->
+      <div class="d-flex flex-column gap-2 align-self-center">
+        <button class="btn btn-sm px-3 py-1 d-flex align-items-center"
+                (click)="downloadFile(resource)"
+                style="background: #f8f9fa; border: 1px solid #ddd; color: #2c3e50;">
+          <span class="material-icons me-1" style="font-size: 1rem;">cloud_download</span>
         </button>
-        <button
-          class="btn btn-outline-danger btn-sm"
-          (click)="deleteResource(resource.idResource)"
-          title="Delete Resource"
-        >
-          🗑️
+        <button class="btn btn-sm px-3 py-1 d-flex align-items-center"
+                (click)="deleteResource(resource.idResource)"
+                style="background: #f8f9fa; border: 1px solid #ddd; color: #e74c3c;">
+          <span class="material-icons me-1" style="font-size: 1rem;">delete</span>
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="resources.length === 0" class="text-center py-5" style="margin-top: -30%">
+    <span class="material-icons" style="font-size: 3rem; color: #bdc3c7;">folder_open</span>
+    <p class="mt-3 text-muted">No documents available</p>
+    <!--    <button class="btn btn-link text-primary">Upload your first resource</button>-->
   </div>
 </div>

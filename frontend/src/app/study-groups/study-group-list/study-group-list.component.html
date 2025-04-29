@@ -94,7 +94,7 @@
       <!-- Profile Dropdown -->
       <div class="profile-dropdown position-relative">
         <button class="profile-btn d-flex align-items-center" (click)="toggleProfileDropdown()">
-          <img src="assets/backoffice/images/profile.jpg" alt="Profile" class="profile-img rounded-circle me-2">
+          <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
           <span class="profile-name">{{ user?.username }}</span>
           <i class="material-icons">arrow_drop_down</i>
         </button>
@@ -126,14 +126,15 @@
               <app-task [studyGroupId]="selectedGroup?.id" [invitees]="invitees"></app-task>
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
-              <h3>Resources</h3>
+              <span class="material-icons align-middle me-2" style="color: #e74c3c;">insert_drive_file</span>
+              Study Resources
               <app-ressource
                 [resources]="resources"
                 (refreshRequested)="loadResources()"
                 [studyGroupId]="selectedGroup?.id"
               ></app-ressource>
-              <div class="add-resource-button-container">
-                <button class="btn btn-primary" (click)="openAddResourceModal()">Add Resource</button>
+              <div class="add-resource-button-container" >
+                <button class="btn btn-link text-primary" (click)="openAddResourceModal()">Upload your resource</button>
               </div>
             </div>
 

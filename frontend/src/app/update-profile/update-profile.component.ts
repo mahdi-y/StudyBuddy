@@ -19,18 +19,18 @@ export class UpdateProfileComponent implements OnInit {
   messageType: 'success' | 'error' | 'info' = 'info';
   selectedFile: File | null = null;
   isLoading = false;
-  
+
   private apiUrl = 'http://localhost:8083/api/users';
   private uploadUrl = 'http://localhost:8083/Upload';
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     private storage: LocalStorageService
   ) {
     this.updateForm = new FormGroup({
        // Username typically shouldn't be editable
-      
+
       address: new FormControl('', [Validators.required, Validators.email]),
       mobileNo: new FormControl('', [
         Validators.pattern(/^\+[1-9]\d{1,14}$/) // E.164 format
@@ -61,14 +61,14 @@ export class UpdateProfileComponent implements OnInit {
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Failed to fetch user details:', error);
-        if (error.status === 403) {
-          this.showMessage('Access denied. Please check your permissions.', 'error');
-        } else if (error.status === 401) {
-          this.showMessage('Session expired. Please log in again.', 'error');
-          this.storage.remove('auth-token');
-        } else {
-          this.showMessage('Error loading profile details. Please try again.', 'error');
-        }
+        // if (error.status === 403) {
+        //   this.showMessage('Access denied. Please check your permissions.', 'error');
+        // } else if (error.status === 401) {
+        //   this.showMessage('Session expired. Please log in again.', 'error');
+        //   this.storage.remove('auth-token');
+        // } else {
+        //   this.showMessage('Error loading profile details. Please try again.', 'error');
+        // }
         return throwError(error);
       })
     ).subscribe({
@@ -76,7 +76,7 @@ export class UpdateProfileComponent implements OnInit {
         this.user = user;
         this.updateForm.patchValue({
           username: user.username,
-          
+
           address: user.address || '',
           mobileNo: user.mobileNo || '',
           age: user.age || ''
@@ -90,7 +90,7 @@ export class UpdateProfileComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      
+
       // Preview the image
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -106,27 +106,27 @@ export class UpdateProfileComponent implements OnInit {
       this.showMessage('Please fill out the form correctly.', 'error');
       return;
     }
-  
+
     const token = this.storage.get('auth-token');
     if (!token) {
       this.showMessage('Session expired. Please log in again.', 'error');
       return;
     }
-  
+
     this.isLoading = true;
-    
+
     // Prepare the update data
     const updateData = {
       address: this.updateForm.value.address,
       mobileNo: this.updateForm.value.mobileNo,
       age: this.updateForm.value.age ? Number(this.updateForm.value.age) : null
     };
-  
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  
+
     // Update user data
     this.http.put(`${this.apiUrl}/me`, updateData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
@@ -144,7 +144,7 @@ export class UpdateProfileComponent implements OnInit {
           this.isLoading = false;
           this.showMessage('Profile updated successfully!', 'success');
           this.loadUserProfile(); // Refresh data
-  
+
           // Redirect to study-group page after successful profile update
           this.router.navigate(['/study-group']); // Assuming the route is "/study-group"
         }
