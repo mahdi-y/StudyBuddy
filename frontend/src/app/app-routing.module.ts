@@ -10,7 +10,7 @@ import { AddTaskComponent } from './task/add/add.component';
 import { UpdateTaskComponent } from './task/update/update.component';
 import { ProgressComponent } from './progress/progress.component';
 import { StudyGroupsBackComponent } from './backoffice/study-groups-back/study-groups-back.component'; // Adjust the path as needed
-
+import { TaskBackofficeComponent} from "./backoffice/task-backoffice/task-backoffice.component";
 import {HomeComponent} from "./frontoffice/home/home.component";
 import {AboutComponent} from "./frontoffice/about/about.component";
 import {WorkComponent} from "./frontoffice/work/work.component";
@@ -74,7 +74,7 @@ const routes: Routes = [
 
       {path: 'study-groups-back', component: StudyGroupsBackComponent},
       { path: 'resources', component: RessourceComponent }, // Resources route (This will render RessourceComponent)
-
+      { path: 'task-list', component: TaskBackofficeComponent }
       // { path: 'studygroups', component: StudyGroupsComponent },
       // { path: 'resources', component: ResourcesComponent },
       // { path: 'tasks', component: TasksComponent },

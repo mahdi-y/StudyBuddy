@@ -50,6 +50,7 @@ import { RequestResetComponent } from './request-reset/request-reset.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { UpdateAdminComponent } from './update-admin/update-admin.component';
+import { TaskBackofficeComponent } from './backoffice/task-backoffice/task-backoffice.component';
 
 
 
@@ -94,7 +95,8 @@ import { UpdateAdminComponent } from './update-admin/update-admin.component';
     ReportedMessagesComponent,
     UnauthorizedComponent,
     StudyGroupsBackComponent,
-    StudyGroupComponent
+    StudyGroupComponent,
+    TaskBackofficeComponent
   ],
   imports: [
     CommonModule,

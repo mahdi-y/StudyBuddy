@@ -1,0 +1,34 @@
+<div class="container mt-4">
+  <h2 class="mb-4">All Tasks</h2>
+
+  <div *ngIf="loading" class="text-muted">Loading tasks...</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && tasks.length === 0" class="alert alert-info">
+    No tasks found.
+  </div>
+
+  <div *ngIf="tasks.length > 0">
+    <div *ngFor="let task of tasks" class="card mb-3 shadow-sm rounded-4">
+      <div class="card-body d-flex justify-content-between align-items-start p-4">
+        <div>
+          <h5 class="card-title mb-1">{{ task.title }}</h5>
+          <p class="mb-2 text-muted small">Due: {{ task.dueDate | date:'mediumDate' }}</p>
+          <p class="mb-0">{{ task.description }}</p>
+          <small class="text-muted">
+            Completed: <span [ngClass]="{ 'text-success': task.completed, 'text-danger': !task.completed }">
+              {{ task.completed ? 'Yes' : 'No' }}
+            </span>
+          </small>
+        </div>
+
+        <div class="d-flex flex-column gap-2">
+          <!-- Add edit logic if needed -->
+          <button class="btn btn-outline-danger btn-sm" (click)="deleteTask(task.id)">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

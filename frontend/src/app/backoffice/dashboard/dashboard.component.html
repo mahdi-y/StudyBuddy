@@ -44,7 +44,7 @@
 
         <!-- Tasks -->
         <li class="nav-item" [class.active]="activeLink === 'tasks'">
-          <a (click)="setActive('tasks')" routerLinkActive="active">
+          <a (click)="setActive('tasks')" routerLink="/dashboard/task-list" routerLinkActive="active">
             <i class="material-icons">list</i>
             <span class="nav-text">Tasks</span>
           </a>
