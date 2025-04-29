@@ -15,7 +15,7 @@ public class OCRService {
 
     // For setting the Tesseract datapath dynamically or fallback to default
     private static final String TESSERACT_DATAPATH = System.getenv("TESSERACT_DATAPATH") != null ?
-            System.getenv("TESSERACT_DATAPATH") : "C:/Tesseract/tessdata";  // Adjust for your system
+            System.getenv("TESSERACT_DATAPATH") : "D:/Tesseract/tessdata";  // Adjust for your system
 
     public byte[] processImageToPdf(MultipartFile file) throws IOException, TesseractException {
         // Save the image temporarily
@@ -23,7 +23,7 @@ public class OCRService {
         file.transferTo(tempFile);
 
         // Set the TESSDATA_PREFIX system property dynamically if required (Windows)
-        System.setProperty("TESSDATA_PREFIX", "C:/Tesseract/"); // Adjust if needed
+        System.setProperty("TESSDATA_PREFIX", "D:/Tesseract/"); // Adjust if needed
 
         // OCR with Tesseract
         Tesseract tesseract = new Tesseract();

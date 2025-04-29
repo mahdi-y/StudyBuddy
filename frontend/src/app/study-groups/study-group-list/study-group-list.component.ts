@@ -25,6 +25,8 @@ export class StudyGroupListComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef; // Reference to the hidden file input
 
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
+  uploadProgress: number = 0; // Track upload progress
+  downloadProgress: number = 0; // Track download progress
   inviteeEmailOrId: string = ''; // Add this
   errorMessage: string = ''; // Add this to hold error messages
   successMessage: string = '';
