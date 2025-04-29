@@ -45,6 +45,7 @@ export class AddTaskComponent implements OnInit {
     // Check if studyGroupId is already provided as an @Input()
     if (this.studyGroupId !== undefined) {
       console.log('Study Group ID (from Input):', this.studyGroupId);
+      this.loadProgressListForStudyGroup(this.studyGroupId);
     } else {
       // Fallback to query parameters if @Input() is not provided
       this.route.queryParams.subscribe(params => {
@@ -52,29 +53,38 @@ export class AddTaskComponent implements OnInit {
         if (id && !isNaN(+id)) {
           this.studyGroupId = +id; // Convert to number only if valid
           console.log('Study Group ID (from Query Params):', this.studyGroupId);
+          this.loadProgressListForStudyGroup(this.studyGroupId);
         } else {
           console.warn('No valid studyGroupId found in query parameters.');
-          this.studyGroupId = undefined; // Explicitly set to undefined if invalid
+          this.loadProgressList(); // Load all progresses as fallback
         }
       });
     }
 
-    // Load progress list
-    this.loadProgressList();
     const todayDate = new Date();
     this.createdAt = todayDate.toISOString().split('T')[0];
   }
 
   loadProgressList(): void {
-    this.progressService.getAllProgress().pipe(
-      map(progressList => progressList.filter(p => !p.archived))
-    ).subscribe({
-      next: (filteredProgress) => {
-        console.log('📦 Unarchived progress list received:', filteredProgress);
-        this.progressList = filteredProgress;
+    this.progressService.getAllProgress().subscribe({
+      next: (progressList) => {
+        console.log('📦 All progress list received:', progressList);
+        this.progressList = progressList.filter(p => !p.archived);
       },
       error: (err) => {
         console.error('❌ Error fetching progress list', err);
+      }
+    });
+  }
+
+  loadProgressListForStudyGroup(studyGroupId: number): void {
+    this.progressService.getProgressesByStudyGroup(studyGroupId).subscribe({
+      next: (progresses) => {
+        console.log('📦 Progress list for study group received:', progresses);
+        this.progressList = progresses.filter(p => !p.archived);
+      },
+      error: (err) => {
+        console.error('❌ Error fetching progress list for study group', err);
       }
     });
   }

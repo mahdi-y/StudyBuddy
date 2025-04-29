@@ -114,7 +114,8 @@ import { UpdateAdminComponent } from './update-admin/update-admin.component';
     NgChartsModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -395,3 +395,10 @@ body, html {
 button {
   margin-top: 10px;
 }
+
+.add-resource-button-container {
+  display: flex;
+  justify-content: center; // Horizontally centers the button
+  align-items: center;     // Vertically centers the button (if needed)
+  margin-top: 10px;        // Adds some spacing above the button
+}

@@ -40,18 +40,29 @@
 
   <!-- Select Existing Progress -->
   <div class="mb-3">
-    <label for="progressId" class="form-label">Select Existing Progress</label>
-    <select
-      id="progressId"
-      name="progressId"
-      class="form-select"
-      [(ngModel)]="newTask.progressId"
-    >
-      <option [ngValue]="null">-- No Progress --</option>
-      <option *ngFor="let progress of progressList" [ngValue]="progress.id">
-        {{ progress.name }}
-      </option>
-    </select>
+    <label class="form-label">Progress <span class="text-danger">*</span></label>
+    <div class="input-group">
+      <select
+        id="progressId"
+        name="progressId"
+        class="form-select"
+        [(ngModel)]="newTask.progressId"
+      >
+        <option [ngValue]="null">-- No Progress --</option>
+        <option *ngFor="let progress of progressList" [ngValue]="progress.id">
+          {{ progress.name }}
+        </option>
+      </select>
+      <input
+        type="text"
+        id="newProgressName"
+        name="newProgressName"
+        class="form-control"
+        [(ngModel)]="newProgressName"
+        placeholder="Or enter new progress"
+        [required]="newTask.progressId === null"
+      />
+    </div>
   </div>
 
   <div class="mb-3">
@@ -69,19 +80,19 @@
   </div>
 
 
-  <!-- Or Enter New Progress -->
-  <div class="mb-3">
-    <label for="newProgressName" class="form-label">Or Enter New Progress</label>
-    <input
-      type="text"
-      id="newProgressName"
-      name="newProgressName"
-      class="form-control"
-      [(ngModel)]="newProgressName"
-      placeholder="e.g. Research, In Progress, Completed"
-      [required]="newTask.progressId === null"
-    />
-  </div>
+<!--  &lt;!&ndash; Or Enter New Progress &ndash;&gt;-->
+<!--  <div class="mb-3">-->
+<!--    <label for="newProgressName" class="form-label">Or Enter New Progress</label>-->
+<!--    <input-->
+<!--      type="text"-->
+<!--      id="newProgressName"-->
+<!--      name="newProgressName"-->
+<!--      class="form-control"-->
+<!--      [(ngModel)]="newProgressName"-->
+<!--      placeholder="e.g. Research, In Progress, Completed"-->
+<!--      [required]="newTask.progressId === null"-->
+<!--    />-->
+<!--  </div>-->
 
   <button type="submit" class="btn btn-success mt-3">Add Task</button>
 </form>
