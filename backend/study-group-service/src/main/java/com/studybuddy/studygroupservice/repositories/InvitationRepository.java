@@ -10,4 +10,6 @@ import java.util.List;
 public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     List<Invitation> findByInviteeUserId(Long inviteeUserId);
     List<Invitation> findByStudyGroupId(Long studyGroupId);
+    List<Invitation> findByInviteeUserIdAndStatus(Long userId, String status);
+
 }

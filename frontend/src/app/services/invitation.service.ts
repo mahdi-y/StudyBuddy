@@ -20,7 +20,16 @@ export class InvitationService {
   sendInvitation(invitation: SendInvitation): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/send`, invitation);
   }
-
+  acceptInvitation(invitationId: number): Observable<Invitation> {
+    return this.http.put<Invitation>(`${this.apiUrl}/${invitationId}/accept`, {});
+  }
+  getPendingInvitations(userId: number): Observable<Invitation[]> {
+    return this.http.get<Invitation[]>(`${this.apiUrl}/pending?userId=${userId}`);
+  }
+  
+  rejectInvitation(invitationId: number): Observable<Invitation> {
+    return this.http.put<Invitation>(`${this.apiUrl}/${invitationId}/reject`, {});
+  }
   /**
    * Sends an email notification to the invitee.
    * @param groupName The name of the study group.

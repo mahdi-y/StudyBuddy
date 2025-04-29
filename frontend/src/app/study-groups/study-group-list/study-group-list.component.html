@@ -82,14 +82,14 @@
 
   <!-- Main content -->
   <div class="main-content" [class.expanded]="isSidebarCollapsed">
-    <!-- Top Nav Bar -->
-    <div class="top-nav d-flex justify-content-between align-items-center px-3 py-2">
-      <div class="d-flex align-items-center">
-        <button class="toggle-btn" (click)="toggleSidebar()">
-          <i class="material-icons">menu</i>
-        </button>
-        <h5 class="mb-0 ms-3">Study Group: {{ selectedGroup?.name || 'Select a Group' }}</h5>
-      </div>
+     <!-- Top Nav Bar -->
+<div class="top-nav d-flex justify-content-between align-items-center px-3 py-2">
+  <div class="d-flex align-items-center">
+    <button class="toggle-btn" (click)="toggleSidebar()">
+      <i class="material-icons">menu</i>
+    </button>
+    <h5 class="mb-0 ms-3">Study Group: {{ selectedGroup?.name || 'Select a Group' }}</h5>
+  </div>
 
       <!-- Profile Dropdown -->
       <div class="profile-dropdown position-relative">
@@ -98,17 +98,35 @@
           <span class="profile-name">{{ user?.username }}</span>
           <i class="material-icons">arrow_drop_down</i>
         </button>
+  <!-- Notification Bell (Separated) -->
+  <div class="notification-dropdown position-relative me-3">
+    <button class="notification-btn d-flex align-items-center" (click)="togglePendingInvitations()">
+      <i class="material-icons">notifications</i>
+      <span *ngIf="pendingInvitations.length > 0" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+        {{ pendingInvitations.length }}
+      </span>
+    </button>
 
-        <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="showProfileDropdown">
-          <a routerLink="/update-profile" class="dropdown-item">
-            <i class="material-icons">settings</i> Profile
-          </a>
-          <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">
-            <i class="material-icons">logout</i> Sign Out
-          </a>
+    <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="isInvitationsVisible" style="min-width: 300px;">
+      <h6 class="dropdown-header">Pending Invitations</h6>
+      <ng-container *ngIf="pendingInvitations.length > 0; else noInvites">
+        <div *ngFor="let invite of pendingInvitations" class="dropdown-item text-wrap">
+          <div><strong>Group:</strong> {{ invite.studyGroup?.name }}</div>
+          <div class="mt-1 d-flex justify-content-end">
+            <button class="btn btn-sm btn-success me-1" (click)="acceptInvitation(invite.id)">✓</button>
+            <button class="btn btn-sm btn-danger" (click)="rejectInvitation(invite.id)">✗</button>
+          </div>
+          <hr class="my-1">
         </div>
-      </div>
+      </ng-container>
+      <ng-template #noInvites>
+        <div class="dropdown-item text-muted">No pending invitations</div>
+      </ng-template>
     </div>
+  </div>
+</div>
+      </div>
+      
 
     <!-- Content Grid -->
     <div class="content-grid container-fluid p-3">
@@ -126,15 +144,14 @@
               <app-task [studyGroupId]="selectedGroup?.id" [invitees]="invitees"></app-task>
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
-              <span class="material-icons align-middle me-2" style="color: #e74c3c;">insert_drive_file</span>
-              Study Resources
+              <h3>Resources</h3>
               <app-ressource
                 [resources]="resources"
                 (refreshRequested)="loadResources()"
                 [studyGroupId]="selectedGroup?.id"
               ></app-ressource>
-              <div class="add-resource-button-container" >
-                <button class="btn btn-link text-primary" (click)="openAddResourceModal()">Upload your resource</button>
+              <div class="add-resource-button-container">
+                <button class="btn btn-primary" (click)="openAddResourceModal()">Add Resource</button>
               </div>
             </div>
 

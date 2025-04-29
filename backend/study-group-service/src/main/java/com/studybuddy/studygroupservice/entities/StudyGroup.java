@@ -20,6 +20,9 @@ public class StudyGroup {
     @Column(name = "owner_user_id")
     private Long ownerUserId;
 
+
+    @ElementCollection
+    private List<Long> participantIds = new ArrayList<>();
     @OneToMany(mappedBy = "studyGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Invitation> invitations = new ArrayList<>();
 }

@@ -25,8 +25,6 @@ export class StudyGroupListComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef; // Reference to the hidden file input
 
   @ViewChild('createGroupModalContainer', { read: ViewContainerRef }) modalContainer!: ViewContainerRef;
-  uploadProgress: number = 0; // Track upload progress
-  downloadProgress: number = 0; // Track download progress
   inviteeEmailOrId: string = ''; // Add this
   errorMessage: string = ''; // Add this to hold error messages
   successMessage: string = '';
@@ -34,6 +32,9 @@ export class StudyGroupListComponent implements OnInit {
   newResource: any = { title: '', fileUrl: '', description: '' };
   selectedFile: File | null = null;
   studyGroups: StudyGroup[] = [];
+  isModalOpen: boolean = false; // Controls modal visibility
+  isInvitationsVisible: boolean = false; // Controls visibility of the dropdown
+
   selectedGroup: StudyGroup | null = null;
   selectedDetailGroup: StudyGroup | null = null;
   searchTerm: string = '';
@@ -45,6 +46,7 @@ export class StudyGroupListComponent implements OnInit {
   chatId: number | null = null;
   loadingChatId: boolean = false;
   invitees: Invitation[] = [];
+  pendingInvitations: Invitation[] = [];
   resources: any[] = [];
   @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
 
@@ -68,10 +70,12 @@ export class StudyGroupListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadPendingInvitations();
+    this.loadUserProfile();
+
     const currentUser = this.authService.getCurrentUser();
     if (currentUser) {
       this.currentUserId = currentUser.id;
-      this.loadUserProfile();
       // Fetch the user's study groups
       this.studyGroupService.getUserGroups(this.currentUserId).subscribe({
         next: (data) => {
@@ -92,7 +96,19 @@ export class StudyGroupListComponent implements OnInit {
         }
       });
     }
-
+    const createGroupModalEl = document.getElementById('createGroupModal');
+    if (createGroupModalEl) {
+      createGroupModalEl.addEventListener('hidden.bs.modal', () => {
+        this.refreshStudyGroups();
+      });
+    }
+    // Add event listener for update modal
+    const updateGroupModalEl = document.getElementById('updateGroupModal');
+    if (updateGroupModalEl) {
+      updateGroupModalEl.addEventListener('hidden.bs.modal', () => {
+        this.refreshStudyGroups();
+      });
+    }
     // Listen for modal close events to refresh study groups
     const inviteModalEl = document.getElementById('inviteModal');
     if (inviteModalEl) {
@@ -108,7 +124,95 @@ export class StudyGroupListComponent implements OnInit {
       });
     }
   }
+  togglePendingInvitations() {
+    this.isInvitationsVisible = !this.isInvitationsVisible;
+  }
+  openModal() {
+    this.isModalOpen = true;
+  }
+  loadPendingInvitations(): void {
+    const currentUser = this.authService.getCurrentUser();
+    
+    // Debugging: Check if the currentUser is correctly fetched
+    console.log('Current User:', currentUser);
+    
+    if (currentUser && currentUser.id) {
+      console.log('Fetching invitations for User ID:', currentUser.id);
+      
+      this.invitationService.getPendingInvitations(currentUser.id).subscribe({
+        next: (invites: Invitation[]) => {
+          // Debugging: Check the invitations returned by the API
+          console.log('Received Invitations:', invites);
+          
+          this.pendingInvitations = invites;
+          this.cdr.detectChanges(); // Optional, helps in manual change detection
+        },
+        error: (err) => {
+          console.error('Failed to load pending invitations', err);
+          this.toastr.error('Could not load pending invitations');
+        }
+      });
+    } else {
+      console.warn('User not authenticated or missing ID');
+    }
+  }
+  acceptInvitation(invitationId: number): void {
+    this.invitationService.acceptInvitation(invitationId).subscribe({
+      next: (updatedInvitation) => {
+        this.toastr.success('Invitation accepted!');
+        
+        // 🔁 Refresh all required data
+        this.refreshAllData(); // This includes groups, chat, tasks, resources
+        this.loadPendingInvitations(); // Make sure invitations update immediately
+      },
+      error: (err) => {
+        console.error('Failed to accept invitation', err);
+        this.toastr.error('Failed to accept invitation');
+      }
+    });
+  }
+  
+  rejectInvitation(invitationId: number): void {
+    this.invitationService.rejectInvitation(invitationId).subscribe({
+      next: () => {
+        this.toastr.info('Invitation rejected');
+        
+        // 🔁 Refresh all required data
+        this.refreshAllData();
+        this.loadPendingInvitations(); // Remove declined invitation from UI
+      },
+      error: (err) => {
+        console.error('Failed to reject invitation', err);
+        this.toastr.error('Failed to reject invitation');
+      }
+    });
+  }
 
+  refreshAllData(): void {
+    this.refreshStudyGroups(); // Refresh study groups
+  
+    setTimeout(() => {
+      if (this.selectedGroup?.id) {
+        // Refresh related data for selected group
+        this.loadInvitees(this.selectedGroup.id);
+        this.loadChatIdForSelectedGroup();
+        this.loadResourcesForSelectedGroup();
+      }
+    }, 100); // Small delay to ensure selectedGroup is updated
+  }
+  loadResourcesForSelectedGroup(): void {
+    if (!this.selectedGroup?.id) return;
+  
+    this.ressourceService.getResourcesByStudyGroupId(this.selectedGroup.id).subscribe({
+      next: (resources) => {
+        this.resources = resources;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to load resources:', err);
+      }
+    });
+  }
   loadInvitees(studyGroupId: number): void {
     this.studyGroupService.getInviteesByStudyGroupId(studyGroupId).subscribe({
       next: async (invitees) => {
@@ -541,7 +645,6 @@ export class StudyGroupListComponent implements OnInit {
   triggerFileInput(): void {
     this.fileInput.nativeElement.click(); // Programmatically trigger the file input dialog
   }
-
   private loadUserProfile(): void {
     console.log('Fetching profile for user:', this.user?.username);
     this.userService.getAllUsers().subscribe({

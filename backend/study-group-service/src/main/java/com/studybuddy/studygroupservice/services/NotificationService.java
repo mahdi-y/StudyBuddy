@@ -37,4 +37,28 @@ public class NotificationService {
             throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
         }
     }
+    public void sendInvitationResponseNotification(String responseStatus, String groupName, String recipientEmail) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(recipientEmail);
+            message.setSubject("Invitation Response: " + responseStatus);
+
+            // Format sender (optional)
+            message.setFrom("StudyBuddy Support <laouiniamen1211@gmail.com>");
+
+            if ("ACCEPTED".equalsIgnoreCase(responseStatus)) {
+                message.setText("Good news! Your invitation to join the study group '" +
+                        groupName + "' has been accepted.");
+            } else if ("REJECTED".equalsIgnoreCase(responseStatus)) {
+                message.setText("Unfortunately, your invitation to join the study group '" +
+                        groupName + "' was declined.");
+            }
+
+            javaMailSender.send(message);
+            System.out.println("Status notification email sent to: " + recipientEmail);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send status notification email: " + e.getMessage(), e);
+        }
+    }
 }

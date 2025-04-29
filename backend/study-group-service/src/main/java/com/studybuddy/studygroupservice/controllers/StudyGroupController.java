@@ -37,7 +37,7 @@ public class StudyGroupController {
     // Get all groups for a user
     @GetMapping("/user/{userId}")
     public List<StudyGroupDTO> getUserGroups(@PathVariable Long userId) {
-        List<StudyGroup> ownedGroups = studyGroupService.getUserGroups(userId);
+        List<StudyGroup> ownedGroups = studyGroupService.getUserGroupsAsEntities(userId); // ✅ Now returns StudyGroup
         List<StudyGroup> invitedGroups = studyGroupService.getGroupsWhereUserIsInvited(userId);
 
         List<StudyGroup> allGroups = Stream.concat(ownedGroups.stream(), invitedGroups.stream())
