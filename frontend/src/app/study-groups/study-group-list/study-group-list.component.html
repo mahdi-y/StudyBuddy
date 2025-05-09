@@ -91,14 +91,6 @@
     <h5 class="mb-0 ms-3">Study Group: {{ selectedGroup?.name || 'Select a Group' }}</h5>
   </div>
 
-      <!-- Profile Dropdown -->
-      <div class="profile-dropdown position-relative">
-        <button class="profile-btn d-flex align-items-center" (click)="toggleProfileDropdown()">
-          <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
-          <span class="profile-name">{{ user?.username }}</span>
-          <i class="material-icons">arrow_drop_down</i>
-        </button>
-  <!-- Notification Bell (Separated) -->
   <div class="notification-dropdown position-relative me-3">
     <button class="notification-btn d-flex align-items-center" (click)="togglePendingInvitations()">
       <i class="material-icons">notifications</i>
@@ -106,12 +98,11 @@
         {{ pendingInvitations.length }}
       </span>
     </button>
-
     <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="isInvitationsVisible" style="min-width: 300px;">
       <h6 class="dropdown-header">Pending Invitations</h6>
       <ng-container *ngIf="pendingInvitations.length > 0; else noInvites">
         <div *ngFor="let invite of pendingInvitations" class="dropdown-item text-wrap">
-          <div><strong>Group:</strong> {{ invite.studyGroup?.name }}</div>
+          <div><strong>Group:</strong> {{ invite.studyGroup.name }}</div>
           <div class="mt-1 d-flex justify-content-end">
             <button class="btn btn-sm btn-success me-1" (click)="acceptInvitation(invite.id)">✓</button>
             <button class="btn btn-sm btn-danger" (click)="rejectInvitation(invite.id)">✗</button>
@@ -124,9 +115,29 @@
       </ng-template>
     </div>
   </div>
+
+  <!-- Profile Dropdown -->
+  <div class="profile-dropdown position-relative">
+    <button class="profile-btn d-flex align-items-center" (click)="toggleProfileDropdown()">
+      <img [src]="user?.profilePicture || 'assets/backoffice/images/profile.jpg'" alt="Profile" class="profile-img">
+      <span class="profile-name">{{ user?.username }}</span>
+      <i class="material-icons">arrow_drop_down</i>
+    </button>
+    <div class="dropdown-menu position-absolute end-0 mt-2" [class.show]="showProfileDropdown">
+      <a routerLink="/update-profile" class="dropdown-item">
+        <i class="material-icons">settings</i> Profile
+      </a>
+      <a href="#" class="dropdown-item" (click)="logout(); $event.preventDefault();">
+        <i class="material-icons">logout</i> Sign Out
+      </a>
+    </div>
+  </div>
+
+
+  <!-- Notification Bell (Separated) -->
 </div>
-      </div>
-      
+
+
 
     <!-- Content Grid -->
     <div class="content-grid container-fluid p-3">
@@ -144,15 +155,16 @@
               <app-task [studyGroupId]="selectedGroup?.id" [invitees]="invitees"></app-task>
             </div>
             <div class="resources-container border rounded p-3 flex-grow-1">
-              <h3>Resources</h3>
+<!--              <h3>Resources</h3>-->
+              <span class="material-icons align-middle me-2" style="color: #e74c3c;">insert_drive_file</span>
+              Study Resources
+                <button class="btn btn-link text-primary" style="margin-top: -1%; margin-left: 25%" (click)="openAddResourceModal()">Upload your resource</button>
               <app-ressource
                 [resources]="resources"
                 (refreshRequested)="loadResources()"
                 [studyGroupId]="selectedGroup?.id"
               ></app-ressource>
-              <div class="add-resource-button-container">
-                <button class="btn btn-primary" (click)="openAddResourceModal()">Add Resource</button>
-              </div>
+
             </div>
 
           </div>

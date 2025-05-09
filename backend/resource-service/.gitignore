@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore application.properties
+src/main/resources/resource.properties
+backend/chat-service/src/main/resources/resource.properties

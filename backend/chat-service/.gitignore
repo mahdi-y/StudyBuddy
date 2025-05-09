@@ -5,8 +5,8 @@ target/
 !**/src/test/**/target/
 
 # Ignore application.properties
-src/main/resources/neutrino.properties
-backend/chat-service/src/main/resources/neutrino.properties
+src/main/resources/chat.properties
+backend/chat-service/src/main/resources/chat.properties
 
 ### STS ###
 .apt_generated

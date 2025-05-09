@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, SimpleChanges, OnChanges} from '@angular/core';
 import { RessourceService } from 'src/app/services/ressource.service';
 import { Ressource } from 'src/app/models/resource.model';
 
@@ -7,7 +7,7 @@ import { Ressource } from 'src/app/models/resource.model';
   templateUrl: './ressource.component.html',
   styleUrls: ['./ressource.component.css']
 })
-export class RessourceComponent implements OnInit {
+export class RessourceComponent implements OnInit, OnChanges {
   @Input() resources: Ressource[] = []; // This receives resources from the parent
   @Input() studyGroupId: number | undefined; // Study Group ID passed from the parent
   @Output() refreshRequested = new EventEmitter<void>(); // This will emit the refresh request

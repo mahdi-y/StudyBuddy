@@ -29,6 +29,7 @@ export class AddTaskComponent implements OnInit {
   @Input() studyGroupId!: number | undefined;
   @Output() taskAdded = new EventEmitter<void>();
   @Input() invitees: any[] = [];
+  today: string = new Date().toISOString().split('T')[0];
 
   usersInStudyGroup: any[] = []; // Array to store users in the study group
   selectedAssignedTo: number | null = null; // ID of the user selected for assignment
@@ -146,5 +147,9 @@ export class AddTaskComponent implements OnInit {
 
   private formatDueDate(date: string): string {
     return new Date(date).toISOString();
+  }
+
+  hasSelectedOrCreatedProgress(): boolean {
+    return this.newTask.progressId !== null || !!this.newProgressName?.trim();
   }
 }

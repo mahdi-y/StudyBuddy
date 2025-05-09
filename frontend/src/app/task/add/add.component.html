@@ -9,7 +9,12 @@
       class="form-control"
       [(ngModel)]="newTask.title"
       required
+      placeholder="Enter task title"
+      #title="ngModel"
     />
+    <div *ngIf="title.invalid && title.touched" class="form-text text-danger">
+      Title is required.
+    </div>
   </div>
 
   <!-- Description Field -->
@@ -22,7 +27,11 @@
       rows="3"
       [(ngModel)]="newTask.description"
       required
+      #description="ngModel"
     ></textarea>
+    <div *ngIf="description.invalid && description.touched" class="form-text text-danger">
+      Description is required.
+    </div>
   </div>
 
   <!-- Due Date Field -->
@@ -35,7 +44,12 @@
       class="form-control"
       [(ngModel)]="newTask.dueDate"
       required
+      [min]="today"
+      #dueDate="ngModel"
     />
+    <div *ngIf="dueDate.invalid && dueDate.touched" class="form-text text-danger">
+      Due date is required.
+    </div>
   </div>
 
   <!-- Select Existing Progress -->
@@ -53,6 +67,7 @@
           {{ progress.name }}
         </option>
       </select>
+
       <input
         type="text"
         id="newProgressName"
@@ -63,6 +78,17 @@
         [required]="newTask.progressId === null"
       />
     </div>
+
+    <div *ngIf="taskForm.submitted && !hasSelectedOrCreatedProgress()" class="text-danger mb-2">
+      Please select an existing progress or enter a new one.
+    </div>
+
+
+    <!-- Validation: Both Filled -->
+    <div *ngIf="!isProgressExclusive()" class="text-danger mb-2">
+      You cannot select an existing progress and enter a new one at the same time.
+    </div>
+
   </div>
 
   <div class="mb-3">

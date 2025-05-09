@@ -132,18 +132,18 @@ export class StudyGroupListComponent implements OnInit {
   }
   loadPendingInvitations(): void {
     const currentUser = this.authService.getCurrentUser();
-    
+
     // Debugging: Check if the currentUser is correctly fetched
     console.log('Current User:', currentUser);
-    
+
     if (currentUser && currentUser.id) {
       console.log('Fetching invitations for User ID:', currentUser.id);
-      
+
       this.invitationService.getPendingInvitations(currentUser.id).subscribe({
         next: (invites: Invitation[]) => {
           // Debugging: Check the invitations returned by the API
           console.log('Received Invitations:', invites);
-          
+
           this.pendingInvitations = invites;
           this.cdr.detectChanges(); // Optional, helps in manual change detection
         },
@@ -160,7 +160,7 @@ export class StudyGroupListComponent implements OnInit {
     this.invitationService.acceptInvitation(invitationId).subscribe({
       next: (updatedInvitation) => {
         this.toastr.success('Invitation accepted!');
-        
+
         // 🔁 Refresh all required data
         this.refreshAllData(); // This includes groups, chat, tasks, resources
         this.loadPendingInvitations(); // Make sure invitations update immediately
@@ -171,12 +171,12 @@ export class StudyGroupListComponent implements OnInit {
       }
     });
   }
-  
+
   rejectInvitation(invitationId: number): void {
     this.invitationService.rejectInvitation(invitationId).subscribe({
       next: () => {
         this.toastr.info('Invitation rejected');
-        
+
         // 🔁 Refresh all required data
         this.refreshAllData();
         this.loadPendingInvitations(); // Remove declined invitation from UI
@@ -190,7 +190,7 @@ export class StudyGroupListComponent implements OnInit {
 
   refreshAllData(): void {
     this.refreshStudyGroups(); // Refresh study groups
-  
+
     setTimeout(() => {
       if (this.selectedGroup?.id) {
         // Refresh related data for selected group
@@ -202,7 +202,7 @@ export class StudyGroupListComponent implements OnInit {
   }
   loadResourcesForSelectedGroup(): void {
     if (!this.selectedGroup?.id) return;
-  
+
     this.ressourceService.getResourcesByStudyGroupId(this.selectedGroup.id).subscribe({
       next: (resources) => {
         this.resources = resources;
@@ -461,6 +461,7 @@ export class StudyGroupListComponent implements OnInit {
     // Load invitees for the selected study group
     if (this.selectedGroup && this.selectedGroup.id) {
       this.loadInvitees(this.selectedGroup.id);
+
     }
     // Load the chat ID for the selected study group
     this.loadChatIdForSelectedGroup();

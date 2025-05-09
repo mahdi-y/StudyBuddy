@@ -70,6 +70,7 @@ export class TaskComponent implements OnInit, OnChanges {
 
       // Clear existing data before loading new progresses
       this.progresses = [];
+      this.filteredTasks = [];
       this.loadProgressesForGroup(this.studyGroupId);
     }
 
@@ -132,16 +133,19 @@ export class TaskComponent implements OnInit, OnChanges {
 
   loadTasksForAllProgresses(): void {
     this.isLoading = true;
-
     const taskObservables = this.progresses.map(progress =>
       this.taskService.getTasksByProgressId(progress.id)
     );
-
     forkJoin(taskObservables).subscribe({
       next: (allTasksArrays) => {
         this.tasks = allTasksArrays.flat();
         this.filterTasksForCurrentUser(); // Filter tasks after loading
         this.isLoading = false;
+
+        // Check if there are no tasks for the current user
+        if (this.filteredTasks.length === 0) {
+          console.log('No tasks available for the current user.');
+        }
       },
       error: (err) => {
         console.error('Failed to load tasks for one or more progresses:', err);
@@ -150,15 +154,18 @@ export class TaskComponent implements OnInit, OnChanges {
     });
   }
 
-
   loadTasksForProgress(progressId: number): void {
     this.isLoading = true;
-
     this.taskService.getTasksByProgressId(progressId).subscribe({
       next: (tasks) => {
         this.tasks = tasks;
         this.filterTasksForCurrentUser(); // Filter tasks after loading
         this.isLoading = false;
+
+        // Check if there are no tasks for the current user
+        if (this.filteredTasks.length === 0) {
+          console.log('No tasks available for the current user.');
+        }
       },
       error: (err) => {
         console.error('Failed to load tasks for progress ID:', progressId, err);

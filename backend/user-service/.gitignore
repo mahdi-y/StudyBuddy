@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore application.properties
+src/main/resources/user.properties
+backend/user-service/src/main/resources/user.properties
+
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+
