@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
+@PropertySource("classpath:user.properties")
 public class JWTService {
 
-	public static final String SECRET = "404D635166546A576E5A7234753778214125442A472D4B6150645267556B5870";
+	@Value("${jwt.code}")
+	private String jwtSecret;
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -54,7 +58,6 @@ public class JWTService {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
-	// 🔽 Updated method to accept id
 	public String generateToken(String username, Integer userId, String role) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("id", userId);      // Include user ID
@@ -75,7 +78,7 @@ public class JWTService {
 	}
 
 	private Key getSignKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+		byte[] keyBytes = Decoders.BASE64.decode(jwtSecret); // Now uses injected value
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 }
