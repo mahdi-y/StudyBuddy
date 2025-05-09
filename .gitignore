@@ -2,3 +2,6 @@ src/main/resources/neutrino.properties
 backend/chat-service/src/main/resources/neutrino.properties
 
 backend/task-service/src/main/resources/openrouter.properties
+backend/user-service/src/main/resources/user.properties
+backend/study-group-service/src/main/resources/studygroup.properties
+backend/resource-service/src/main/resources/resource.properties
