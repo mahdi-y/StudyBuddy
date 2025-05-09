@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore application.properties
+src/main/resources/task.properties
+backend/task-service/src/main/resources/task.properties
