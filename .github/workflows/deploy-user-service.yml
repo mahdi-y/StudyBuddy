@@ -15,6 +15,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Decode Kubeconfig
+        run: echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
@@ -29,5 +32,5 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f backend/user-service/user-service-deployment.yaml --dry-run=client
+          kubectl apply -f backend/user-service/user-service-deployment.yaml
           kubectl apply -f backend/user-service/user-service-service.yaml
