@@ -18,7 +18,7 @@ jobs:
       - name: Set up Kubeconfig
         uses: azure/setup-kubectl@v1
         with:
-          kubeconfig: ${{ secrets.KUBECONFIG }}
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
