@@ -21,7 +21,7 @@ import io.jsonwebtoken.security.Keys;
 @PropertySource("classpath:user.properties")
 public class JWTService {
 
-	@Value("${jwt.code}")
+	@Value("${JWT_CODE}")
 	private String jwtSecret;
 
 	public String extractUsername(String token) {

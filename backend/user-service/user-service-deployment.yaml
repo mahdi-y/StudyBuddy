@@ -2,8 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
+  labels:
+    app: user-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: user-service
@@ -16,7 +18,40 @@ spec:
         - name: user-service
           image: bapo12/user-service:latest
           ports:
-            - containerPort: 8083  # Updated from 8080 to 8083
-          envFrom:
-            - secretRef:
-                name: user-service-secrets #name and surname and other stuff
+            - containerPort: 8083
+          env:
+            # DB Credentials
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: db.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: db.password
+
+            # JWT Secret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: jwt.code
+
+            # Twilio Secrets
+            - name: TWILIO_SID
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: twilio.sid
+            - name: TWILIO_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: twilio.token
+            - name: TWILIO_PHONE
+              valueFrom:
+                secretKeyRef:
+                  name: user-service-secrets
+                  key: twilio.phone
