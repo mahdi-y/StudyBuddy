@@ -19,4 +19,4 @@ spec:
             - containerPort: 8083  # Updated from 8080 to 8083
           envFrom:
             - secretRef:
-                name: user-service-secrets
+                name: user-service-secrets #name
