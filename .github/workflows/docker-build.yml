@@ -2,7 +2,7 @@ name: Build and Push user-service Docker Image
 
 on:
   push:
-    branches: [ main ]
+    branches: [ production ]
     paths:
       - 'backend/user-service/**'   # Only run when user-service changes
 
