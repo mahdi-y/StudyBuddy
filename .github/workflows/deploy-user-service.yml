@@ -32,5 +32,5 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f backend/user-service/user-service-deployment.yaml
+          kubectl apply -f backend/user-service/user-service-deployment.yaml --dry-run=client
           kubectl apply -f backend/user-service/user-service-service.yaml
