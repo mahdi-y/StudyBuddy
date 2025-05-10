@@ -15,9 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Decode Kubeconfig
-        run: echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > /root/.kube/config
-
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
@@ -27,6 +24,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
       - name: Test Kubernetes connection
         run: kubectl cluster-info
 
@@ -34,7 +37,3 @@ jobs:
         run: |
           kubectl apply -f backend/user-service/user-service-deployment.yaml --validate=false
           kubectl apply -f backend/user-service/user-service-service.yaml --validate=false
-            
-             
-              
-               
