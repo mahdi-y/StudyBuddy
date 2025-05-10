@@ -1,0 +1,38 @@
+name: Deploy User Service to Kubernetes
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Create kubeconfig from secret
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_DATA }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Test kubectl access
+        run: |
+          kubectl config view
+          kubectl get nodes
+
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f backend/user-service/user-service-deployment.yaml
+          kubectl apply -f backend/user-service/user-service-service.yaml
+
+      - name: Show deployed services
+        run: |
+          kubectl get pods,svc

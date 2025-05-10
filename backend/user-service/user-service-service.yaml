@@ -3,11 +3,10 @@ kind: Service
 metadata:
   name: user-service
 spec:
+  type: NodePort
+  ports:
+    - port: 8083           # Port exposed by the service
+      targetPort: 8083     # Matches containerPort
+      nodePort: 30083      # Optional: fixed external port (must be between 30000-32767)
   selector:
     app: user-service
-  ports:
-    - protocol: TCP
-      port: 8083           # Exposed service port
-      targetPort: 8083     # Container port
-      nodePort: 30083      # Exposed on the node
-  type: NodePort
