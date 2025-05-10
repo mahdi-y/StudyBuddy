@@ -3,7 +3,7 @@ name: Build GitHub Actions Runner Image
 on:
   push:
     branches:
-      - main  # Trigger the workflow when changes are pushed to the `main` branch
+      - main
   pull_request:
     branches:
       - main  # Trigger the workflow on PR to `main` branch
