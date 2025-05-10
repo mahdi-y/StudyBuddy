@@ -34,3 +34,7 @@ jobs:
         run: |
           kubectl apply -f backend/user-service/user-service-deployment.yaml --validate=false
           kubectl apply -f backend/user-service/user-service-service.yaml --validate=false
+            
+             
+              
+               
