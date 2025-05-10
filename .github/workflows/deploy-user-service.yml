@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Decode Kubeconfig
-        run: echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+        run: echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > /root/.kube/config
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
