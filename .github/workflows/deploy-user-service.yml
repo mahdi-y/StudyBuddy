@@ -1,0 +1,22 @@
+name: Deploy User Service to Kubernetes
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+
+      - name: Deploy user-service
+        run: |
+          kubectl apply -f backend/user-service/user-service-deployment.yaml
+          kubectl apply -f backend/user-service/user-service-service.yaml

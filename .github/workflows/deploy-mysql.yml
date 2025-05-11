@@ -1,0 +1,23 @@
+name: Deploy MySQL for User Service
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-mysql:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" > ~/.kube/config
+
+      - name: Deploy PVC, Deployment, and Service
+        run: |
+          kubectl apply -f backend/user-service/mysql/mysql-pvc.yaml
+          kubectl apply -f backend/user-service/mysql/mysql-deployment.yaml
+          kubectl apply -f backend/user-service/mysql/mysql-service.yaml
