@@ -1,7 +1,10 @@
 name: Deploy User Service to Kubernetes
 
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy MySQL for User Service"]
+    types:
+      - completed
 
 jobs:
   deploy:
