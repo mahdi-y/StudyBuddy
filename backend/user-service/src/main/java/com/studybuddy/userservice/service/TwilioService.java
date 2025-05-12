@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:user.properties")
+//@PropertySource("classpath:user.properties")
 public class TwilioService {
 
     @Value("${twilio.account.sid}")
