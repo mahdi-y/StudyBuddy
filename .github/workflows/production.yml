@@ -21,11 +21,14 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Deploy MySQL PVC, Deployment, and Service
+      - name: Deploy MySQL for User and Study Group Services
         run: |
           kubectl apply -f backend/user-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/user-service/mysql/mysql-deployment.yaml --validate=false
           kubectl apply -f backend/user-service/mysql/mysql-service.yaml --validate=false
+          kubectl apply -f backend/study-group-service/mysql/mysql-pvc.yaml --validate=false
+          kubectl apply -f backend/study-group-service/mysql/mysql-deployment.yaml --validate=false
+          kubectl apply -f backend/study-group-service/mysql/mysql-service.yaml --validate=false
 
   build-user-service:
     runs-on: self-hosted
@@ -60,6 +63,39 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
 
+  build-study-group-service:
+    runs-on: self-hosted
+    needs: deploy-mysql
+    defaults:
+      run:
+        working-directory: backend/study-group-service
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Spring Boot JAR
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend/study-group-service
+          file: backend/study-group-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
+
   deploy-user-service:
     runs-on: self-hosted
     needs: build-user-service
@@ -73,28 +109,60 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Force Redeploy by Updating Environment Variable
+      - name: Force Redeploy by Updating Env
         id: vars
         run: |
           echo "REVISION=$(date +%s)" >> $GITHUB_ENV
 
-      - name: Apply User Service Deployment with Cache Busting
+      - name: Apply Deployment
         env:
           REVISION: ${{ env.REVISION }}
         run: |
           sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
 
-      - name: Apply User Service Service
+      - name: Apply Service
         run: |
           kubectl apply -f backend/user-service/user-service-service.yaml
 
-      - name: Wait for Deployment Rollout
+      - name: Wait for Rollout
         run: |
           kubectl rollout status deployment/user-service --timeout=60s
 
+  deploy-study-group-service:
+    runs-on: self-hosted
+    needs: build-study-group-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Env
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-service-deployment.yaml | kubectl apply -f -
+
+      - name: Apply Service
+        run: |
+          kubectl apply -f backend/study-group-service/study-group-service-service.yaml
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/study-group-service --timeout=60s
+
   build-frontend:
     runs-on: self-hosted
-    needs: deploy-user-service
+    needs: [deploy-user-service, deploy-study-group-service]
     defaults:
       run:
         working-directory: frontend
@@ -134,17 +202,17 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
 
-      - name: Force Redeploy by Updating Environment Variable
+      - name: Force Redeploy by Updating Env
         id: vars
         run: |
           echo "REVISION=$(date +%s)" >> $GITHUB_ENV
 
-      - name: Apply Frontend Deployment with Cache Busting
+      - name: Apply Frontend Deployment
         env:
           REVISION: ${{ env.REVISION }}
         run: |
           sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" frontend/frontend-deployment.yaml | kubectl apply -f -
 
-      - name: Wait for Frontend Deployment Rollout
+      - name: Wait for Rollout
         run: |
           kubectl rollout status deployment/frontend --timeout=60s

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: study-group-service
+  labels:
+    app: study-group-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: study-group-service
+  template:
+    metadata:
+      labels:
+        app: study-group-service
+    spec:
+      containers:
+        - name: study-group-service
+          image: bapo12/study-group-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8081
+          env:
+            - name: REVISION
+              value: "REVISION"
+
+            # Database Credentials
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: study-group-secrets
+                  key: db.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: study-group-secrets
+                  key: db.password
+
+            # OpenAI Key
+            - name: OPENAI_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: study-group-secrets
+                  key: openai.key
+
+            # Mail credentials
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: study-group-secrets
+                  key: mail.username
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: study-group-secrets
+                  key: mail.password
