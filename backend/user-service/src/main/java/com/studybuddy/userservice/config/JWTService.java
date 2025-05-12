@@ -18,7 +18,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 @Service
-@PropertySource("classpath:user.properties")
+//@PropertySource("classpath:user.properties")
 public class JWTService {
 
 	@Value("${JWT_CODE}")
