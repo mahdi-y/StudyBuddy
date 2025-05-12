@@ -4,7 +4,7 @@ on:
   push:
     branches: [ production ]
     paths:
-      - 'backend/user-service/**'   # Only run when user-service changes
+      - 'backend/user-service/**'
 
 jobs:
   deploy:
@@ -18,8 +18,30 @@ jobs:
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
 
-      - name: Deploy user-service
+      - name: Force Redeploy by Updating Environment Variable
+        id: vars
         run: |
-          kubectl apply -f backend/user-service/user-service-deployment.yaml --validate=false
-          kubectl apply -f backend/user-service/user-service-service.yaml --validate=false
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply MySQL Manifests (if needed)
+        run: |
+          kubectl apply -f backend/user-service/mysql/mysql-pvc.yaml
+          kubectl apply -f backend/user-service/mysql/mysql-service.yaml
+          kubectl apply -f backend/user-service/mysql/mysql-deployment.yaml
+
+      - name: Apply User Service Deployment with Cache Busting
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          # Replace REVISION placeholder in Deployment YAML
+          sed "s/REVISION/${{ env.REVISION }}/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
+
+      - name: Apply User Service Service
+        run: |
+          kubectl apply -f backend/user-service/user-service-service.yaml
+
+      - name: Wait for Deployment Rollout
+        run: |
+          kubectl rollout status deployment/user-service --timeout=60s
