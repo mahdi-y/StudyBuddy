@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-reset-password',
@@ -15,6 +16,7 @@ export class ResetPasswordComponent {
   confirmPassword: string = '';
   isPasswordMatch: boolean = true;
 error: any;
+
   constructor(private http: HttpClient, private router: Router) {}
 
   resetPassword() {
@@ -24,12 +26,12 @@ error: any;
       newPassword: this.newPassword
     };
 
-    this.http.post('http://localhost:8083/api/auth/reset-password', resetData)
+    this.http.post(`${environment.authApiUrl}/reset-password`, resetData)
       .subscribe({
         next: (response: any) => {
           this.isSuccess = true;
           this.message = 'Password reset successful! Redirecting...';
-          
+
           // Navigate after 2 seconds
           setTimeout(() => {
             this.router.navigate(['/login']);

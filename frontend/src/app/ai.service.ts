@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AiService {
-  private apiUrl = 'http://localhost:9098/api/ai/generate'; // adjust if needed
+
   constructor(private http: HttpClient) {}
 
   generateAIResponse(prompt: string, pageContent: string): Observable<string> {
@@ -15,7 +16,7 @@ export class AiService {
     });
 
     return this.http.post(
-      this.apiUrl,
+      environment.apiUrlAi,
       {
         prompt,
         context: pageContent // Send page content as context

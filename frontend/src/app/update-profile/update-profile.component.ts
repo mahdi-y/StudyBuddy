@@ -4,7 +4,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { LocalStorageService } from '../services/local-storage.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { Router } from '@angular/router'; // Import the Router service
+import { Router } from '@angular/router';
+import {environment} from "../../environments/environment"; // Import the Router service
 
 
 @Component({
@@ -19,9 +20,6 @@ export class UpdateProfileComponent implements OnInit {
   messageType: 'success' | 'error' | 'info' = 'info';
   selectedFile: File | null = null;
   isLoading = false;
-
-  private apiUrl = 'http://localhost:8083/api/users';
-  private uploadUrl = 'http://localhost:8083/Upload';
 
   constructor(
     private http: HttpClient,
@@ -57,7 +55,7 @@ export class UpdateProfileComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get(`${this.apiUrl}/me`, { headers }).pipe(
+    this.http.get(`${environment.apiUrlUser}/me`, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Failed to fetch user details:', error);
@@ -128,7 +126,7 @@ export class UpdateProfileComponent implements OnInit {
     });
 
     // Update user data
-    this.http.put(`${this.apiUrl}/me`, updateData, { headers }).pipe(
+    this.http.put(`${environment.apiUrlUser}/me`, updateData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Update failed:', error);
@@ -164,7 +162,7 @@ export class UpdateProfileComponent implements OnInit {
       // Don't set Content-Type - let browser set it with boundary
     });
 
-    this.http.post(this.uploadUrl, uploadFormData, { headers }).pipe(
+    this.http.post(environment.uploadUrl, uploadFormData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Profile picture upload failed:', error);

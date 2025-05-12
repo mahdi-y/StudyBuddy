@@ -5,6 +5,7 @@ import { LocalStorageService } from '../services/local-storage.service';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-update-admin',
@@ -19,18 +20,16 @@ export class UpdateAdminComponent implements OnInit {
   messageType: 'success' | 'error' | 'info' = 'info';
   selectedFile: File | null = null;
   isLoading = false;
-  
-  private apiUrl = 'http://localhost:8083/api/users';
-  private uploadUrl = 'http://localhost:8083/Upload';
+
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
     private storage: LocalStorageService
   ) {
     this.updateForm = new FormGroup({
        // Username typically shouldn't be editable
-      
+
       address: new FormControl('', [Validators.required, Validators.email]),
       mobileNo: new FormControl('', [
         Validators.pattern(/^\+[1-9]\d{1,14}$/) // E.164 format
@@ -57,7 +56,7 @@ export class UpdateAdminComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    this.http.get(`${this.apiUrl}/me`, { headers }).pipe(
+    this.http.get(`${environment.apiUrlUser}/me`, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Failed to fetch user details:', error);
@@ -76,7 +75,7 @@ export class UpdateAdminComponent implements OnInit {
         this.user = user;
         this.updateForm.patchValue({
           username: user.username,
-          
+
           address: user.address || '',
           mobileNo: user.mobileNo || '',
           age: user.age || ''
@@ -90,7 +89,7 @@ export class UpdateAdminComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.selectedFile = input.files[0];
-      
+
       // Preview the image
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -106,29 +105,29 @@ export class UpdateAdminComponent implements OnInit {
       this.showMessage('Please fill out the form correctly.', 'error');
       return;
     }
-  
+
     const token = this.storage.get('auth-token');
     if (!token) {
       this.showMessage('Session expired. Please log in again.', 'error');
       return;
     }
-  
+
     this.isLoading = true;
-    
+
     // Prepare the update data
     const updateData = {
       address: this.updateForm.value.address,
       mobileNo: this.updateForm.value.mobileNo,
       age: this.updateForm.value.age ? Number(this.updateForm.value.age) : null
     };
-  
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  
+
     // Update user data
-    this.http.put(`${this.apiUrl}/me`, updateData, { headers }).pipe(
+    this.http.put(`${environment.apiUrlUser}/me`, updateData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Update failed:', error);
@@ -144,7 +143,7 @@ export class UpdateAdminComponent implements OnInit {
           this.isLoading = false;
           this.showMessage('Profile updated successfully!', 'success');
           this.loadUserProfile(); // Refresh data
-  
+
           // Redirect to study-group page after successful profile update
           this.router.navigate(['/dashboard']); // Assuming the route is "/study-group"
         }
@@ -164,7 +163,7 @@ export class UpdateAdminComponent implements OnInit {
       // Don't set Content-Type - let browser set it with boundary
     });
 
-    this.http.post(this.uploadUrl, uploadFormData, { headers }).pipe(
+    this.http.post(environment.uploadUrl, uploadFormData, { headers }).pipe(
       catchError((error: HttpErrorResponse) => {
         this.isLoading = false;
         console.error('Profile picture upload failed:', error);

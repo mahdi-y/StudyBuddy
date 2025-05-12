@@ -12,7 +12,8 @@ public class UserClient {
     private final RestTemplate restTemplate;
 
     public Long getUserIdByEmail(String email) {
-        String url = "http://localhost:8080/api/users/email/" + email; // <--- Change port if needed
+        String url = "http://user-service:8080/api/users/email/" + email;
+
         UserDTO user = restTemplate.getForObject(url, UserDTO.class);
 
         if (user == null) {

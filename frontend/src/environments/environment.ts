@@ -1,7 +1,21 @@
-// src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8082',
-  apiUrlUser: 'http://localhost:8083',
-  websocketUrl: 'ws://localhost:8082',  // Use 'ws://' for WebSocket
+  apiUrl: '/api/chat',
+  apiUrlUser: '/api/users',
+  websocketUrl: '/ws/chat',
+  authApiUrl: '/api/auth',
+  authApiUrlService: '/api',
+  baseUrlFlashcard: '/api/flashcards',
+  apiUrlInvites: '/api/invitations',
+  notificationApiUrl: '/api/notifications/send',
+  apiUrlResources: '/api/ressources',
+  studyGroupApiUrl: '/api',
+  apiUrlGroups: '/api/groups',
+  openAiApiUrl: '/api/openai',
+  baseUrlUser: '/',
+  uploadUrl: '/api/Upload',
+  apiUrlAi: '/api/ai/generate',
+  apiUrlProgress: '/api/progress',
+  apiUrlTask: '/api/task',
+  apiUrlP: '/api',
 };

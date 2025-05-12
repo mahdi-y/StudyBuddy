@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, tap} from 'rxjs';
-import { Task } from 'src/app/task/task.model';  // We'll define this model shortly
+import { Task } from 'src/app/task/task.model';
+import {environment} from "../environments/environment";  // We'll define this model shortly
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:9098/api/task';
-  private apiUrlP = 'http://localhost:9098/api'; // Base URL
+// Base URL
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class TaskService {
     // Remove studyGroupId from the body since we're sending it in headers
     const { studyGroupId, ...body } = task;
 
-    return this.http.post<Task>(`${this.apiUrl}/add`, body, { headers });
+    return this.http.post<Task>(`${environment.apiUrlTask}/add`, body, { headers });
   }
 
 // Get all progress entries
@@ -33,27 +33,27 @@ export class TaskService {
 
   // Get all tasks
   getAllTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.apiUrl}/tasks`);  // Add /tasks to the URL
+    return this.http.get<Task[]>(`${environment.apiUrlTask}/tasks`);  // Add /tasks to the URL
   }
   // Get task by ID
   getTask(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.apiUrl}/get/${id}`);
+    return this.http.get<Task>(`${environment.apiUrlTask}/get/${id}`);
   }
 
   // Update a task
   updateTask(id: number, task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/update/${id}`, task);
+    return this.http.put<Task>(`${environment.apiUrlTask}/update/${id}`, task);
   }
 
   // Delete a task
   deleteTask(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
+    return this.http.delete<void>(`${environment.apiUrlTask}/delete/${id}`);
   }
 
   getTasksByProgressId(progressId: number): Observable<Task[]> {
     console.log('Fetching tasks for progress ID:', progressId);
 
-    return this.http.get<Task[]>(`${this.apiUrl}/by-progress/${progressId}`).pipe(
+    return this.http.get<Task[]>(`${environment.apiUrlTask}/by-progress/${progressId}`).pipe(
       tap((tasks) => {
         console.log('Received tasks:', tasks);
       }),

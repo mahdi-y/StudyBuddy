@@ -1,0 +1,36 @@
+name: Deploy Frontend to Kubernetes
+
+on:
+  push:
+    branches: [ production ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Environment Variable
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Frontend Deployment with Cache Busting
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" frontend/deployment.yaml | kubectl apply -f -
+
+      - name: Wait for Frontend Deployment Rollout
+        run: |
+          kubectl rollout status deployment/frontend --timeout=60s

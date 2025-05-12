@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Validated
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/ressources")
 public class RessourceController {

@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/invitations")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200") // if needed for frontend
 public class InvitationController {
 
     private final InvitationService invitationService;

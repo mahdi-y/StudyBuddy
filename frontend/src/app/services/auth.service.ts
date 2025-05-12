@@ -6,12 +6,13 @@ import { LoginRequest } from '../models/login-request';
 import { LoginResponse } from '../models/login-response';
 import { SignupResponse } from '../models/signup-response';
 import { LocalStorageService } from './local-storage.service';
+import {environment} from "../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private apiUrl = 'http://localhost:8083/api';
 
-    constructor(private http: HttpClient, private storage: LocalStorageService) {
+
+  constructor(private http: HttpClient, private storage: LocalStorageService) {
     }
 
   register(request: SignupRequest): Observable<SignupResponse> {
@@ -27,11 +28,11 @@ export class AuthService {
     if (request.profilePicture) {
       formData.append('profilePicture', request.profilePicture);
     }
-    return this.http.post<SignupResponse>(`${this.apiUrl}/doRegister`, formData);
+    return this.http.post<SignupResponse>(`${environment.authApiUrlService}/doRegister`, formData);
   }
 
   login(username: string, password: string, request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/doLogin`, request);
+    return this.http.post<LoginResponse>(`${environment.authApiUrlService}/doLogin`, request);
   }
 
   getCurrentUser(): {
@@ -57,14 +58,14 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/forgotPassword`, email, { responseType: 'text' as 'json' });
+    return this.http.post<string>(`${environment.authApiUrlService}/forgotPassword`, email, { responseType: 'text' as 'json' });
   }
 
   validateResetToken(token: string): Observable<string> {
-    return this.http.get<string>(`${this.apiUrl}/validateResetToken`, { params: { token }, responseType: 'text' as 'json' });
+    return this.http.get<string>(`${environment.authApiUrlService}/validateResetToken`, { params: { token }, responseType: 'text' as 'json' });
   }
 
   resetPassword(token: string, newPassword: string): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/resetPassword`, { token, newPassword }, { responseType: 'text' as 'json' });
+    return this.http.post<string>(`${environment.authApiUrlService}/resetPassword`, { token, newPassword }, { responseType: 'text' as 'json' });
   }
 }

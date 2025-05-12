@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-request-reset',
@@ -11,11 +12,12 @@ export class RequestResetComponent {
 msg: any;
 error: any;
 
+
   constructor(private http: HttpClient) {}
 
   requestReset() {
-    console.log('Sending request to http://localhost:8083/api/auth/request-reset with username:', this.username);
-    this.http.post('http://localhost:8083/api/auth/request-reset', this.username)
+    console.log(`Sending request to ${environment.authApiUrl}/request-reset with username:`, this.username);
+    this.http.post(`${environment.authApiUrl}/request-reset`, this.username)
       .subscribe({
         next: (response: any) => {
           this.message = response;
