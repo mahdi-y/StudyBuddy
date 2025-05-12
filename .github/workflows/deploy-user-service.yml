@@ -1,10 +1,10 @@
 name: Deploy User Service to Kubernetes
 
 on:
-  push:
-    branches: [ production ]
-    paths:
-      - 'backend/user-service/**'   # Only run when user-service changes
+  workflow_run:
+    workflows: ["Build and Push user-service Docker Image"]
+    types:
+      - completed
 
 jobs:
   deploy:
@@ -19,7 +19,11 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
-      - name: Deploy user-service
+      - name: Force Kubernetes to pull the latest image
+        run: |
+          kubectl set image deployment/user-service user-service=bapo12/user-service:latest --record
+
+      - name: Apply Kubernetes manifests
         run: |
           kubectl apply -f backend/user-service/user-service-deployment.yaml --validate=false
           kubectl apply -f backend/user-service/user-service-service.yaml --validate=false
