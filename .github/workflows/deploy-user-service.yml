@@ -35,8 +35,8 @@ jobs:
         env:
           REVISION: ${{ env.REVISION }}
         run: |
-          # Replace REVISION placeholder in Deployment YAML
-          sed "s/REVISION/${{ env.REVISION }}/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
+          # Wrap revision in quotes so Kubernetes accepts it as a string
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
 
       - name: Apply User Service Service
         run: |
