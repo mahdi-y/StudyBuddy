@@ -41,6 +41,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: task-service-secrets
-                  key: openrouter.api.key
+                  key: openrouter.key
 
 
