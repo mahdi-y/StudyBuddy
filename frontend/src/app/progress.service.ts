@@ -14,7 +14,7 @@ export class ProgressService {
 
   // Fetch all progress entities
   getAllProgress(): Observable<Progress[]> {
-    return this.http.get<Progress[]>(`${environment.apiUrlProgress}/all`); // Correcting to use /all for fetching all progress gg
+    return this.http.get<Progress[]>(`${environment.apiUrlProgress}/all`); // Correcting fff to use /all for fetching all progress gg
   }
 
   // Fetch tasks by progress ID
