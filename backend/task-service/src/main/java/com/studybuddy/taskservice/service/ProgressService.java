@@ -17,7 +17,7 @@ import java.util.Optional;
 public class ProgressService {
 
     @Autowired
-    private ProgressRepository progressRepository;  // Fixed naming convention for progressRepository
+    private ProgressRepository progressRepository;  // Fixed naming convention for progressRepository ff
 
     @Autowired
     private TaskRepository taskRepository;
