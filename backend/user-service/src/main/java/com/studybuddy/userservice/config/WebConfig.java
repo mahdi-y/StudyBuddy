@@ -15,13 +15,13 @@ public class WebConfig implements WebMvcConfigurer {
 				.addResourceLocations("file:./uploads/");
 	}
 
-	// Configure global CORS settings
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/api/**")
-				.allowedOrigins("http://192.168.1.56:30080")  // Specific allowed origin
-				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-				.allowedHeaders("*")
-				.allowCredentials(true);  // Allow credentials like cookies or tokens
-	}
+//	// Configure global CORS settings
+//	@Override
+//	public void addCorsMappings(CorsRegistry registry) {
+//		registry.addMapping("/api/**")
+//				.allowedOrigins("http://192.168.1.56:30080")  // Specific allowed origin
+//				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//				.allowedHeaders("*")
+//				.allowCredentials(true);  // Allow credentials like cookies or tokens
+//	}
 }
