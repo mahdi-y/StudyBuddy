@@ -150,11 +150,11 @@ jobs:
         env:
           REVISION: ${{ env.REVISION }}
         run: |
-          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-service-deployment.yaml | kubectl apply -f -
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-deployment.yaml | kubectl apply -f -
 
       - name: Apply Service
         run: |
-          kubectl apply -f backend/study-group-service/study-group-service-service.yaml
+          kubectl apply -f backend/study-group-service/study-group-service.yaml
 
       - name: Wait for Rollout
         run: |
