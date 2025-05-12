@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'work', component: WorkComponent},
   { path: 'category', component: CategoryComponent},
   { path: 'study-group', component: StudyGroupListComponent, canActivate: [AuthGuard]},
-  { path: 'study-group/new', component: StudyGroupCreateComponent, canActivate: [AuthGuard] },     // For creating a new study group
+  { path: 'study-group/new', component: StudyGroupCreateComponent, canActivate: [AuthGuard] },     // For creating a new study group fefz
   { path: 'study-group/update-group/:id', component: StudyGroupUpdateComponent, canActivate: [AuthGuard] },
   { path: 'flashcards', component: FlashcardComponent },
   { path: 'unauthorized', component: UnauthorizedComponent},
