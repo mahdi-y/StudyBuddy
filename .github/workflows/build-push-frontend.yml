@@ -31,3 +31,8 @@ jobs:
           file: frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:latest,${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:${{ github.sha }}
+
+      - name: Clean up unused Docker images
+        run: |
+          docker system prune -f
+          docker image prune -f
