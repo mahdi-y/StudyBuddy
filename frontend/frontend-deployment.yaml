@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: your-docker-username/studybuddy-frontend:latest
+          image: bapo12/studybuddy-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
