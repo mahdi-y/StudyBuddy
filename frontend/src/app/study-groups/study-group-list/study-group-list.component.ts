@@ -300,7 +300,7 @@ export class StudyGroupListComponent implements OnInit {
     this.userService.checkIfEmailExists(this.inviteeEmailOrId).subscribe({
       next: (emailExists: boolean) => {
         if (!emailExists) {
-          this.errorMessage = 'The email does not exist.'; // Set error message
+          this.errorMessage = 'The email does not exist.'; // Set error message cc
           return;
         }
         // Fetch user ID based on the email if the email exists
