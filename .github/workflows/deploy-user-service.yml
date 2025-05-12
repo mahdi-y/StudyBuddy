@@ -19,16 +19,7 @@ jobs:
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t bapo12/user-service:latest .
-          docker push bapo12/user-service:latest
-
-      - name: Force Kubernetes to pull the latest image
-        run: |
-          kubectl set image deployment/user-service user-service=bapo12/user-service:latest --record
-
-      - name: Apply Kubernetes manifests
+      - name: Deploy user-service
         run: |
           kubectl apply -f backend/user-service/user-service-deployment.yaml --validate=false
           kubectl apply -f backend/user-service/user-service-service.yaml --validate=false
