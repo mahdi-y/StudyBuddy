@@ -29,9 +29,9 @@ jobs:
           kubectl apply -f backend/study-group-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/study-group-service/mysql/mysql-deployment.yaml --validate=false
           kubectl apply -f backend/study-group-service/mysql/mysql-service.yaml --validate=false
-          kubectl apply -f backend/task-service/mysql/task-mysql-pvc.yaml --validate=false
-          kubectl apply -f backend/task-service/mysql/task-mysql-deployment.yaml --validate=false
-          kubectl apply -f backend/task-service/mysql/task-mysql-service.yaml --validate=false
+          kubectl apply -f backend/task-service/mysql/mysql-pvc.yaml --validate=false
+          kubectl apply -f backend/task-service/mysql/mysql-deployment.yaml --validate=false
+          kubectl apply -f backend/task-service/mysql/mysql-service.yaml --validate=false
 
   build-user-service:
     runs-on: self-hosted
