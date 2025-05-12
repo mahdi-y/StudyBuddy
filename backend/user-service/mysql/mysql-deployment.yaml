@@ -25,4 +25,4 @@ spec:
       volumes:
         - name: mysql-persistent-storage
           persistentVolumeClaim:
-            claimName: mysql-pvc #mawleya salli
+            claimName: mysql-pvc #mawleya salliddd

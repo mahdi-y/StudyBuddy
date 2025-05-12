@@ -39,9 +39,5 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
-        uses: docker/build-push-action@v5
-        with:
-          context: backend/user-service
-          file: backend/user-service/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+        run: |
+          sudo docker buildx build --push --tag ${{ secrets.DOCKER_USERNAME }}/user-service:latest backend/user-service
