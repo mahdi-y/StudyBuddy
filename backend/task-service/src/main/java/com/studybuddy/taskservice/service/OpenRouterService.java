@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@PropertySource("classpath:task.properties")
+//@PropertySource("classpath:task.properties")
 public class OpenRouterService {
 
     @Value("${openrouter.api.key}")

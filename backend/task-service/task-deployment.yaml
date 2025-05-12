@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: task-service
+  labels:
+    app: task-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: task-service
+  template:
+    metadata:
+      labels:
+        app: task-service
+    spec:
+      containers:
+        - name: task-service
+          image: bapo12/task-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9098
+          env:
+            - name: REVISION
+              value: "REVISION"
+
+            # Database Credentials
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: task-service-secrets
+                  key: db.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: task-service-secrets
+                  key: db.password
+
+            # OpenAI Key
+            - name: OPENROUTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: task-service-secrets
+                  key: openrouter.api.key
+
+
