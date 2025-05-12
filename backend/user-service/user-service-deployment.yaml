@@ -17,7 +17,7 @@ spec:
       containers:
         - name: user-service
           image: bapo12/user-service:latest
-          imagePullPolicy: Always   # Ensure Kubernetes always pulls the latest images pleaseccc
+          imagePullPolicy: Always   # Ensure Kubernetes always pulls the latest images pleasecccss
           ports:
             - containerPort: 8083
           env:

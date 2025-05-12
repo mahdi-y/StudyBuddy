@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://192.168.1.56:30080") // Angular port
 @RequestMapping("/api/users")
 public class UserController {
 

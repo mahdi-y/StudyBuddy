@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin(origins = "http://192.168.1.56:30080") // Angular port
 @RequestMapping("/api")
 public class LoginController {
 

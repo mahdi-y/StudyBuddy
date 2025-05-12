@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Random;
 
 @RestController
+@CrossOrigin(origins = "http://192.168.1.56:30080")
 @RequestMapping("/api/auth")
 public class PasswordResetController {
 
