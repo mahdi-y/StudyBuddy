@@ -60,6 +60,7 @@
     </dependencies>
 
     <build>
+        <finalName>study-group-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
