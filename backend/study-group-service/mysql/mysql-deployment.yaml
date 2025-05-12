@@ -16,7 +16,7 @@ spec:
           image: mysql:8.0
           envFrom:
             - secretRef:
-                name: study-group-secrets
+                name: study-group-mysql-secrets
           ports:
             - containerPort: 3306
           volumeMounts:

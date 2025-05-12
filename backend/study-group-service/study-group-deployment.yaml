@@ -46,7 +46,7 @@ spec:
             # Mail credentials
             - name: MAIL_USERNAME
               valueFrom:
-                secretKeyRef:
+                secretKeyRef: #t3-
                   name: study-group-secrets
                   key: mail.username
             - name: MAIL_PASSWORD
