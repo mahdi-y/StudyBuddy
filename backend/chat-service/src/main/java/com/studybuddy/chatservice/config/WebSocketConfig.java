@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOrigins("http://192.168.1.56:30080, http://chat-service:8082").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("http://192.168.1.64:30080, http://chat-service:8082").withSockJS();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://192.168.1.56:30080, http://chat-service:8082") // Frontend URL
+                        .allowedOrigins("http://192.168.1.64:30080, http://chat-service:8082") // Frontend URL
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .allowCredentials(true);
