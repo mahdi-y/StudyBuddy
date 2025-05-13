@@ -1,7 +1,9 @@
 export const environment = {
   production: false,
   apiUrl: '/api/chats',
+  apiUrlReport: '/api/reports',
   apiUrlUser: '/api/users',
+  apiUrlMessage: '/api/messages',
   websocketUrl: '/ws',
   authApiUrl: '/api/auth',
   authApiUrlService: '/api',
@@ -9,6 +11,7 @@ export const environment = {
   apiUrlInvites: '/api/invitations',
   notificationApiUrl: '/api/notifications/send',
   apiUrlResources: '/api/ressources',
+  apiUrlUpload: '/api/upload',
   studyGroupApiUrl: '/api',
   apiUrlGroups: '/api/groups',
   openAiApiUrl: '/api/openai',
@@ -18,4 +21,6 @@ export const environment = {
   apiUrlProgress: '/api/progress',
   apiUrlTask: '/api/task',
   apiUrlP: '/api',
+  apiUrlOcr: '/api/ocr'
+
 };

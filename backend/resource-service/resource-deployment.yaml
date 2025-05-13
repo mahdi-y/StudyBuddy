@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-service
+  labels:
+    app: resource-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-service
+  template:
+    metadata:
+      labels:
+        app: resource-service
+    spec:
+      containers:
+        - name: resource-service
+          image: bapo12/resource-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8069
+          env:
+            - name: REVISION
+              value: "REVISION"
+
+            # Database Credentials
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: resource-secrets
+                  key: db.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: resource-secrets
+                  key: db.password
+
+            # OCR Configurationgggggg
+            - name: TESSDATA_PREFIX
+              value: "/usr/share/tesseract-ocr/4.00/"
+
+            - name: TESSERACT_DATAPATH
+              value: "/usr/share/tesseract-ocr/4.00/tessdata"

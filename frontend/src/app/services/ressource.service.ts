@@ -28,7 +28,7 @@ export class RessourceService {
   }
 
   uploadFile(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${environment.studyGroupApiUrl}/upload`, formData);
+    return this.http.post<any>(`${environment.apiUrlUpload}`, formData);
   }
 
 
@@ -42,7 +42,7 @@ export class RessourceService {
     return this.http.delete<void>(`${environment.apiUrlResources}/${resourceId}`);
   }
   uploadImageForOCR(formData: FormData): Observable<any> {
-    return this.http.post<any>(`${environment.studyGroupApiUrl}/ocr/upload-ocr`, formData);  // Updated URL
+    return this.http.post<any>(`${environment.apiUrlOcr}/upload-ocr`, formData);  // Updated URL
   }
 
   getResourcesByStudyGroupId(studyGroupId: number): Observable<Ressource[]> {

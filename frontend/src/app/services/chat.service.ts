@@ -33,7 +33,7 @@ export class ChatService implements OnDestroy {
 
   getMessages(chatId: number): Observable<any[]> {
     console.log(`Fetching messages for chatId: ${chatId}`);
-    return this.http.get<any[]>(`${environment.apiUrl}/api/messages/${chatId}`);
+    return this.http.get<any[]>(`${environment.apiUrlMessage}/${chatId}`);
   }
 
   private setupStompCallbacks(): void {
@@ -255,12 +255,12 @@ export class ChatService implements OnDestroy {
   }
 
   getReportedMessages(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/api/reports`);
+    return this.http.get<any[]>(`${environment.apiUrlReport}`);
   }
 
 
   dismissReport(reportId: number): Promise<void> {
-    const url = `${environment.apiUrl}/api/reports/dismiss/${reportId}`;
+    const url = `${environment.apiUrlReport}/dismiss/${reportId}`;
     return lastValueFrom(this.http.delete<void>(url));
   }
 
@@ -269,7 +269,7 @@ export class ChatService implements OnDestroy {
   }
 
   getUserById(id: number) {
-    return this.http.get<{ username: string }>(`${environment.apiUrlUser}/api/users/${id}`);
+    return this.http.get<{ username: string }>(`${environment.apiUrlUser}/${id}`);
   }
 
 }
