@@ -36,7 +36,7 @@ spec:
                   name: chat-service-secrets
                   key: db.password
 
-            # OpenAI Keykkkkkcccchhh
+            # OpenAI Keykkkkkcccchhhffff
             - name: NEUTRINO_USER_ID
               valueFrom:
                 secretKeyRef:

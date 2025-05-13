@@ -313,7 +313,7 @@ jobs:
 
   deploy-frontend:
     runs-on: self-hosted
-#    needs: build-frontend
+    needs: deploy-chat-service
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
