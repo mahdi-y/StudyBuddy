@@ -6,8 +6,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Set the TESSDATA_PREFIX environment variable for Tess4J
-ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/tessdata
-
+ENV TESSDATA_PREFIX=/usr/share/tesseract-ocr/4.00/
+ENV TESSERACT_DATAPATH=/usr/share/tesseract-ocr/4.00/tessdata
 # Copy your Spring Boot application jar
 VOLUME /tmp
 COPY target/resource-service.jar resource-service.jar
