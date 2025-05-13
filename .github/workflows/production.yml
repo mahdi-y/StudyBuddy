@@ -210,7 +210,7 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/user-service --timeout=60s
+          kubectl rollout status deployment/user-service --timeout=300s
 
   deploy-study-group-service:
     runs-on: self-hosted
