@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Validated
-@CrossOrigin(origins = "http://192.168.1.64:30080")
+@CrossOrigin(origins = "http://192.168.1.88:30080, http://192.168.1.91:30080")
 @RestController
 @RequestMapping("/api/ressources")
 public class RessourceController {

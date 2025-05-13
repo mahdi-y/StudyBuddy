@@ -13,7 +13,7 @@
 
     @RestController
     @RequestMapping("/api/ocr")
-    @CrossOrigin(origins = "http://192.168.1.64:30080")  // Allow CORS from Angular frontend
+    @CrossOrigin(origins = "http://192.168.1.88:30080, http://192.168.1.91:30080")  // Allow CORS from Angular frontend
     public class OCRController {
 
         private final OCRService ocrService;

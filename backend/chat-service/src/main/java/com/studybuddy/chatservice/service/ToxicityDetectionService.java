@@ -12,10 +12,10 @@ import java.util.Map;
 //@PropertySource("classpath:chat.properties")
 public class ToxicityDetectionService {
 
-    @Value("${neutrino.user-id}")
+    @Value("${neutrino.user}")
     private String userId;
 
-    @Value("${neutrino.api-key}")
+    @Value("${neutrino.api}")
     private String apiKey;
 
     private static final String API_URL = "https://neutrinoapi.net/bad-word-filter";
