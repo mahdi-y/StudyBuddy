@@ -210,7 +210,7 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/user-service --timeout=300s
+          kubectl rollout status deployment/user-service --timeout=600s
 
   deploy-study-group-service:
     runs-on: self-hosted
@@ -242,7 +242,7 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/study-group-service --timeout=300s
+          kubectl rollout status deployment/study-group-service --timeout=600s
 
   deploy-task-service:
     runs-on: self-hosted
@@ -274,7 +274,7 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/task-service --timeout=300s
+          kubectl rollout status deployment/task-service --timeout=600s
 
   deploy-chat-service:
     runs-on: self-hosted
@@ -306,7 +306,7 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/chat-service --timeout=300s
+          kubectl rollout status deployment/chat-service --timeout=600s
 
 
   build-frontend:
@@ -372,4 +372,4 @@ jobs:
 
       - name: Wait for Rollout
         run: |
-          kubectl rollout status deployment/frontend --timeout=300s
+          kubectl rollout status deployment/frontend --timeout=1500s
