@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-service
+  labels:
+    app: chat-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-service
+  template:
+    metadata:
+      labels:
+        app: chat-service
+    spec:
+      containers:
+        - name: chat-service
+          image: bapo12/chat-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9098
+          env:
+            - name: REVISION
+              value: "REVISION"
+
+            # Database Credentials
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-secrets
+                  key: db.username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-secrets
+                  key: db.password
+
+            # OpenAI Key
+            - name: NEUTRINO_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-secrets
+                  key: neutrino.user-id
+
+            - name: NEUTRINO_API
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-secrets
+                  key: neutrino.api-key
+
+

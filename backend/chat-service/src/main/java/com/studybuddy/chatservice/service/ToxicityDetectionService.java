@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Map;
 
 @Service
-@PropertySource("classpath:chat.properties")
+//@PropertySource("classpath:chat.properties")
 public class ToxicityDetectionService {
 
     @Value("${neutrino.user-id}")

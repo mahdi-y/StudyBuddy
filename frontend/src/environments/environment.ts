@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   apiUrl: '/api/chat',
   apiUrlUser: '/api/users',
-  websocketUrl: 'ws://192.168.1.56:30080/ws/chat',
+  websocketUrl: '/ws',
   authApiUrl: '/api/auth',
   authApiUrlService: '/api',
   baseUrlFlashcard: '/api/flashcards',
