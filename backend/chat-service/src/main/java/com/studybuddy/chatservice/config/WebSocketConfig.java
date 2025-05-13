@@ -30,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://192.168.1.64:30080, http://chat-service:8082") // Frontend URL
+                        .allowedOrigins("http://192.168.1.88:30080, http://chat-service:8082, http://192.168.1.91:30080") // Frontend URL
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                         .allowedHeaders("*")
                         .allowCredentials(true);

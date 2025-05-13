@@ -4,7 +4,7 @@
   .welcome-section {
     margin-bottom: 20px;
 
-    h2 {
+    :is(h2) {
       font-size: 1.5rem;
       color: #333;
       margin-bottom: 5px;
@@ -79,7 +79,7 @@
         margin-bottom: 10px;
       }
 
-      canvas {
+      :is(canvas) {
         width: 100%;
         height: auto;
       }
@@ -101,7 +101,7 @@
         margin-bottom: 10px;
       }
 
-      table {
+      :is(table) {
         width: 100%;
         border-collapse: collapse;
 
@@ -141,7 +141,7 @@
         list-style: none;
         padding: 0;
 
-        li {
+        :is(li) {
           margin-bottom: 10px;
 
           .notification-item {

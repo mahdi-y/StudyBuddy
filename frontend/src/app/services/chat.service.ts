@@ -15,7 +15,7 @@ export class ChatService implements OnDestroy {
 
   constructor(private http: HttpClient) {
     this.stompClient = new Client({
-      brokerURL: `${environment.websocketUrl}/ws/websocket`,
+      brokerURL: `${environment.websocketUrl}/websocket`,
       connectHeaders: {
         login: '',
         passcode: '',
@@ -162,12 +162,12 @@ export class ChatService implements OnDestroy {
   }
 
   getChatSettings(chatId: number): Observable<{ profanityFilterEnabled: boolean }> {
-    return this.http.get<{ profanityFilterEnabled: boolean }>(`${environment.apiUrl}/api/chats/${chatId}/settings`);
+    return this.http.get<{ profanityFilterEnabled: boolean }>(`${environment.apiUrl}/${chatId}/settings`);
   }
 
   updateChatSettings(chatId: number, settings: { profanityFilterEnabled: boolean }): Observable<any> {
     console.log('Sending updateChatSettings request for chatId:', chatId, 'with settings:', settings);
-    return this.http.patch(`${environment.apiUrl}/api/chats/${chatId}/settings`, settings);
+    return this.http.patch(`${environment.apiUrl}/${chatId}/settings`, settings);
   }
 
   sendTypingIndicator(chatId: number, senderId: number, isTyping: boolean): void {
@@ -265,7 +265,7 @@ export class ChatService implements OnDestroy {
   }
 
   getChatIdByStudyGroupId(studyGroupId: number): Observable<number> {
-    return this.http.get<number>(`${environment.apiUrl}/api/chats/study-group/${studyGroupId}`);
+    return this.http.get<number>(`${environment.apiUrl}/study-group/${studyGroupId}`);
   }
 
   getUserById(id: number) {

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: '/api/chat',
+  apiUrl: '/api/chats',
   apiUrlUser: '/api/users',
   websocketUrl: '/ws',
   authApiUrl: '/api/auth',
