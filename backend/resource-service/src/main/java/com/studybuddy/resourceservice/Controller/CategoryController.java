@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@CrossOrigin(origins = "http://192.168.1.88:30080, http://192.168.1.91:30080") // Angular port
+@CrossOrigin(origins = " http://9.163.179.211:8069")  // Allow CORS from Angular frontend
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
