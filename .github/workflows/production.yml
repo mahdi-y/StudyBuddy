@@ -137,7 +137,7 @@ jobs:
       - name: Apply Service
         run: kubectl apply -f backend/user-service/user-service-service.yaml
       - name: Wait for Rollout
-        run: kubectl rollout status deployment/user-service --timeout=300s
+        run: kubectl rollout status deployment/user-service --timeout=600s
 
   # ----------------------
   # Build and Deploy Study Group Service
@@ -196,7 +196,7 @@ jobs:
       - name: Apply Service
         run: kubectl apply -f backend/study-group-service/study-group-service.yaml
       - name: Wait for Rollout
-        run: kubectl rollout status deployment/study-group-service --timeout=300s
+        run: kubectl rollout status deployment/study-group-service --timeout=600s
 
   # ----------------------
   # Build and Deploy Task Service
@@ -255,7 +255,7 @@ jobs:
       - name: Apply Service
         run: kubectl apply -f backend/task-service/task-service.yaml
       - name: Wait for Rollout
-        run: kubectl rollout status deployment/task-service --timeout=300s
+        run: kubectl rollout status deployment/task-service --timeout=600s
 
   # ----------------------
   # Build and Deploy Chat Service
@@ -314,7 +314,7 @@ jobs:
       - name: Apply Service
         run: kubectl apply -f backend/chat-service/chat-service.yaml
       - name: Wait for Rollout
-        run: kubectl rollout status deployment/chat-service --timeout=300s
+        run: kubectl rollout status deployment/chat-service --timeout=600s
 
   # ----------------------
   # Build and Deploy Resource Service
@@ -373,7 +373,7 @@ jobs:
       - name: Apply Service
         run: kubectl apply -f backend/resource-service/resource-service.yaml
       - name: Wait for Rollout
-        run: kubectl rollout status deployment/resource-service --timeout=300s
+        run: kubectl rollout status deployment/resource-service --timeout=600s
 
   # ----------------------
   # Build and Deploy Frontend
