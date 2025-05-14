@@ -33,16 +33,22 @@ jobs:
           filters: |
             user_service:
               - backend/user-service/**
+              - '.github/workflows/**'
             study_group_service:
               - backend/study-group-service/**
+              - '.github/workflows/**'
             task_service:
               - backend/task-service/**
+              - '.github/workflows/**'
             chat_service:
               - backend/chat-service/**
+              - '.github/workflows/**'
             resource_service:
               - backend/resource-service/**
+              - '.github/workflows/**'
             frontend:
               - frontend/**
+              - '.github/workflows/**'
 
   deploy-mysql:
     name: Deploy MySQL
@@ -104,7 +110,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: backend/user-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
 
@@ -163,7 +169,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: backend/study-group-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
 
@@ -222,7 +228,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: backend/task-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/task-service:latest
 
@@ -281,7 +287,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: backend/chat-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-service:latest
 
@@ -340,7 +346,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: backend/resource-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/resource-service:latest
 
@@ -397,7 +403,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: Dockerfile
+          file: frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:latest
       - name: Clean up unused Docker images
