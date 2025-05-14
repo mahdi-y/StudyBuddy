@@ -6,22 +6,57 @@ on:
     paths:
       - 'frontend/**'
       - 'backend/**'
+      - '.github/workflows/production.yml'
 
 jobs:
+  detect-changes:
+    name: Detect Changed Components
+    runs-on: ubuntu-latest
+    outputs:
+      mysql_changed: true
+      user_service_changed: ${{ steps.filter.outputs.user_service }}
+      study_group_service_changed: ${{ steps.filter.outputs.study_group_service }}
+      task_service_changed: ${{ steps.filter.outputs.task_service }}
+      chat_service_changed: ${{ steps.filter.outputs.chat_service }}
+      resource_service_changed: ${{ steps.filter.outputs.resource_service }}
+      frontend_changed: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Detect Changed Files
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            user_service:
+              - backend/user-service/**
+            study_group_service:
+              - backend/study-group-service/**
+            task_service:
+              - backend/task-service/**
+            chat_service:
+              - backend/chat-service/**
+            resource_service:
+              - backend/resource-service/**
+            frontend:
+              - frontend/**
 
   deploy-mysql:
+    name: Deploy MySQL
     runs-on: self-hosted
+    needs: detect-changes
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
-
-      - name: Deploy MySQL for User and Study Group Services
+      - name: Deploy MySQL Resources
         run: |
           kubectl apply -f backend/user-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/user-service/mysql/mysql-deployment.yaml --validate=false
@@ -35,404 +70,360 @@ jobs:
           kubectl apply -f backend/chat-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/chat-service/mysql/mysql-deployment.yaml --validate=false
           kubectl apply -f backend/chat-service/mysql/mysql-service.yaml --validate=false
-          kubectl apply -f backend/resource-service/mysql/mysql-service.yaml --validate=false
           kubectl apply -f backend/resource-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/resource-service/mysql/mysql-deployment.yaml --validate=false
+          kubectl apply -f backend/resource-service/mysql/mysql-service.yaml --validate=false
 
+  # ----------------------
+  # Build and Deploy User Service
+  # ----------------------
   build-user-service:
+    name: Build User Service
     runs-on: self-hosted
     needs: deploy-mysql
+    if: needs.detect-changes.outputs.user_service_changed == 'true'
     defaults:
       run:
         working-directory: backend/user-service
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Set up Java 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: backend/user-service
-          file: backend/user-service/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
 
+  deploy-user-service:
+    name: Deploy User Service
+    runs-on: self-hosted
+    needs: build-user-service
+    if: needs.detect-changes.outputs.user_service_changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+      - name: Force Redeploy by Updating Env
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
+      - name: Apply Service
+        run: kubectl apply -f backend/user-service/user-service-service.yaml
+      - name: Wait for Rollout
+        run: kubectl rollout status deployment/user-service --timeout=300s
+
+  # ----------------------
+  # Build and Deploy Study Group Service
+  # ----------------------
   build-study-group-service:
+    name: Build Study Group Service
     runs-on: self-hosted
     needs: deploy-mysql
+    if: needs.detect-changes.outputs.study_group_service_changed == 'true'
     defaults:
       run:
         working-directory: backend/study-group-service
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Set up Java 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: backend/study-group-service
-          file: backend/study-group-service/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
 
+  deploy-study-group-service:
+    name: Deploy Study Group Service
+    runs-on: self-hosted
+    needs: build-study-group-service
+    if: needs.detect-changes.outputs.study_group_service_changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+      - name: Force Redeploy by Updating Env
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-deployment.yaml | kubectl apply -f -
+      - name: Apply Service
+        run: kubectl apply -f backend/study-group-service/study-group-service.yaml
+      - name: Wait for Rollout
+        run: kubectl rollout status deployment/study-group-service --timeout=300s
+
+  # ----------------------
+  # Build and Deploy Task Service
+  # ----------------------
   build-task-service:
+    name: Build Task Service
     runs-on: self-hosted
     needs: deploy-mysql
+    if: needs.detect-changes.outputs.task_service_changed == 'true'
     defaults:
       run:
         working-directory: backend/task-service
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Set up Java 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: backend/task-service
-          file: backend/task-service/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/task-service:latest
 
+  deploy-task-service:
+    name: Deploy Task Service
+    runs-on: self-hosted
+    needs: build-task-service
+    if: needs.detect-changes.outputs.task_service_changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+      - name: Force Redeploy by Updating Env
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/task-service/task-deployment.yaml | kubectl apply -f -
+      - name: Apply Service
+        run: kubectl apply -f backend/task-service/task-service.yaml
+      - name: Wait for Rollout
+        run: kubectl rollout status deployment/task-service --timeout=300s
+
+  # ----------------------
+  # Build and Deploy Chat Service
+  # ----------------------
   build-chat-service:
+    name: Build Chat Service
     runs-on: self-hosted
     needs: deploy-mysql
+    if: needs.detect-changes.outputs.chat_service_changed == 'true'
     defaults:
       run:
         working-directory: backend/chat-service
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Set up Java 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: backend/chat-service
-          file: backend/chat-service/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-service:latest
 
+  deploy-chat-service:
+    name: Deploy Chat Service
+    runs-on: self-hosted
+    needs: build-chat-service
+    if: needs.detect-changes.outputs.chat_service_changed == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+      - name: Force Redeploy by Updating Env
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/chat-service/chat-deployment.yaml | kubectl apply -f -
+      - name: Apply Service
+        run: kubectl apply -f backend/chat-service/chat-service.yaml
+      - name: Wait for Rollout
+        run: kubectl rollout status deployment/chat-service --timeout=300s
+
+  # ----------------------
+  # Build and Deploy Resource Service
+  # ----------------------
   build-resource-service:
+    name: Build Resource Service
     runs-on: self-hosted
     needs: deploy-mysql
+    if: needs.detect-changes.outputs.resource_service_changed == 'true'
     defaults:
       run:
         working-directory: backend/resource-service
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Set up Java 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
-
       - name: Build Spring Boot JAR
         run: mvn clean package -DskipTests
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: backend/resource-service
-          file: backend/resource-service/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/resource-service:latest
 
-  deploy-user-service:
-    runs-on: self-hosted
-    needs: build-user-service
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Apply Deployment
-        env:
-          REVISION: ${{ env.REVISION }}
-        run: |
-          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
-
-      - name: Apply Service
-        run: |
-          kubectl apply -f backend/user-service/user-service-service.yaml
-
-      - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/user-service --timeout=300s
-
-  deploy-study-group-service:
-    runs-on: self-hosted
-    needs: build-study-group-service
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Apply Deployment
-        env:
-          REVISION: ${{ env.REVISION }}
-        run: |
-          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-deployment.yaml | kubectl apply -f -
-
-      - name: Apply Service
-        run: |
-          kubectl apply -f backend/study-group-service/study-group-service.yaml
-
-      - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/study-group-service --timeout=300s
-
-  deploy-task-service:
-    runs-on: self-hosted
-    needs: build-task-service
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Apply Deployment
-        env:
-          REVISION: ${{ env.REVISION }}
-        run: |
-          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/task-service/task-deployment.yaml | kubectl apply -f -
-
-      - name: Apply Service
-        run: |
-          kubectl apply -f backend/task-service/task-service.yaml
-
-      - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/task-service --timeout=300s
-
-  deploy-chat-service:
-    runs-on: self-hosted
-    needs: build-chat-service
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Kubeconfig
-        run: |
-          mkdir -p ~/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-          chmod 600 ~/.kube/config
-
-      - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Apply Deployment
-        env:
-          REVISION: ${{ env.REVISION }}
-        run: |
-          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/chat-service/chat-deployment.yaml | kubectl apply -f -
-
-      - name: Apply Service
-        run: |
-          kubectl apply -f backend/chat-service/chat-service.yaml
-
-      - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/chat-service --timeout=300s
-
   deploy-resource-service:
+    name: Deploy Resource Service
     runs-on: self-hosted
     needs: build-resource-service
+    if: needs.detect-changes.outputs.resource_service_changed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
-
       - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
       - name: Apply Deployment
         env:
           REVISION: ${{ env.REVISION }}
         run: |
           sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/resource-service/resource-deployment.yaml | kubectl apply -f -
-
       - name: Apply Service
-        run: |
-          kubectl apply -f backend/resource-service/resource-service.yaml
-
+        run: kubectl apply -f backend/resource-service/resource-service.yaml
       - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/resource-service --timeout=300s
-          
+        run: kubectl rollout status deployment/resource-service --timeout=300s
 
+  # ----------------------
+  # Build and Deploy Frontend
+  # ----------------------
   build-frontend:
+    name: Build Frontend
     runs-on: self-hosted
-    needs: [deploy-user-service, deploy-study-group-service, deploy-task-service, deploy-chat-service, deploy-resource-service]
+    needs:
+      - deploy-user-service
+      - deploy-study-group-service
+      - deploy-task-service
+      - deploy-chat-service
+      - deploy-resource-service
+    if: needs.detect-changes.outputs.frontend_changed == 'true'
     defaults:
       run:
         working-directory: frontend
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build and Push Frontend Docker Image
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: frontend
-          file: frontend/Dockerfile
+          context: .
+          file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:latest,${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:${{ github.sha }}
-
+          tags: ${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:latest
       - name: Clean up unused Docker images
         run: |
           docker system prune -f
           docker image prune -f
 
   deploy-frontend:
+    name: Deploy Frontend
     runs-on: self-hosted
     needs: build-frontend
+    if: needs.detect-changes.outputs.frontend_changed == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Kubeconfig
         run: |
           mkdir -p ~/.kube
           echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
           chmod 600 ~/.kube/config
-
       - name: Force Redeploy by Updating Env
-        id: vars
-        run: |
-          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Apply Frontend Deployment
+        run: echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+      - name: Apply Deployment
         env:
           REVISION: ${{ env.REVISION }}
         run: |
           sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" frontend/frontend-deployment.yaml | kubectl apply -f -
-
       - name: Wait for Rollout
-        run: |
-          kubectl rollout status deployment/frontend --timeout=1500s
+        run: kubectl rollout status deployment/frontend --timeout=1500s
