@@ -109,7 +109,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: backend/user-service
           file: backend/user-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
@@ -168,7 +168,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: backend/study-group-service
           file: backend/study-group-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
@@ -227,7 +227,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: backend/task-service
           file: backend/task-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/task-service:latest
@@ -286,7 +286,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: backend/chat-service
           file: backend/chat-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/chat-service:latest
@@ -345,7 +345,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: backend/resource-service
           file: backend/resource-service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/resource-service:latest
@@ -402,7 +402,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
-          context: .
+          context: frontend
           file: frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/studybuddy-frontend:latest
