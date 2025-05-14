@@ -12,7 +12,7 @@
     import java.util.Map;
 
     @RestController
-    @CrossOrigin(origins = " http://9.163.179.211:8069")  // Allow CORS from Angular frontend
+    @CrossOrigin(origins = "http://9.163.179.211:8069")  // Allow CORS from Angular frontend
     @RequestMapping("/api/ocr")
     public class OCRController {
 

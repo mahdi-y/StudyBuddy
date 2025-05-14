@@ -18,7 +18,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Validated
-@CrossOrigin(origins = " http://9.163.179.211:8069")  // Allow CORS from Angular frontend
+@CrossOrigin(origins = "http://9.163.179.211:8069")  // Allow CORS from Angular frontend
 @RestController
 @RequestMapping("/api/ressources")
 public class RessourceController {

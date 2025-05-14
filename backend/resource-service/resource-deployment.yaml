@@ -36,7 +36,7 @@ spec:
                   name: resource-secrets
                   key: db.password
 
-            # OCR Configurationgggggg mon dieu je te lovegg last tryyyyyy
+            # OCR Configurationgggggg mon dieu je te lovegg last tryyyyyy last last last
             - name: TESSDATA_PREFIX
               value: "/usr/share/tesseract-ocr/4.00/"
 
