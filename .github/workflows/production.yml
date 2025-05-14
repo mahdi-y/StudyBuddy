@@ -34,154 +34,154 @@ jobs:
           kubectl apply -f backend/task-service/mysql/mysql-service.yaml --validate=false
           kubectl apply -f backend/chat-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/chat-service/mysql/mysql-deployment.yaml --validate=false
+          kubectl apply -f backend/chat-service/mysql/mysql-service.yaml --validate=false
           kubectl apply -f backend/resource-service/mysql/mysql-service.yaml --validate=false
           kubectl apply -f backend/resource-service/mysql/mysql-pvc.yaml --validate=false
           kubectl apply -f backend/resource-service/mysql/mysql-deployment.yaml --validate=false
-          kubectl apply -f backend/resource-service/mysql/mysql-service.yaml --validate=false
-#
-#  build-user-service:
-#    runs-on: self-hosted
-#    needs: deploy-mysql
-#    defaults:
-#      run:
-#        working-directory: backend/user-service
-#    steps:
-#      - name: Checkout source code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Java 21
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '21'
-#
-#      - name: Build Spring Boot JAR
-#        run: mvn clean package -DskipTests
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Build and Push Docker Image
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: backend/user-service
-#          file: backend/user-service/Dockerfile
-#          push: true
-#          tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
-#
-#  build-study-group-service:
-#    runs-on: self-hosted
-#    needs: deploy-mysql
-#    defaults:
-#      run:
-#        working-directory: backend/study-group-service
-#    steps:
-#      - name: Checkout source code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Java 21
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '21'
-#
-#      - name: Build Spring Boot JAR
-#        run: mvn clean package -DskipTests
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Build and Push Docker Image
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: backend/study-group-service
-#          file: backend/study-group-service/Dockerfile
-#          push: true
-#          tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
-#
-#  build-task-service:
-#    runs-on: self-hosted
-#    needs: deploy-mysql
-#    defaults:
-#      run:
-#        working-directory: backend/task-service
-#    steps:
-#      - name: Checkout source code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Java 21
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '21'
-#
-#      - name: Build Spring Boot JAR
-#        run: mvn clean package -DskipTests
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Build and Push Docker Image
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: backend/task-service
-#          file: backend/task-service/Dockerfile
-#          push: true
-#          tags: ${{ secrets.DOCKER_USERNAME }}/task-service:latest
-#
-#  build-chat-service:
-#    runs-on: self-hosted
-#    needs: deploy-mysql
-#    defaults:
-#      run:
-#        working-directory: backend/chat-service
-#    steps:
-#      - name: Checkout source code
-#        uses: actions/checkout@v2
-#
-#      - name: Set up Java 21
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'temurin'
-#          java-version: '21'
-#
-#      - name: Build Spring Boot JAR
-#        run: mvn clean package -DskipTests
-#
-#      - name: Log in to Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKER_USERNAME }}
-#          password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v3
-#
-#      - name: Build and Push Docker Image
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: backend/chat-service
-#          file: backend/chat-service/Dockerfile
-#          push: true
-#          tags: ${{ secrets.DOCKER_USERNAME }}/chat-service:latest
+
+  build-user-service:
+    runs-on: self-hosted
+    needs: deploy-mysql
+    defaults:
+      run:
+        working-directory: backend/user-service
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Spring Boot JAR
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend/user-service
+          file: backend/user-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
+
+  build-study-group-service:
+    runs-on: self-hosted
+    needs: deploy-mysql
+    defaults:
+      run:
+        working-directory: backend/study-group-service
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Spring Boot JAR
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend/study-group-service
+          file: backend/study-group-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/study-group-service:latest
+
+  build-task-service:
+    runs-on: self-hosted
+    needs: deploy-mysql
+    defaults:
+      run:
+        working-directory: backend/task-service
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Spring Boot JAR
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend/task-service
+          file: backend/task-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/task-service:latest
+
+  build-chat-service:
+    runs-on: self-hosted
+    needs: deploy-mysql
+    defaults:
+      run:
+        working-directory: backend/chat-service
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build Spring Boot JAR
+        run: mvn clean package -DskipTests
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: backend/chat-service
+          file: backend/chat-service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/chat-service:latest
 
   build-resource-service:
     runs-on: self-hosted
@@ -219,133 +219,133 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/resource-service:latest
 
-#  deploy-user-service:
-#    runs-on: self-hosted
-#    needs: build-user-service
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Kubeconfig
-#        run: |
-#          mkdir -p ~/.kube
-#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-#          chmod 600 ~/.kube/config
-#
-#      - name: Force Redeploy by Updating Env
-#        id: vars
-#        run: |
-#          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-#
-#      - name: Apply Deployment
-#        env:
-#          REVISION: ${{ env.REVISION }}
-#        run: |
-#          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
-#
-#      - name: Apply Service
-#        run: |
-#          kubectl apply -f backend/user-service/user-service-service.yaml
-#
-#      - name: Wait for Rollout
-#        run: |
-#          kubectl rollout status deployment/user-service --timeout=300s
-#
-#  deploy-study-group-service:
-#    runs-on: self-hosted
-#    needs: build-study-group-service
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Kubeconfig
-#        run: |
-#          mkdir -p ~/.kube
-#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-#          chmod 600 ~/.kube/config
-#
-#      - name: Force Redeploy by Updating Env
-#        id: vars
-#        run: |
-#          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-#
-#      - name: Apply Deployment
-#        env:
-#          REVISION: ${{ env.REVISION }}
-#        run: |
-#          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-deployment.yaml | kubectl apply -f -
-#
-#      - name: Apply Service
-#        run: |
-#          kubectl apply -f backend/study-group-service/study-group-service.yaml
-#
-#      - name: Wait for Rollout
-#        run: |
-#          kubectl rollout status deployment/study-group-service --timeout=300s
-#
-#  deploy-task-service:
-#    runs-on: self-hosted
-#    needs: build-task-service
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Kubeconfig
-#        run: |
-#          mkdir -p ~/.kube
-#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-#          chmod 600 ~/.kube/config
-#
-#      - name: Force Redeploy by Updating Env
-#        id: vars
-#        run: |
-#          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-#
-#      - name: Apply Deployment
-#        env:
-#          REVISION: ${{ env.REVISION }}
-#        run: |
-#          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/task-service/task-deployment.yaml | kubectl apply -f -
-#
-#      - name: Apply Service
-#        run: |
-#          kubectl apply -f backend/task-service/task-service.yaml
-#
-#      - name: Wait for Rollout
-#        run: |
-#          kubectl rollout status deployment/task-service --timeout=300s
-#
-#  deploy-chat-service:
-#    runs-on: self-hosted
-#    needs: build-chat-service
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#
-#      - name: Set up Kubeconfig
-#        run: |
-#          mkdir -p ~/.kube
-#          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
-#          chmod 600 ~/.kube/config
-#
-#      - name: Force Redeploy by Updating Env
-#        id: vars
-#        run: |
-#          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
-#
-#      - name: Apply Deployment
-#        env:
-#          REVISION: ${{ env.REVISION }}
-#        run: |
-#          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/chat-service/chat-deployment.yaml | kubectl apply -f -
-#
-#      - name: Apply Service
-#        run: |
-#          kubectl apply -f backend/chat-service/chat-service.yaml
-#
-#      - name: Wait for Rollout
-#        run: |
-#          kubectl rollout status deployment/chat-service --timeout=300s
+  deploy-user-service:
+    runs-on: self-hosted
+    needs: build-user-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Env
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/user-service/user-service-deployment.yaml | kubectl apply -f -
+
+      - name: Apply Service
+        run: |
+          kubectl apply -f backend/user-service/user-service-service.yaml
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/user-service --timeout=300s
+
+  deploy-study-group-service:
+    runs-on: self-hosted
+    needs: build-study-group-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Env
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/study-group-service/study-group-deployment.yaml | kubectl apply -f -
+
+      - name: Apply Service
+        run: |
+          kubectl apply -f backend/study-group-service/study-group-service.yaml
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/study-group-service --timeout=300s
+
+  deploy-task-service:
+    runs-on: self-hosted
+    needs: build-task-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Env
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/task-service/task-deployment.yaml | kubectl apply -f -
+
+      - name: Apply Service
+        run: |
+          kubectl apply -f backend/task-service/task-service.yaml
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/task-service --timeout=300s
+
+  deploy-chat-service:
+    runs-on: self-hosted
+    needs: build-chat-service
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+      - name: Force Redeploy by Updating Env
+        id: vars
+        run: |
+          echo "REVISION=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Apply Deployment
+        env:
+          REVISION: ${{ env.REVISION }}
+        run: |
+          sed "s/value: \"REVISION\"/value: \"${{ env.REVISION }}\"/" backend/chat-service/chat-deployment.yaml | kubectl apply -f -
+
+      - name: Apply Service
+        run: |
+          kubectl apply -f backend/chat-service/chat-service.yaml
+
+      - name: Wait for Rollout
+        run: |
+          kubectl rollout status deployment/chat-service --timeout=300s
 
   deploy-resource-service:
     runs-on: self-hosted
@@ -382,7 +382,7 @@ jobs:
 
   build-frontend:
     runs-on: self-hosted
-    needs: [deploy-resource-service]
+    needs: [deploy-user-service, deploy-study-group-service, deploy-task-service, deploy-chat-service, deploy-resource-service]
     defaults:
       run:
         working-directory: frontend
