@@ -34,7 +34,7 @@ This Code of Conduct applies both within project spaces and in public spaces whe
 
 ## Enforcement
 
-Instances of _abusive_, _harassing_, or otherwise _unacceptable behavior_ may be reported by contacting the project team at [insert-contact-email@example.com]. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain **confidentiality** with regard to the reporter of an incident.
+Instances of _abusive_, _harassing_, or otherwise _unacceptable behavior_ may be reported by contacting the project team at [mohamedmahdi.zalila@outlook.com]. All complaints will be reviewed and investigated and will result in a response that is deemed necessary and appropriate to the circumstances. The project team is obligated to maintain **confidentiality** with regard to the reporter of an incident.
 
 ## Attribution
 
