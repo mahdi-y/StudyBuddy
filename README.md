@@ -1,326 +1,275 @@
 # StudyBuddy
 
-**StudyBuddy** is a collaborative platform designed to enhance group study experiences through _user management_, _study group organization_, _resource sharing_, _task management_, and _real-time chat_. Built with a **microservices architecture**, it leverages **Spring Boot**, **MySQL**, **PostgreSQL**, **WebSockets**, and **Kubernetes** for scalability, security, and maintainability. The platform is **production-ready** and deployed on a **Kubernetes cluster** provisioned on **OpenStack** infrastructure.
+> **A collaborative, microservices-based platform for students to form study groups, share resources, manage tasks, and communicate in real time.**
+
+<div align="center">
+  <!-- Badges for quick stack overview -->
+  <img src="https://img.shields.io/badge/Cloud-OpenStack-ED1944?style=for-the-badge&logo=openstack&logoColor=white" />
+  <img src="https://img.shields.io/badge/Orchestration-Kubernetes-326ce5?style=for-the-badge&logo=kubernetes&logoColor=white" />
+  <img src="https://img.shields.io/badge/Backend-Spring%20Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white" />
+  <img src="https://img.shields.io/badge/Frontend-Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white" />
+  <img src="https://img.shields.io/badge/Database-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Database-PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" />
+</div>
+
+
+
+<!-- Optional: Mermaid diagram for architecture -->
+<details>
+<summary><b>Click to view architecture diagram</b></summary>
+
+```mermaid
+flowchart LR
+    subgraph Cloud
+      A[OpenStack]
+      B[Kubernetes]
+    end
+    subgraph Backend
+      C[Spring Boot]
+      D[MySQL]
+      E[PostgreSQL]
+    end
+    subgraph Frontend
+      F[Angular]
+    end
+    A --> B
+    B --> C
+    C --> D
+    C --> E
+    B --> F
+```
+</details>
+
+---
 
 ## Table of Contents
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Microservices](#microservices)
-- [Tech Stack](#tech-stack)
-- [Security](#security)
-- [Kubernetes Deployment](#kubernetes-deployment)
-- [Setup Instructions](#setup-instructions)
-- [Database Setup](#database-setup)
-- [CI/CD](#cicd)
-- [Monitoring and Logging](#monitoring-and-logging)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Project Status](#project-status)
+
+- [StudyBuddy](#studybuddy)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Architecture](#architecture)
+  - [Microservices](#microservices)
+  - [Tech Stack](#tech-stack)
+  - [Security](#security)
+  - [Kubernetes Deployment](#kubernetes-deployment)
+  - [Setup Instructions](#setup-instructions)
+    - [Prerequisites](#prerequisites)
+    - [Quick Start](#quick-start)
+  - [Database Setup](#database-setup)
+  - [CI/CD](#cicd)
+  - [Monitoring and Troubleshooting](#monitoring-and-troubleshooting)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Project Status](#project-status)
+
+---
 
 ## Overview
 
-**StudyBuddy** enables students to form _study groups_, share _resources_, manage _tasks_, and communicate in _real time_. Its **microservices-based design** ensures modularity, while **Kubernetes** on **OpenStack** provides robust deployment and scaling capabilities. **JWT-based authentication** and **Kubernetes Secrets** ensure secure operations.
+**StudyBuddy** is built with **Spring Boot**, **Angular**, **MySQL**, **PostgreSQL**, and **WebSockets** for scalability, security, and seamless deployment on **Kubernetes** over **OpenStack**.
+
+**Key Capabilities:**
+- Form and manage study groups with role-based permissions
+- Share and categorize resources securely
+- Assign and track tasks with deadlines and priorities
+- Communicate via real-time group and private chat
+
+The modular microservices architecture ensures maintainability and scalability, while **JWT authentication** and **Kubernetes Secrets** provide robust security.
+
+---
 
 ## Features
 
-- **User Management**: Register, login, manage profiles, and authenticate with _JWT_.
-- **Study Groups**: Create, join, and manage groups with _role-based permissions_ (owner, admin, member, guest).
-- **Resource Sharing**: Upload, categorize, and version study materials with access restricted to group members.
-- **Task Management**: Create, assign, and track tasks with _deadlines_ and _priorities_.
-- **Real-Time Chat**: Group and private messaging via _WebSockets_ with persistent chat history.
-- **Scalable Architecture**: Deployed on _Kubernetes_ with persistent storage and ingress routing.
+- **User Management:** Registration, login, profile management, JWT-based authentication
+- **Study Groups:** Create, join, and manage groups with owner, admin, member, and guest roles
+- **Resource Sharing:** Upload, categorize, and version study materials; access restricted to group members
+- **Task Management:** Create, assign, and track tasks with deadlines and priorities
+- **Real-Time Chat:** Group and private messaging via WebSockets with persistent chat history
+- **Scalable Deployment:** Runs on Kubernetes with persistent storage and ingress routing
+
+---
 
 ## Architecture
 
-**StudyBuddy** follows a **microservices architecture**, with each service handling a specific domain. Services communicate via _REST_ or _WebSockets_ and are deployed in a **Kubernetes cluster** backed by **OpenStack** infrastructure running the **Dalmatian** release on **Ubuntu 24.04**. The cluster is provisioned using an **Ansible playbook**. For a detailed architecture diagram, see the [StudyBuddy Architecture Diagram](https://miro.com/app/board/uXjVI69XbuA=/?share_link_id=764135954399).
+StudyBuddy uses a **microservices** approach, with each service responsible for a specific domain. Services communicate via REST or WebSockets and are deployed in a Kubernetes cluster on OpenStack (Dalmatian, Ubuntu 24.04), provisioned using Ansible.
 
-### Microservices
+[View Architecture Diagram](https://miro.com/app/board/uXjVI69XbuA=/?share_link_id=764135954399)
 
-1. **User Management Service**
-   - Handles _registration_, _login_, and _profile management_.
-   - Uses **JWT** for stateless authentication, with secrets managed via _Kubernetes Secrets_.
-   - Stores user data in a **MySQL** database.
-   - Endpoints: `/api/doRegister`, `/api/login`.
-   - Configuration: Requires `user-service-properties` file in the backend `src/main/resources` folder.
+---
 
-2. **Study Group Service**
-   - Manages _group creation_, _membership_, and _role-based permissions_.
-   - Integrates with **Chat Service** for synchronized communication.
-   - Stores group data in **MySQL**.
-   - Configuration: Requires `group-service-properties` file in the backend `src/main/resources` folder.
+## Microservices
 
-3. **Resources Service**
-   - Centralized repository for study materials with _upload/download_, _categorization_, and _versioning_.
-   - Metadata in **PostgreSQL**; files stored in _Kubernetes Persistent Volumes_ (**OpenEBS** on **OpenStack**).
-   - Restricts access to _group members_.
-   - Configuration: Requires `resources-service-properties` file in the backend `src/main/resources` folder.
+| Service             | Description                                         | Database    | Key Endpoints                  | Config File                   |
+|---------------------|-----------------------------------------------------|-------------|-------------------------------|-------------------------------|
+| User Management     | Registration, login, profile, JWT authentication    | MySQL       | `/api/doRegister`, `/api/login`| `user-service-properties`     |
+| Study Group         | Group creation, membership, role management         | MySQL       | `/api/groups`                  | `group-service-properties`    |
+| Resources           | Upload/download, categorization, versioning         | PostgreSQL  | `/api/ressources`              | `resources-service-properties`|
+| Tasks               | CRUD, deadlines, status tracking, group validation  | MySQL       | `/api/tasks`                   | `tasks-service-properties`    |
+| Chat                | Real-time messaging, chat history, membership check | MySQL       | `/api/chat`                    | `chat-service-properties`     |
 
-4. **Tasks Service**
-   - Supports _task CRUD operations_, _deadlines_, and _status tracking_.
-   - Integrates with **Study Group Service** for membership validation.
-   - Stores task data in **MySQL**.
-   - Configuration: Requires `tasks-service-properties` file in the backend `src/main/resources` folder.
+> All configuration files are placed in each service’s `src/main/resources` directory.
 
-5. **Chat Service**
-   - Provides _real-time_ group and private messaging via **WebSockets**.
-   - Persists _chat history_ in **MySQL**.
-   - Validates memberships through **Study Group Service**.
-   - Configuration: Requires `chat-service-properties` file in the backend `src/main/resources` folder.
+---
 
 ## Tech Stack
 
-- **Backend**: _Spring Boot_ (Java 21)
-- **Databases**: _MySQL_ (User, Group, Tasks, Chat), _PostgreSQL_ (Resources)
-- **Frontend**: _Angular_ (served via _Kubernetes Ingress_)
-- **Authentication**: _JWT_ (HMAC-SHA256, managed via _Kubernetes Secrets_)
-- **Real-Time Communication**: _Spring WebSockets_
-- **Orchestration**: _Kubernetes_ (Pods, Deployments, Services, Ingress)
-- **Storage**: _Kubernetes Persistent Volumes_ (_OpenEBS_ on _OpenStack_)
-- **OpenStack Components**: _Nova_, _Neutron_, _Cinder_, _Keystone_, _Swift_, _Placement_, _Glance_, _Heat_, _Horizon_ (Dalmatian release, Ubuntu 24.04)
-- **CI/CD**: _GitHub Actions_ (self-hosted runner in cluster)
-- **Configuration**: _Kubernetes ConfigMaps_, _Secrets_
-- **Cluster Deployment**: _Ansible playbook_
-- **Monitoring**: _Prometheus_, _Grafana_
+- **Backend:** Spring Boot (Java 21)
+- **Frontend:** Angular (served via Kubernetes Ingress)
+- **Databases:** MySQL (User, Group, Tasks, Chat), PostgreSQL (Resources)
+- **Authentication:** JWT (HMAC-SHA256, managed via Kubernetes Secrets)
+- **Real-Time:** Spring WebSockets
+- **Orchestration:** Kubernetes (Pods, Deployments, Services, Ingress)
+- **Storage:** Kubernetes Persistent Volumes (OpenEBS on OpenStack)
+- **CI/CD:** GitHub Actions (self-hosted runner)
+- **Monitoring:** Prometheus, Grafana
+
+---
 
 ## Security
 
-- **JWT Authentication**: _Stateless_, signed tokens with short expiration (15-60 minutes). Validated on every request.
-- **Password Hashing**: _BCrypt_ for secure credential storage.
-- **Kubernetes Secrets**: Store sensitive data (_JWT keys_, _DB credentials_) encrypted at rest.
-- **RBAC**: _Kubernetes role-based access controls_ for secret access.
-- **TLS**: _Ingress controller_ (_NGINX_) handles _HTTPS_ traffic with _TLS termination_.
-- **Access Control**: Services enforce _group membership_ and _role-based permissions_.
+- **JWT Authentication:** Stateless, short-lived tokens (15–60 min), validated on every request
+- **Password Hashing:** BCrypt for secure credential storage
+- **Kubernetes Secrets:** Encrypted storage for JWT keys and DB credentials
+- **RBAC:** Kubernetes role-based access controls
+- **TLS:** NGINX Ingress controller for HTTPS with TLS termination
+- **Access Control:** Enforced group membership and role-based permissions
+
+---
 
 ## Kubernetes Deployment
 
-**StudyBuddy** is deployed on a **Kubernetes cluster** provisioned on **OpenStack** (Dalmatian release, Ubuntu 24.04) using an **Ansible playbook**. The following components are used:
+StudyBuddy is deployed on a Kubernetes cluster provisioned on OpenStack (Dalmatian, Ubuntu 24.04) using Ansible.
 
-- **Pods**: Run _microservice containers_.
-- **Deployments**: Ensure _pod replicas_, _rolling updates_, and _self-healing_.
-- **Services**: Provide stable _IPs/DNS_ for inter-service communication.
-- **Persistent Volumes (PV) / PVCs**: Backed by _OpenEBS_ on _OpenStack_ for _database_ and _file storage_.
-- **Ingress**: _NGINX controller_ routes external traffic to services (e.g., `/api/user` to _User Service_).
-- **Namespaces**: Separate `studybuddy-prod` and `studybuddy-dev` environments.
-- **ConfigMaps**: Store _non-sensitive configurations_.
-- **Secrets**: Securely inject _sensitive data_ into containers.
-- **GitHub Actions Runner**: Self-hosted runner deployed on the _master node_ for CI/CD.
+**Key Components:**
+- Pods/Deployments: Run and manage microservice containers
+- Services: Stable IPs/DNS for inter-service communication
+- Persistent Volumes: OpenEBS-backed storage for databases and files
+- Ingress: NGINX controller routes external traffic
+- Namespaces: Separate `studybuddy-prod` and `studybuddy-dev`
+- ConfigMaps/Secrets: Store configuration and sensitive data
+- GitHub Actions Runner: Self-hosted for CI/CD
 
-**Example Ingress Configuration**:
+**Sample Ingress Configuration:**
 ```yaml
-server {
-    listen 80;
-    server_name localhost;
-
-    # Serve Angular app
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    location ^~ /api/ {
-        proxy_pass http://user-service:8083;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location ^~ /api/users {
-        proxy_pass http://user-service:8083;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location ^~ /api/auth {
-        proxy_pass http://user-service:8083;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+location ^~ /api/users {
+  proxy_pass http://user-service:8083;
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
 }
 ```
+
+---
 
 ## Setup Instructions
 
 ### Prerequisites
-- **OpenStack Infrastructure**: A working _OpenStack_ environment (Dalmatian release, Ubuntu 24.04) with components _Nova_, _Neutron_, _Cinder_, _Keystone_, _Swift_, _Placement_, _Glance_, _Heat_, and _Horizon_.
-- **Kubernetes Cluster**: A fully configured cluster deployed using an _Ansible playbook_.
-- **OpenEBS**: Installed on the _master node_ for dynamic storage provisioning.
-- **GitHub Actions Runner**: Self-hosted runner installed on the _master node_.
-- **GitHub Secrets**:
-  - `KUBE_CONFIG`: Kubernetes configuration file for cluster access.
-  - `DOCKER_USERNAME`: Docker Hub username.
-  - `DOCKER_PASSWORD`: Docker Hub password.
-- **Docker**
-- **Git**
-- **MySQL** and **PostgreSQL** instances (deployed via the CI/CD pipeline).
-- **NGINX Ingress Controller**
 
-### Steps
-1. **Set Up OpenStack**:
-   - Ensure **OpenStack** (Dalmatian release) is running on **Ubuntu 24.04** with all required components (_Nova_, _Neutron_, _Cinder_, _Keystone_, _Swift_, _Placement_, _Glance_, _Heat_, _Horizon_).
-   - Verify access to the **Horizon** dashboard and configure **Keystone** for authentication.
+- OpenStack (Dalmatian, Ubuntu 24.04) with Nova, Neutron, Cinder, Keystone, Swift, Placement, Glance, Heat, Horizon
+- Kubernetes cluster (deployed via Ansible)
+- OpenEBS (Jiva storage class)
+- Docker, Git
+- MySQL and PostgreSQL (deployed via CI/CD)
+- NGINX Ingress Controller
+- GitHub Actions self-hosted runner
+- GitHub Secrets: `KUBE_CONFIG`, `DOCKER_USERNAME`, `DOCKER_PASSWORD`
 
-2. **Deploy Kubernetes Cluster**:
-   - Use the provided **Ansible playbook** to deploy the **Kubernetes** cluster on **OpenStack**:
-     ```bash
-     ansible-playbook -i inventory cluster.yml
-     ```
-   - Ensure the cluster is accessible via `kubectl` and the master node is configured.
+### Quick Start
 
-3. **Set Up OpenEBS**:
-   - Install **OpenEBS** on the master node using the `openebs-jiva` storage class:
-     ```bash
-     helm repo add openebs https://openebs.github.io/charts
-     helm install openebs openebs/openebs --namespace openebs --create-namespace \
-       --set jiva.enabled=true
-     ```
-
-4. **Clone the Repository**:
-   ```bash
+1. **Clone the Repository**
+   ```sh
    git clone https://github.com/<your-repo>/studybuddy.git
    cd studybuddy
    ```
 
-5. **Configure Service Properties**:
-   - For each microservice (_user-service_, _group-service_, _resources-service_, _tasks-service_, _chat-service_), create a `<service>-properties` file in the backend `src/main/resources` folder.
-   - Example `user-service-properties`:
+2. **Configure Service Properties**
+   - Create `<service>-properties` files in each backend service’s `src/main/resources` directory.
+   - Example for user service:
      ```properties
      spring.datasource.url=jdbc:mysql://mysql:3306/studybuddy_user
      spring.datasource.username=root
      spring.datasource.password=<your-mysql-password>
      jwt.secret=<your-jwt-secret>
      ```
-   - Example `chat-service-properties`:
-     ```properties
-     spring.datasource.url=jdbc:mysql://mysql:3306/studybuddy_chat
-     spring.datasource.username=root
-     spring.datasource.password=<your-mysql-password>
-     websocket.endpoint=/chat
-     ```
-   - Repeat for other services, updating database URLs and credentials.
 
-6. **Configure GitHub Secrets**:
-   - Add the following to GitHub Secrets in your repository (_Settings_ > _Secrets and variables_ > _Actions_):
-     - `KUBE_CONFIG`: Contents of your `~/.kube/config` file.
-     - `DOCKER_USERNAME`: Your Docker Hub username.
-     - `DOCKER_PASSWORD`: Your Docker Hub password.
-   - Optionally, create a service account for secure access:
-     ```bash
-     kubectl create sa github-actions -n studybuddy-prod
-     kubectl create clusterrolebinding github-actions-binding \
-       --clusterrole=edit --serviceaccount=studybuddy-prod:github-actions
-     ```
+3. **Set Up Kubernetes Secrets**
+   ```sh
+   kubectl create secret generic studybuddy-secrets \
+     --from-literal=jwt-secret=<your-jwt-secret> \
+     --from-literal=mysql-password=<your-mysql-password> \
+     --from-literal=postgres-password=<your-postgres-password>
+   ```
 
-7. **Set Up GitHub Actions Runner**:
-   - Deploy a self-hosted **GitHub Actions runner** on the master node:
-     ```bash
-     kubectl apply -f https://github.com/actions/runner-controller/releases/latest/download/actions-runner-controller.yaml
-     ```
-   - Configure the runner in your GitHub repository under _Settings_ > _Actions_ > _Runners_ > _New self-hosted runner_, following the provided instructions.
-   - Ensure the runner is running in the `studybuddy-prod` namespace:
-     ```bash
-     kubectl get pods -n studybuddy-prod
-     ```
-
-8. **Configure Secrets**:
-   - Create **Kubernetes Secrets** for _JWT keys_ and _DB credentials_:
-     ```bash
-     kubectl create secret generic studybuddy-secrets \
-       --from-literal=jwt-secret=<your-jwt-secret> \
-       --from-literal=mysql-password=<your-mysql-password> \
-       --from-literal=postgres-password=<your-postgres-password>
-     ```
-
-9. **Trigger Deployment**:
-   - Push changes to the `production` branch to trigger the **Production Deployment Pipeline**:
-     ```bash
+4. **Deploy with CI/CD**
+   - Push to the `production` branch to trigger deployment:
+     ```sh
      git push origin production
      ```
-   - The pipeline will handle MySQL deployment, building/pushing Docker images, and applying Kubernetes manifests.
+   - Monitor deployment in GitHub Actions.
 
-10. **Verify Deployment**:
-    - Check that pods and services are running:
-      ```bash
-      kubectl get pods -n studybuddy-prod
-      kubectl get ingress -n studybuddy-prod
-      ```
+5. **Verify Deployment**
+   ```sh
+   kubectl get pods -n studybuddy-prod
+   kubectl get ingress -n studybuddy-prod
+   ```
 
-11. **Access the Application**:
-    - Open `https://studybuddy.example.com` in a browser (ensure _DNS_ is configured).
+6. **Access the Application**
+   - Open `https://studybuddy.example.com` in your browser.
+
+---
 
 ## Database Setup
 
-The **Production Deployment Pipeline** automatically deploys **MySQL** instances for the _User_, _Study Group_, _Tasks_, and _Chat_ services. For **PostgreSQL** (Resources service).
+MySQL and PostgreSQL instances are automatically deployed by the CI/CD pipeline for each service. Ensure credentials in `<service>-properties` match those in Kubernetes Secrets.
+
+---
 
 ## CI/CD
 
-The **Production Deployment Pipeline** (defined in `.github/workflows/production.yml`) automates the deployment process. It is triggered by pushes to the `production` branch, specifically for changes in `frontend/` or `backend/` directories. The pipeline:
+- **Pipeline:** Defined in `.github/workflows/production.yml`
+- **Triggers:** Pushes to `production` branch
+- **Steps:** Deploys databases, builds/pushes Docker images, applies Kubernetes manifests, ensures rollout
 
-- **Deploys MySQL**: Sets up MySQL instances for _User_, _Study Group_, _Tasks_, and _Chat_ services using Kubernetes manifests.
-- **Builds and Pushes Images**: Compiles **Spring Boot** microservices (Java 21) and the **Angular** frontend, builds Docker images, and pushes them to **Docker Hub** (e.g., `<DOCKER_USERNAME>/user-service:latest`).
-- **Deploys Services**: Applies Kubernetes deployments and services for each microservice and the frontend, forcing redeployment by updating a `REVISION` environment variable.
-- **Ensures Rollout**: Waits for deployments to complete successfully.
+Monitor pipeline status in the GitHub Actions tab.
 
-**Prerequisites**:
-- GitHub Secrets: `KUBE_CONFIG`, `DOCKER_USERNAME`, `DOCKER_PASSWORD`.
-- Self-hosted **GitHub Actions runner** on the master node.
+---
 
-To deploy, push to the `production` branch:
-```bash
-git push origin production
-```
+## Monitoring and Troubleshooting
 
-Monitor the pipeline in the GitHub **Actions** tab of your repository.
+- **Monitoring:** Prometheus and Grafana dashboards
+- **Troubleshooting:**
+  - PVC Not Bound: Check OpenEBS and storage class
+  - Runner Offline: Verify runner pod and GitHub registration
+  - Deployment Fails: Inspect pod logs and configuration files
+  - Database Errors: Check service credentials and DB status
+  - OpenStack Issues: Use Horizon and CLI tools for diagnostics
 
-## Monitoring
-
-- **Monitoring**: _Prometheus_ and _Grafana_ for metrics and alerting.
-
-## Troubleshooting
-
-- **OpenEBS PVC Not Bound**:
-  - Ensure **OpenEBS** is installed and the `openebs-jiva` storage class is specified.
-  - Check master node taints: `kubectl describe node <master-node>`.
-  - Verify OpenStack **Cinder** integration: `openstack volume list`.
-- **GitHub Actions Runner Offline**:
-  - Verify the runner pod: `kubectl get pods -n studybuddy-prod`.
-  - Check GitHub repository settings for runner registration.
-  - Ensure **Neutron** networking allows runner connectivity.
-- **Deployment Fails**:
-  - View pod logs: `kubectl logs <pod-name> -n studybuddy-prod`.
-  - Ensure `<service>-properties` files are correctly configured in `src/main/resources`.
-  - Check **Keystone** authentication for OpenStack resources.
-- **Database Connection Errors**:
-  - Verify **MySQL** and **PostgreSQL** services: `kubectl get svc -n studybuddy-prod`.
-  - Ensure database credentials match `<service>-properties` files.
-- **OpenStack Issues**:
-  - Use **Horizon** to debug resource allocation (e.g., Nova instances, Swift storage).
-  - Check **Heat** stack status: `openstack stack list`.
-- **Pipeline Failures**:
-  - Check GitHub Actions logs for errors in MySQL deployment, image builds, or Kubernetes apply steps.
-  - Verify `KUBE_CONFIG` and Docker Hub credentials in GitHub Secrets.
+---
 
 ## Contributing
 
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit changes (`git commit -m "Add your feature"`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a **Pull Request**.
+We welcome contributions! Please:
 
-Please follow the [**Code of Conduct**](./CODE_OF_CONDUCT.md) and review the [**Contributing Guidelines**](./CONTRIBUTING.md).
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit changes with descriptive messages
+4. Push to your branch and open a Pull Request
+
+See our [Code of Conduct](./CODE_OF_CONDUCT.md) and [Contributing Guidelines](./CONTRIBUTING.md).
+
+---
 
 ## License
 
-This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE.md) file for details.
+This project is licensed under the **MIT License**. See [LICENSE.md](./LICENSE.md) for details.
+
+---
 
 ## Project Status
 
-**StudyBuddy** is **production-ready** as of May 2025, running on **OpenStack Dalmatian** and **Kubernetes**. For issues or feature requests, contact maintainers via [GitHub Issues](https://github.com/<your-repo>/studybuddy/issues). Future enhancements include _resource versioning_, _Prometheus/Grafana monitoring_, and _ELK Stack logging_.
+**Production-ready** as of May 2025, running on OpenStack Dalmatian and Kubernetes.  
+For issues or feature requests, use [GitHub Issues](https://github.com/<your-repo>/studybuddy/issues).
+
+**Planned enhancements:** Resource versioning  and ELK Stack logging.
